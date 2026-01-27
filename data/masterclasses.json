@@ -1,0 +1,42 @@
+[
+  {
+    "id": "1",
+    "title": "Знакомство с гончарным кругом",
+    "description": "Базовый мастер-класс для начинающих. Научитесь основам работы на гончарном круге.",
+    "image": "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&h=400&fit=crop",
+    "price": 2500,
+    "duration": "2 часа",
+    "capacity": "до 6 человек",
+    "active": true
+  },
+  {
+    "id": "2",
+    "title": "Ручная лепка",
+    "description": "Создайте уникальное изделие без гончарного круга. Идеально для детей и взрослых.",
+    "image": "https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?w=600&h=400&fit=crop",
+    "price": 2000,
+    "duration": "1.5 часа",
+    "capacity": "до 8 человек",
+    "active": true
+  },
+  {
+    "id": "3",
+    "title": "Роспись керамики",
+    "description": "Распишите готовое изделие в технике underglaze. Заберёте после обжига.",
+    "image": "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&h=400&fit=crop",
+    "price": 1800,
+    "duration": "1.5 часа",
+    "capacity": "до 10 человек",
+    "active": true
+  },
+  {
+    "id": "4",
+    "title": "Свидание на гончарном круге",
+    "description": "Романтический мастер-класс для двоих. Создайте парные изделия вместе.",
+    "image": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=600&h=400&fit=crop",
+    "price": 6000,
+    "duration": "2.5 часа",
+    "capacity": "2 человека",
+    "active": true
+  }
+]

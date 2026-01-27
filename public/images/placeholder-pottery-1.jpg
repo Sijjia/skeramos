@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <rect fill="#E8F5E9" width="800" height="600"/>
+  <circle cx="400" cy="250" r="120" fill="#C8E6C9"/>
+  <ellipse cx="400" cy="380" rx="80" ry="20" fill="#A5D6A7"/>
+  <text x="400" y="480" text-anchor="middle" font-family="sans-serif" font-size="24" fill="#2D5016">Гончарный круг</text>
+</svg>

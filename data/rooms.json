@@ -1,0 +1,36 @@
+[
+  {
+    "id": "1",
+    "title": "Стандартный номер",
+    "description": "Уютный номер для комфортного отдыха. Идеально подходит для одного или двух гостей.",
+    "image": "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&h=600&fit=crop",
+    "price": 3500,
+    "capacity": 2,
+    "size": 18,
+    "amenities": ["Wi-Fi", "Кондиционер", "Smart TV", "Душ", "Чай/кофе"],
+    "active": true
+  },
+  {
+    "id": "2",
+    "title": "Комфорт",
+    "description": "Просторный номер с дополнительными удобствами. Отличный выбор для пар.",
+    "image": "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&h=600&fit=crop",
+    "price": 5000,
+    "capacity": 2,
+    "size": 25,
+    "amenities": ["Wi-Fi", "Кондиционер", "Smart TV 55\"", "Ванна", "Мини-бар", "Премиум косметика"],
+    "active": true
+  },
+  {
+    "id": "3",
+    "title": "Романтический люкс",
+    "description": "Роскошный номер для особых случаев. Идеален для романтического уикенда.",
+    "image": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&h=600&fit=crop",
+    "price": 8000,
+    "capacity": 2,
+    "size": 35,
+    "amenities": ["Wi-Fi", "Джакузи", "Камин", "Smart TV 65\"", "Мини-бар", "Панорамный вид", "Шампанское"],
+    "featured": true,
+    "active": true
+  }
+]

@@ -1,0 +1,45 @@
+[
+  {
+    "id": "1",
+    "title": "Кесе с орнаментом",
+    "description": "Традиционная пиала с кыргызским орнаментом",
+    "image": "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&h=600&fit=crop",
+    "category": "works",
+    "author": "Айгуль Сатарова",
+    "active": true
+  },
+  {
+    "id": "2",
+    "title": "Набор посуды",
+    "description": "Авторский набор для чаепития",
+    "image": "https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?w=800&h=600&fit=crop",
+    "category": "works",
+    "author": "Бакыт Токтогулов",
+    "active": true
+  },
+  {
+    "id": "3",
+    "title": "Урок на гончарном круге",
+    "description": "Первые шаги в работе с глиной",
+    "image": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&h=600&fit=crop",
+    "category": "masterclasses",
+    "date": "Декабрь 2024",
+    "active": true
+  },
+  {
+    "id": "4",
+    "title": "Романтический номер",
+    "description": "Уютный номер с видом на горы",
+    "image": "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&h=600&fit=crop",
+    "category": "hotel",
+    "active": true
+  },
+  {
+    "id": "5",
+    "title": "Приватный кинозал",
+    "description": "Уютное пространство для просмотра фильмов",
+    "image": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&h=600&fit=crop",
+    "category": "hotel",
+    "active": true
+  }
+]

@@ -1,0 +1,90 @@
+{
+  "common": {
+    "home": "Home",
+    "contacts": "Contacts",
+    "back": "Back",
+    "enter": "Enter",
+    "learnMore": "Learn more",
+    "bookNow": "Book now",
+    "signUp": "Sign up",
+    "discuss": "Discuss details",
+    "call": "Call",
+    "writeUs": "Write us",
+    "from": "from"
+  },
+  "zones": {
+    "creativity": "Creativity",
+    "hotel": "Hotel",
+    "switchTo": "Switch to {zone}"
+  },
+  "landing": {
+    "creativityTitle": "Creativity",
+    "creativitySubtitle": "Pottery workshop",
+    "hotelTitle": "Hotel",
+    "hotelSubtitle": "Cozy mini-hotel"
+  },
+  "creativity": {
+    "title": "Creativity Zone",
+    "description": "Discover the art of ceramics in our pottery workshop",
+    "heroSubtitle": "Pottery workshop in the heart of Bishkek",
+    "masterclasses": "Masterclasses",
+    "masterclassesDesc": "Try your hand at pottery under the guidance of experienced masters",
+    "masterclassesSubtitle": "For beginners and those who want to try something new",
+    "courses": "Professional courses",
+    "coursesDesc": "In-depth ceramics training for those who want to master the craft",
+    "coursesSubtitle": "For those who are serious about learning",
+    "events": "Events",
+    "eventsDesc": "Unforgettable corporate events, birthdays and bachelorette parties in a creative atmosphere",
+    "eventsSubtitle": "Perfect for team events and celebrations",
+    "faq": "FAQ",
+    "faqSubtitle": "Answers to popular questions about our masterclasses"
+  },
+  "hotel": {
+    "title": "Hotel Zone",
+    "description": "A cozy mini-hotel in the heart of Bishkek",
+    "heroSubtitle": "Comfort and coziness in the city center",
+    "rooms": "Rooms",
+    "roomsDesc": "From standard to luxury",
+    "roomsSubtitle": "Choose the perfect room for your stay",
+    "packages": "Packages",
+    "packagesDesc": "Romantic getaways",
+    "packagesSubtitle": "Ready solutions for special occasions",
+    "cinema": "Cinema",
+    "cinemaDesc": "Private screenings",
+    "cinemaSubtitle": "A cozy private cinema for 8 people",
+    "cinemaFeatures": "4K projector, Dolby sound, soft seats, mini-bar",
+    "cinemaCapacity": "Up to 8 people",
+    "faq": "FAQ",
+    "faqSubtitle": "Answers to questions about accommodation"
+  },
+  "header": {
+    "masterclasses": "Masterclasses",
+    "rooms": "Rooms",
+    "cinema": "Cinema",
+    "packages": "Packages",
+    "services": "Services",
+    "gallery": "Gallery",
+    "masters": "Masters",
+    "history": "History",
+    "contacts": "Contacts"
+  },
+  "onboarding": {
+    "switchHint": "Switch to see {zone}"
+  },
+  "footer": {
+    "address": "Address",
+    "phone": "Phone",
+    "social": "Social media",
+    "allRights": "All rights reserved"
+  },
+  "contacts": {
+    "title": "Contacts",
+    "subtitle": "Get in touch with us in any convenient way",
+    "address": "8 Shukurov St, Bishkek, Kyrgyzstan",
+    "workingHours": "Working hours",
+    "workingHoursValue": "Mon-Sun: 10:00 - 22:00",
+    "howToFind": "How to find us",
+    "getDirections": "Get directions",
+    "contactUs": "Contact us"
+  }
+}

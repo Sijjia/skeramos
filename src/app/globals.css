@@ -1,26 +1,925 @@
+/* Google Fonts - must be first */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
 @import "tailwindcss";
 
+/* ==========================================================================
+   Skeramos Premium Design System
+   Dual-zone: Творчество (earth/forest) / Отель (luxury/burgundy)
+   ========================================================================== */
+
+/* Base theme variables */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Premium neutrals */
+  --neutral-50: #faf9f7;
+  --neutral-100: #f0eeeb;
+  --neutral-200: #e0dcd6;
+  --neutral-300: #c4bfb6;
+  --neutral-400: #9a948a;
+  --neutral-500: #736d63;
+  --neutral-600: #5c574f;
+  --neutral-700: #3d3a35;
+  --neutral-800: #252320;
+  --neutral-900: #1a1816;
+  --neutral-950: #0d0c0b;
+
+  /* Gold accents */
+  --gold-300: #fcd34d;
+  --gold-400: #fbbf24;
+  --gold-500: #d4a574;
+  --gold-600: #b8860b;
+
+  /* Creativity zone - Earth/Forest */
+  --creativity-50: #f4f7f2;
+  --creativity-100: #e4ebe0;
+  --creativity-200: #c8d7bf;
+  --creativity-300: #a3bc95;
+  --creativity-400: #7a9c68;
+  --creativity-500: #5a7c48;
+  --creativity-600: #456338;
+  --creativity-700: #374f2d;
+  --creativity-800: #2d4026;
+  --creativity-900: #1a2617;
+  --creativity-950: #0f160d;
+
+  /* Hotel zone - Luxury Burgundy */
+  --hotel-50: #fdf4f6;
+  --hotel-100: #fce7eb;
+  --hotel-200: #f9cfd9;
+  --hotel-300: #f4a7ba;
+  --hotel-400: #eb7693;
+  --hotel-500: #dc4b6f;
+  --hotel-600: #c42d54;
+  --hotel-700: #a52145;
+  --hotel-800: #8a1e3d;
+  --hotel-900: #5c1428;
+  --hotel-950: #330a16;
+
+  /* Default to creativity zone */
+  --zone-50: var(--creativity-50);
+  --zone-100: var(--creativity-100);
+  --zone-200: var(--creativity-200);
+  --zone-300: var(--creativity-300);
+  --zone-400: var(--creativity-400);
+  --zone-500: var(--creativity-500);
+  --zone-600: var(--creativity-600);
+  --zone-700: var(--creativity-700);
+  --zone-800: var(--creativity-800);
+  --zone-900: var(--creativity-900);
+  --zone-950: var(--creativity-950);
+
+  /* Theme colors */
+  --background: var(--neutral-950);
+  --background-soft: var(--neutral-900);
+  --background-card: rgba(255, 255, 255, 0.03);
+  --foreground: var(--neutral-100);
+  --foreground-muted: var(--neutral-400);
+  --primary: var(--zone-500);
+  --primary-glow: var(--zone-400);
+  --accent: var(--gold-500);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-light: rgba(255, 255, 255, 0.15);
+
+  /* Glass effects */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
+/* Creativity Zone */
+[data-zone="creativity"] {
+  --zone-50: var(--creativity-50);
+  --zone-100: var(--creativity-100);
+  --zone-200: var(--creativity-200);
+  --zone-300: var(--creativity-300);
+  --zone-400: var(--creativity-400);
+  --zone-500: var(--creativity-500);
+  --zone-600: var(--creativity-600);
+  --zone-700: var(--creativity-700);
+  --zone-800: var(--creativity-800);
+  --zone-900: var(--creativity-900);
+  --zone-950: var(--creativity-950);
+
+  --background: var(--creativity-950);
+  --background-soft: var(--creativity-900);
+  --primary-glow: var(--creativity-400);
+}
+
+/* Hotel Zone */
+[data-zone="hotel"] {
+  --zone-50: var(--hotel-50);
+  --zone-100: var(--hotel-100);
+  --zone-200: var(--hotel-200);
+  --zone-300: var(--hotel-300);
+  --zone-400: var(--hotel-400);
+  --zone-500: var(--hotel-500);
+  --zone-600: var(--hotel-600);
+  --zone-700: var(--hotel-700);
+  --zone-800: var(--hotel-800);
+  --zone-900: var(--hotel-900);
+  --zone-950: var(--hotel-950);
+
+  --background: var(--hotel-950);
+  --background-soft: var(--hotel-900);
+  --primary-glow: var(--hotel-400);
+}
+
+/* Tailwind v4 Theme */
 @theme inline {
+  /* Colors */
   --color-background: var(--background);
+  --color-background-soft: var(--background-soft);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+
+  /* Zone palette */
+  --color-zone-50: var(--zone-50);
+  --color-zone-100: var(--zone-100);
+  --color-zone-200: var(--zone-200);
+  --color-zone-300: var(--zone-300);
+  --color-zone-400: var(--zone-400);
+  --color-zone-500: var(--zone-500);
+  --color-zone-600: var(--zone-600);
+  --color-zone-700: var(--zone-700);
+  --color-zone-800: var(--zone-800);
+  --color-zone-900: var(--zone-900);
+  --color-zone-950: var(--zone-950);
+
+  /* Neutrals */
+  --color-neutral-50: var(--neutral-50);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-900: var(--neutral-900);
+  --color-neutral-950: var(--neutral-950);
+
+  /* Gold */
+  --color-gold-300: var(--gold-300);
+  --color-gold-400: var(--gold-400);
+  --color-gold-500: var(--gold-500);
+  --color-gold-600: var(--gold-600);
+
+  /* Static zone colors */
+  --color-creativity-500: var(--creativity-500);
+  --color-creativity-600: var(--creativity-600);
+  --color-hotel-500: var(--hotel-500);
+  --color-hotel-600: var(--hotel-600);
+
+  /* Fonts */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Montserrat', system-ui, sans-serif;
+
+  /* Spacing */
+  --spacing-18: 4.5rem;
+  --spacing-88: 22rem;
+  --spacing-128: 32rem;
+
+  /* Border radius */
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ==========================================================================
+   Base Styles
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  transition: background-color 0.8s ease, color 0.5s ease;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* Zone transition */
+.zone-transition {
+  transition:
+    background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.5s ease,
+    border-color 0.5s ease,
+    box-shadow 0.5s ease;
+}
+
+/* ==========================================================================
+   Glassmorphism Components
+   ========================================================================== */
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.glass-card:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transform: translateY(-4px);
+}
+
+.glass-card-light {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* ==========================================================================
+   Glow Effects
+   ========================================================================== */
+
+.glow {
+  box-shadow:
+    0 0 20px var(--primary-glow),
+    0 0 40px rgba(var(--primary-glow), 0.3);
+}
+
+.text-glow {
+  text-shadow:
+    0 0 20px var(--primary-glow),
+    0 0 40px var(--primary-glow);
+}
+
+.border-glow {
+  border-color: var(--zone-500);
+  box-shadow: 0 0 15px rgba(var(--zone-500), 0.3);
+}
+
+/* Zone-specific glows */
+[data-zone="creativity"] .zone-glow {
+  box-shadow: 0 0 60px rgba(90, 124, 72, 0.4);
+}
+
+[data-zone="hotel"] .zone-glow {
+  box-shadow: 0 0 60px rgba(165, 33, 69, 0.4);
+}
+
+/* ==========================================================================
+   Gradient Backgrounds
+   ========================================================================== */
+
+.gradient-radial {
+  background: radial-gradient(
+    ellipse at center,
+    var(--zone-900) 0%,
+    var(--background) 70%
+  );
+}
+
+.gradient-mesh {
+  background:
+    radial-gradient(at 40% 20%, var(--zone-800) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, var(--zone-900) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, var(--zone-800) 0px, transparent 50%),
+    radial-gradient(at 80% 50%, var(--neutral-900) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, var(--zone-900) 0px, transparent 50%),
+    var(--background);
+}
+
+.gradient-hero {
+  background: linear-gradient(
+    180deg,
+    var(--background) 0%,
+    var(--zone-950) 50%,
+    var(--background) 100%
+  );
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-15px) rotate(2deg); }
+  75% { transform: translateY(-5px) rotate(-2deg); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+@keyframes float-reverse {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(15px) rotate(-3deg); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: float-reverse 7s ease-in-out infinite;
+}
+
+/* Spin animation (for pottery) */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+.animate-spin-reverse {
+  animation: spin-reverse 25s linear infinite;
+}
+
+/* Pulse glow */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+/* Fade in up */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+/* Stagger delay utilities */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+
+/* Shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* ==========================================================================
+   Hover Effects
+   ========================================================================== */
+
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.hover-scale {
+  transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow:
+    0 0 30px var(--primary-glow),
+    0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Link underline */
+.link-magic {
+  position: relative;
+  text-decoration: none;
+}
+
+.link-magic::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--zone-400), var(--gold-500));
+  transition: width 0.4s ease;
+}
+
+.link-magic:hover::after {
+  width: 100%;
+}
+
+/* ==========================================================================
+   Button Styles
+   ========================================================================== */
+
+/* Primary button */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.btn-primary:hover::before {
+  transform: translateX(100%);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(var(--zone-500), 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* All buttons - base hover */
+button, a[href] {
+  transition: all 0.2s ease;
+}
+
+/* Glass button hover */
+.glass:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   Scroll Reveal Animations
+   ========================================================================== */
+
+/* Fade in on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Slide in from left */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal-left.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Slide in from right */
+.reveal-right {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal-right.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Scale in */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal-scale.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ==========================================================================
+   Parallax & Scroll
+   ========================================================================== */
+
+.parallax-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.parallax-bg {
+  position: absolute;
+  inset: -20%;
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+}
+
+/* Noise overlay for texture */
+.noise-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Scrollbar
+   ========================================================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--neutral-900);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--zone-700);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--zone-500);
+}
+
+/* ==========================================================================
+   Selection
+   ========================================================================== */
+
+::selection {
+  background: var(--zone-600);
+  color: white;
+}
+
+/* ==========================================================================
+   Focus States
+   ========================================================================== */
+
+.focus-ring {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--zone-400);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Reduced Motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-float,
+  .animate-float-slow,
+  .animate-float-reverse,
+  .animate-spin-slow,
+  .animate-spin-reverse,
+  .animate-pulse-glow {
+    animation: none;
+  }
+
+  .hover-lift:hover,
+  .hover-scale:hover {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.bg-gradient-text {
+  background: linear-gradient(135deg, var(--zone-300), var(--gold-500));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.border-gradient {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--background), var(--background)) padding-box,
+    linear-gradient(135deg, var(--zone-500), var(--gold-500)) border-box;
+}
+
+/* ==========================================================================
+   Этно-стили (Кыргызские орнаменты)
+   ========================================================================== */
+
+/* Шырдак паттерн - традиционный войлочный ковер */
+.etno-shyrdak {
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='0.5' opacity='0.15'%3E%3Cpath d='M40 10 L50 20 L40 30 L30 20 Z'/%3E%3Cpath d='M40 50 L50 60 L40 70 L30 60 Z'/%3E%3Cpath d='M10 40 L20 50 L10 60 L0 50 Z'/%3E%3Cpath d='M70 40 L80 50 L70 60 L60 50 Z'/%3E%3Ccircle cx='40' cy='40' r='8'/%3E%3Cpath d='M32 32 L48 32 L48 48 L32 48 Z' transform='rotate(45 40 40)'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 80px 80px;
+}
+
+/* Кочкор-муйуз - бараньи рога (символ благополучия) */
+.etno-kochkor {
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='50' viewBox='0 0 100 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1' opacity='0.1'%3E%3Cpath d='M10 25 Q10 10 25 10 Q40 10 40 25 Q40 40 25 40'/%3E%3Cpath d='M90 25 Q90 10 75 10 Q60 10 60 25 Q60 40 75 40'/%3E%3Ccircle cx='50' cy='25' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 100px 50px;
+}
+
+/* Тюндюк - символ солнца (верх юрты) */
+.etno-tunduk {
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='0.8' opacity='0.08'%3E%3Ccircle cx='60' cy='60' r='25'/%3E%3Ccircle cx='60' cy='60' r='15'/%3E%3Cpath d='M60 35 L60 45 M60 75 L60 85 M35 60 L45 60 M75 60 L85 60'/%3E%3Cpath d='M42 42 L50 50 M70 70 L78 78 M42 78 L50 70 M70 50 L78 42'/%3E%3Cpath d='M60 10 L60 25 M60 95 L60 110 M10 60 L25 60 M95 60 L110 60'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 120px 120px;
+}
+
+/* Секция с этно-оверлеем */
+.etno-section {
+  position: relative;
+}
+
+.etno-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'%3E%3C!-- Центральный тюндюк --%3E%3Ccircle cx='80' cy='80' r='30'/%3E%3Ccircle cx='80' cy='80' r='20'/%3E%3Ccircle cx='80' cy='80' r='10'/%3E%3C!-- Лучи --%3E%3Cpath d='M80 50 L80 30 M80 110 L80 130 M50 80 L30 80 M110 80 L130 80'/%3E%3Cpath d='M59 59 L45 45 M101 101 L115 115 M59 101 L45 115 M101 59 L115 45'/%3E%3C!-- Угловые рога --%3E%3Cpath d='M20 20 Q35 5 50 20 Q35 35 20 20'/%3E%3Cpath d='M140 20 Q125 5 110 20 Q125 35 140 20'/%3E%3Cpath d='M20 140 Q35 155 50 140 Q35 125 20 140'/%3E%3Cpath d='M140 140 Q125 155 110 140 Q125 125 140 140'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* Этно-разделитель */
+.etno-divider {
+  height: 40px;
+  background: url("data:image/svg+xml,%3Csvg width='200' height='40' viewBox='0 0 200 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1' opacity='0.2'%3E%3Cpath d='M0 20 Q25 5 50 20 Q75 35 100 20 Q125 5 150 20 Q175 35 200 20'/%3E%3Ccircle cx='0' cy='20' r='3'/%3E%3Ccircle cx='50' cy='20' r='3'/%3E%3Ccircle cx='100' cy='20' r='3'/%3E%3Ccircle cx='150' cy='20' r='3'/%3E%3Ccircle cx='200' cy='20' r='3'/%3E%3C/g%3E%3C/svg%3E") repeat-x center;
+}
+
+/* Золотой этно-бордер */
+.etno-border {
+  border-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='none' stroke='%23d4a574' stroke-width='2' d='M0 20 L10 10 L20 20 L30 10 L40 20'/%3E%3C/svg%3E") 20 round;
+}
+
+/* Карточка в этно-стиле */
+.etno-card {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.etno-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold-500),
+    transparent
+  );
+}
+
+.etno-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid rgba(212, 165, 116, 0.1);
+  border-radius: inherit;
+}
+
+/* Этно-текстура для фонов секций */
+.etno-texture {
+  background-color: var(--zone-950);
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L35 15 L30 25 L25 15 Z' fill='none' stroke='%23ffffff' stroke-width='0.3' opacity='0.1'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at top, var(--zone-900) 0%, transparent 50%);
+}
+
+/* ==========================================================================
+   Улучшенные параллакс эффекты
+   ========================================================================== */
+
+.parallax-slow {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.parallax-layer-1 {
+  transform: translateY(calc(var(--scroll-y, 0) * 0.1));
+}
+
+.parallax-layer-2 {
+  transform: translateY(calc(var(--scroll-y, 0) * 0.2));
+}
+
+.parallax-layer-3 {
+  transform: translateY(calc(var(--scroll-y, 0) * 0.3));
+}
+
+/* ==========================================================================
+   Дополнительные цвета для Tailwind
+   ========================================================================== */
+
+@theme inline {
+  --color-creativity-950: var(--creativity-950);
+  --color-hotel-950: var(--hotel-950);
+}
+
+/* ==========================================================================
+   Оптимизированные CSS анимации (GPU-accelerated)
+   ========================================================================== */
+
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -20px, 0);
+  }
+}
+
+.animate-float-gentle {
+  animation: float-gentle 20s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Плавное появление */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out forwards;
+}
+
+/* Появление с масштабом (как chamotte.de) */
+@keyframes fade-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-scale {
+  animation: fade-scale 0.65s ease-out forwards;
+}
+
+/* Scroll-triggered анимации через IntersectionObserver */
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+}
+
+.scroll-animate.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Stagger delays для детей */
+.scroll-animate.is-visible > *:nth-child(1) { transition-delay: 0.1s; }
+.scroll-animate.is-visible > *:nth-child(2) { transition-delay: 0.2s; }
+.scroll-animate.is-visible > *:nth-child(3) { transition-delay: 0.3s; }
+.scroll-animate.is-visible > *:nth-child(4) { transition-delay: 0.4s; }
+.scroll-animate.is-visible > *:nth-child(5) { transition-delay: 0.5s; }
+.scroll-animate.is-visible > *:nth-child(6) { transition-delay: 0.6s; }
+
+/* Параллакс через CSS custom properties */
+.parallax-container {
+  --scroll-offset: 0;
+}
+
+.parallax-slow {
+  transform: translateY(calc(var(--scroll-offset) * 0.3));
+  will-change: transform;
+}
+
+.parallax-medium {
+  transform: translateY(calc(var(--scroll-offset) * 0.5));
+  will-change: transform;
+}
+
+.parallax-fast {
+  transform: translateY(calc(var(--scroll-offset) * 0.7));
+  will-change: transform;
+}
+
+/* Hover с GPU acceleration */
+.gpu-lift {
+  transform: translateZ(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+.gpu-lift:hover {
+  transform: translate3d(0, -8px, 0);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }

@@ -1,0 +1,18 @@
+{
+  "siteName": "Skeramos",
+  "phone": "+996 555 123 456",
+  "whatsapp": "996555123456",
+  "email": "info@skeramos.kg",
+  "address": "ул. Шукурова 8, Бишкек, Кыргызстан",
+  "workingHours": "Пн-Вс: 10:00 - 22:00",
+  "social": {
+    "instagram": "https://instagram.com/skeramos",
+    "facebook": "",
+    "telegram": ""
+  },
+  "cinemaPrice": 3000,
+  "mapCoordinates": {
+    "lat": 42.8746,
+    "lng": 74.5698
+  }
+}

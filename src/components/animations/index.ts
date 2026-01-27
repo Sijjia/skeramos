@@ -1,0 +1,29 @@
+// Legacy exports (for backward compatibility)
+export { ScrollAnimation, generateFramePaths } from './ScrollAnimation';
+export { ParallaxSection, ETHNO_PATTERNS } from './ParallaxSection';
+export { FadeInView, StaggerContainer, ScaleFade } from './FadeInView';
+
+// Optimized animations (use these for better performance)
+export {
+  FadeInOnScroll,
+  StaggerContainer as OptimizedStagger,
+  StaggerItem,
+  ParallaxBackground,
+  LiveBackground,
+  TextReveal,
+  CountUp,
+} from './OptimizedAnimations';
+
+// Ethno decorations (CSS-only, maximum performance)
+export {
+  FloatingOrbs,
+  EtnoPatternOverlay,
+  ScrollProgressBar,
+  SectionDivider,
+  GlowingAccent,
+} from './EtnoDecorations';
+
+// Zone transitions
+export { ZoneColorTransition, useZoneColors } from './ZoneColorTransition';
+export { ZoneTransitionProvider, useZoneTransition } from './ZoneTransitionOverlay';
+export { PageTransition } from './PageTransition';
