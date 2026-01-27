@@ -168,7 +168,7 @@ export default function CreativityPage() {
       <FloatingOrbs zone="creativity" count={2} />
       <EtnoPatternOverlay pattern="mixed" opacity={0.02} />
 
-      <main className="min-h-screen bg-background overflow-hidden etno-section">
+      <main className="min-h-screen bg-background etno-section">
         {/* Hero Section */}
         <motion.section
           style={{ opacity: heroOpacity, scale: heroScale }}
