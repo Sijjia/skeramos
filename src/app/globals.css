@@ -193,6 +193,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -201,6 +202,16 @@ body {
   font-family: var(--font-sans);
   line-height: 1.7;
   transition: background-color 0.8s ease, color 0.5s ease;
+  overflow-x: hidden;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix for iOS fixed positioning */
+@supports (-webkit-touch-callout: none) {
+  body {
+    min-height: -webkit-fill-available;
+  }
 }
 
 /* Typography */

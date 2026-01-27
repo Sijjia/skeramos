@@ -35,6 +35,7 @@ export function Header() {
           ? 'glass py-2'
           : 'glass md:bg-transparent md:backdrop-blur-none py-3 md:py-4'
       }`}
+      style={{ transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)' }}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
