@@ -42,7 +42,7 @@ export function ZoneTransitionProvider({ children }: TransitionProviderProps) {
         setIsTransitioning(false);
         setTargetZone(null);
         setPendingCallback(null);
-      }, 400);
+      }, 800);
     }
   }, [pendingCallback]);
 
@@ -78,7 +78,7 @@ function ZoneOverlay({ zone, onAnimationComplete }: ZoneOverlayProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
+      transition={{ duration: 0.6, ease: 'easeInOut' }}
       onAnimationComplete={onAnimationComplete}
     >
       {/* Кыргызский этно-орнамент */}
@@ -103,8 +103,8 @@ function ZoneOverlay({ zone, onAnimationComplete }: ZoneOverlayProps) {
             opacity: 0
           }}
           transition={{
-            duration: 1,
-            delay: i * 0.12,
+            duration: 1.8,
+            delay: i * 0.2,
             ease: 'easeOut'
           }}
         />
@@ -116,7 +116,7 @@ function ZoneOverlay({ zone, onAnimationComplete }: ZoneOverlayProps) {
         initial={{ scale: 0.3, opacity: 0, rotate: -180 }}
         animate={{ scale: 1, opacity: 1, rotate: 0 }}
         exit={{ scale: 0.3, opacity: 0, rotate: 180 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
       >
         <div className="relative w-24 h-24 md:w-28 md:h-28">
           {/* Glow */}
@@ -125,7 +125,7 @@ function ZoneOverlay({ zone, onAnimationComplete }: ZoneOverlayProps) {
             style={{ backgroundColor: accentColor }}
             initial={{ opacity: 0, scale: 1.5 }}
             animate={{ opacity: 0.3, scale: 2 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 1.2, delay: 0.3 }}
           />
           {/* Logo */}
           <div className="relative w-full h-full">
@@ -145,7 +145,7 @@ function ZoneOverlay({ zone, onAnimationComplete }: ZoneOverlayProps) {
         initial={{ y: 30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -30, opacity: 0 }}
-        transition={{ duration: 0.4, delay: 0.15 }}
+        transition={{ duration: 0.8, delay: 0.25 }}
       >
         <span className="text-white/40 text-xs tracking-[0.3em] uppercase">
           зона
