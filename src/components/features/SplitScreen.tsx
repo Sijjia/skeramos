@@ -39,7 +39,7 @@ export function SplitScreen() {
   };
 
   return (
-    <div className="fixed inset-0 flex flex-col md:flex-row overflow-hidden">
+    <div className="fixed inset-0 flex flex-col md:flex-row overflow-hidden" style={{ height: '100dvh' }}>
       {zones.map(({ zone, title, subtitle, bgImage, icon }) => {
         const isHovered = hoveredZone === zone;
         const isOtherHovered = hoveredZone !== null && hoveredZone !== zone;
@@ -49,10 +49,12 @@ export function SplitScreen() {
           <motion.button
             key={zone}
             className={`
-              relative flex-1 flex items-center justify-center
-              overflow-hidden cursor-pointer
+              relative flex items-center justify-center
+              overflow-hidden cursor-pointer min-h-[50dvh] md:min-h-0 md:flex-1
               focus:outline-none focus-visible:ring-4 focus-visible:ring-white/50 focus-visible:ring-inset
+              active:scale-[0.98] transition-transform
             `}
+            style={{ flex: 1 }}
             initial={false}
             animate={{
               flex: isHovered ? 1.5 : isOtherHovered ? 0.5 : 1,
@@ -145,15 +147,9 @@ export function SplitScreen() {
                 {subtitle}
               </motion.p>
 
-              {/* Hover button */}
-              <motion.div
-                className="mt-8"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{
-                  opacity: isHovered ? 1 : 0,
-                  y: isHovered ? 0 : 20,
-                }}
-                transition={{ duration: 0.3 }}
+              {/* Hover button - always visible on mobile, hover-triggered on desktop */}
+              <div
+                className={`mt-8 transition-all duration-300 md:opacity-0 md:translate-y-5 ${isHovered ? 'md:opacity-100 md:translate-y-0' : ''}`}
               >
                 <span className={`
                   inline-flex items-center gap-2 px-8 py-4 rounded-full text-lg font-medium
@@ -168,7 +164,7 @@ export function SplitScreen() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </span>
-              </motion.div>
+              </div>
             </motion.div>
 
             {/* Decorative corner elements */}
