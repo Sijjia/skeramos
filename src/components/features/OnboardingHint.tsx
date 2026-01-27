@@ -41,11 +41,11 @@ export function OnboardingHint({ delay = 3000 }: OnboardingHintProps) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -10, scale: 0.95 }}
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-          className="fixed top-24 left-1/2 -translate-x-1/2 z-50"
+          className="fixed top-24 right-4 z-50"
         >
           <div className="relative bg-white rounded-2xl shadow-xl px-6 py-4 max-w-xs">
             {/* Arrow pointing up to toggle */}
-            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white rotate-45 shadow-lg" />
+            <div className="absolute -top-2 right-6 w-4 h-4 bg-white rotate-45 shadow-lg" />
 
             <div className="relative">
               <p className="text-neutral-700 text-sm text-center">
@@ -75,7 +75,7 @@ export function OnboardingHint({ delay = 3000 }: OnboardingHintProps) {
 
             {/* Animated pulse indicator */}
             <motion.div
-              className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-zone-500 rounded-full"
+              className="absolute -top-1 right-7 w-2 h-2 bg-zone-500 rounded-full"
               animate={{
                 scale: [1, 1.5, 1],
                 opacity: [1, 0.5, 1],

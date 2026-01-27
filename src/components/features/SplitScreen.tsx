@@ -180,37 +180,6 @@ export function SplitScreen() {
         );
       })}
 
-      {/* Center logo */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
-        <motion.div
-          className="relative w-24 h-24 md:w-32 md:h-32"
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{
-            type: 'spring',
-            stiffness: 200,
-            damping: 20,
-            delay: 0.3,
-          }}
-        >
-          {/* Glow behind logo */}
-          <div className="absolute inset-0 bg-white/30 rounded-full blur-xl" />
-
-          {/* Logo container */}
-          <motion.div
-            className="relative w-full h-full bg-white rounded-full shadow-2xl flex items-center justify-center p-4"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-          >
-            <Image
-              src="/logo.png"
-              alt="Skeramos"
-              fill
-              className="object-contain p-4"
-            />
-          </motion.div>
-        </motion.div>
-      </div>
 
       {/* Bottom text */}
       <motion.div
