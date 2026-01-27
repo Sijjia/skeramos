@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
-import { Header } from '@/components/layout/Header';
+
 import { Footer } from '@/components/layout/Footer';
 import { OnboardingHint, StickyCTA, FAQAccordion, RoomCard, PackageCard } from '@/components/features';
 import { FloatingOrbs, EtnoPatternOverlay, GlowingAccent } from '@/components/animations/EtnoDecorations';
@@ -114,8 +114,8 @@ export default function HotelPage() {
 
   return (
     <>
-      <Header />
-      <OnboardingHint />
+      
+      
       <StickyCTA />
       <FloatingOrbs zone="hotel" count={2} />
       <EtnoPatternOverlay pattern="tunduk" opacity={0.02} />

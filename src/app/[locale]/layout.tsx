@@ -6,6 +6,8 @@ import { ZoneProvider } from '@/contexts/ZoneContext';
 import { AnalyticsProvider } from '@/components/analytics';
 import { ZoneTransitionProvider } from '@/components/animations/ZoneTransitionOverlay';
 import { ZoneColorTransition } from '@/components/animations/ZoneColorTransition';
+import { Header } from '@/components/layout/Header';
+import { OnboardingHint } from '@/components/features';
 
 interface LocaleLayoutProps {
   children: React.ReactNode;
@@ -34,6 +36,9 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
     <NextIntlClientProvider messages={messages}>
       <ZoneProvider>
         <ZoneTransitionProvider>
+          {/* Header outside ZoneColorTransition for iOS fixed positioning */}
+          <Header />
+          <OnboardingHint />
           <ZoneColorTransition>
             <AnalyticsProvider>
               {children}

@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useZone } from '@/contexts/ZoneContext';
-import { Header } from '@/components/layout/Header';
+
 import { Footer } from '@/components/layout/Footer';
 import { FadeInOnScroll } from '@/components/animations/OptimizedAnimations';
 import { EtnoPatternOverlay, GlowingAccent, SectionDivider } from '@/components/animations/EtnoDecorations';
@@ -160,7 +160,7 @@ export default function MasterDetailPage() {
   if (!master) {
     return (
       <>
-        <Header />
+        
         <main className="min-h-screen bg-background flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-2xl text-white mb-4">Мастер не найден</h1>
@@ -178,7 +178,7 @@ export default function MasterDetailPage() {
 
   return (
     <>
-      <Header />
+      
       <EtnoPatternOverlay pattern="shyrdak" opacity={0.02} />
 
       <main className="min-h-screen bg-background pt-20">

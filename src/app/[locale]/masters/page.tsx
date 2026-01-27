@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { useZone } from '@/contexts/ZoneContext';
-import { Header } from '@/components/layout/Header';
+
 import { Footer } from '@/components/layout/Footer';
 import { FadeInOnScroll } from '@/components/animations/OptimizedAnimations';
 import { EtnoPatternOverlay, GlowingAccent, SectionDivider } from '@/components/animations/EtnoDecorations';
@@ -58,7 +58,7 @@ export default function MastersPage() {
 
   return (
     <>
-      <Header />
+      
       <EtnoPatternOverlay pattern="tunduk" opacity={0.02} />
 
       <main className="min-h-screen bg-background pt-20">

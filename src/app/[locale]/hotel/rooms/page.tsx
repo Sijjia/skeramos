@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLocale } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
-import { Header } from '@/components/layout/Header';
+
 import { Footer } from '@/components/layout/Footer';
 import { FadeInOnScroll } from '@/components/animations/OptimizedAnimations';
 import { FadeIn, Parallax, StaggerContainer, StaggerItem } from '@/components/animations/ScrollAnimations';
@@ -256,7 +256,7 @@ export default function RoomsPage() {
 
   return (
     <>
-      <Header />
+      
       <EtnoPatternOverlay pattern="tunduk" opacity={0.02} />
 
       <main className="min-h-screen bg-background pt-20">

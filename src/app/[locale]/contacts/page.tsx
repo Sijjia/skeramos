@@ -3,7 +3,7 @@
 import { Suspense, lazy } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
-import { Header } from '@/components/layout/Header';
+
 import { Footer } from '@/components/layout/Footer';
 import { ContactButtons, StickyCTA } from '@/components/features';
 import { Icon } from '@/components/ui';
@@ -20,7 +20,7 @@ export default function ContactsPage() {
 
   return (
     <>
-      <Header />
+      
       <StickyCTA phone={PHONE} />
 
       <main className="min-h-screen bg-background pt-24">

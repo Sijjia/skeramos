@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocale } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
-import { Header } from '@/components/layout/Header';
+
 import { Footer } from '@/components/layout/Footer';
 import { FadeInOnScroll } from '@/components/animations/OptimizedAnimations';
 import { EtnoPatternOverlay, GlowingAccent, SectionDivider } from '@/components/animations/EtnoDecorations';
@@ -91,7 +91,7 @@ export default function CinemaPage() {
 
   return (
     <>
-      <Header />
+      
       <EtnoPatternOverlay pattern="tunduk" opacity={0.02} />
 
       <main className="min-h-screen bg-background pt-20">

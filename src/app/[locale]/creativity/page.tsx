@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
-import { Header } from '@/components/layout/Header';
+
 import { Footer } from '@/components/layout/Footer';
 import { OnboardingHint, StickyCTA, FAQAccordion } from '@/components/features';
 import { FloatingOrbs, EtnoPatternOverlay, SectionDivider, GlowingAccent } from '@/components/animations/EtnoDecorations';
@@ -162,8 +162,8 @@ export default function CreativityPage() {
 
   return (
     <>
-      <Header />
-      <OnboardingHint />
+      
+      
       <StickyCTA />
       <FloatingOrbs zone="creativity" count={2} />
       <EtnoPatternOverlay pattern="mixed" opacity={0.02} />

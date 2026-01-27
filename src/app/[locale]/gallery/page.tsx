@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useZone } from '@/contexts/ZoneContext';
-import { Header } from '@/components/layout/Header';
+
 import { Footer } from '@/components/layout/Footer';
 import { FadeInOnScroll } from '@/components/animations/OptimizedAnimations';
 import { EtnoPatternOverlay, GlowingAccent, SectionDivider } from '@/components/animations/EtnoDecorations';
@@ -215,7 +215,7 @@ export default function GalleryPage() {
 
   return (
     <>
-      <Header />
+      
       <EtnoPatternOverlay pattern="shyrdak" opacity={0.02} />
 
       <main className="min-h-screen bg-background pt-20">
