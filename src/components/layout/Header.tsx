@@ -39,10 +39,10 @@ export function Header() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'glass py-2'
-          : 'glass md:bg-transparent md:backdrop-blur-none py-3 md:py-4'
+          ? 'bg-neutral-950/90 backdrop-blur-md py-2 shadow-lg'
+          : 'bg-transparent py-3 md:py-4'
       }`}
       style={{ transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)' }}
     >
@@ -146,7 +146,7 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden glass mt-2 mx-4 rounded-2xl overflow-hidden"
+            className="lg:hidden bg-neutral-900/95 backdrop-blur-md mt-2 mx-4 rounded-2xl overflow-hidden border border-white/10"
           >
             <nav className="flex flex-col p-4 gap-2">
               {zone === 'creativity' ? (

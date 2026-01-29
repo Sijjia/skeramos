@@ -169,9 +169,13 @@ export default function HotelPage() {
 
               {/* Badge */}
               <motion.div variants={fadeInUp} className="mb-6">
-                <span className="inline-block px-4 py-2 rounded-full glass text-sm text-zone-300 font-medium">
+                <motion.span
+                  className="inline-block px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-sm text-zone-300 font-medium cursor-default"
+                  whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.15)' }}
+                  transition={{ duration: 0.2 }}
+                >
                   Бутик-отель в сердце Кыргызстана
-                </span>
+                </motion.span>
               </motion.div>
 
               {/* Title */}
