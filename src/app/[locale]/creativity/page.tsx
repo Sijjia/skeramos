@@ -5,7 +5,11 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
-import { Palette, GraduationCap, Home, Gift, Clock, Users } from 'lucide-react';
+import {
+  Palette, GraduationCap, Home, Gift, Clock, Users,
+  Sparkles, Heart, Camera, Package, Award, Smile,
+  Shield, Lock, Eye, Key, Coffee
+} from 'lucide-react';
 
 import { Footer } from '@/components/layout/Footer';
 import { OnboardingHint, StickyCTA, FAQAccordion } from '@/components/features';
@@ -153,6 +157,27 @@ const ADVANTAGES = [
     description: 'Программы для детей, взрослых и семейных групп',
   },
 ];
+
+// What you get data
+const WHAT_YOU_GET = [
+  { Icon: Sparkles, title: 'Все материалы включены', description: 'Глина, глазурь, инструменты' },
+  { Icon: GraduationCap, title: 'Работа с мастером', description: 'Индивидуальное сопровождение' },
+  { Icon: Camera, title: 'Фотосессия', description: 'Фото процесса и результата' },
+  { Icon: Package, title: 'Упаковка изделия', description: 'Красивая подарочная упаковка' },
+  { Icon: Award, title: 'Сертификат', description: 'Именной сертификат участника' },
+  { Icon: Coffee, title: 'Чай и угощения', description: 'Напитки и сладости во время МК' },
+  { Icon: Heart, title: 'Тёплая атмосфера', description: 'Музыка и уютная обстановка' },
+  { Icon: Smile, title: 'Положительные эмоции', description: 'Гарантия хорошего настроения' },
+];
+
+// Security data (for hotel guests)
+const SECURITY = [
+  { Icon: Lock, title: 'Сейфы в номерах', description: 'Индивидуальный сейф для ценных вещей' },
+  { Icon: Eye, title: 'Видеонаблюдение', description: 'Камеры на всей территории' },
+  { Icon: Shield, title: 'Охрана', description: 'Круглосуточная охрана' },
+  { Icon: Key, title: 'Собственные ключи', description: 'Электронный ключ от номера' },
+];
+
 
 export default function CreativityPage() {
   const { setZone } = useZone();
@@ -444,6 +469,48 @@ export default function CreativityPage() {
                   <p className="text-neutral-400 text-sm">
                     {adv.description}
                   </p>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* What You Get Section */}
+        <section className="py-24 md:py-32">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-100px' }}
+              variants={staggerContainer}
+              className="text-center mb-16"
+            >
+              <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
+                Включено
+              </motion.span>
+              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-white mt-4">
+                Что вы получите?
+              </motion.h2>
+            </motion.div>
+
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-50px' }}
+              variants={staggerContainer}
+              className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            >
+              {WHAT_YOU_GET.map((item) => (
+                <motion.div
+                  key={item.title}
+                  variants={cardVariants}
+                  className="glass-card p-6 text-center"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-zone-500/10 flex items-center justify-center mx-auto mb-4">
+                    <item.Icon className="w-7 h-7 text-zone-500" strokeWidth={1.5} />
+                  </div>
+                  <h3 className="font-semibold text-white mb-1">{item.title}</h3>
+                  <p className="text-sm text-neutral-400">{item.description}</p>
                 </motion.div>
               ))}
             </motion.div>
