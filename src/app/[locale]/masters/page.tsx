@@ -3,16 +3,32 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
 import { useZone } from '@/contexts/ZoneContext';
+import { Award, Star, Users, MessageCircle } from 'lucide-react';
 
 import { Footer } from '@/components/layout/Footer';
 import { FadeInOnScroll } from '@/components/animations/OptimizedAnimations';
 import { EtnoPatternOverlay, GlowingAccent, SectionDivider } from '@/components/animations/EtnoDecorations';
 
+// Master type with achievements
+interface Master {
+  id: string;
+  slug: string;
+  name: string;
+  role: string;
+  photo: string;
+  experience: string;
+  specialization: string;
+  quote: string;
+  worksCount: number;
+  achievements: string[];
+  whatsapp?: string;
+}
+
 // Mock data - будет заменено на данные из Sanity
-const MASTERS = [
+const MASTERS: Master[] = [
   {
     id: '1',
     slug: 'aigul-satarova',
@@ -23,6 +39,13 @@ const MASTERS = [
     specialization: 'Традиционная кыргызская керамика',
     quote: 'Керамика — это медитация. Каждое изделие несёт частичку души мастера.',
     worksCount: 48,
+    achievements: [
+      'Лауреат "Мастер года" 2024',
+      'Участник выставки Craft Bishkek',
+      'Обучение в Ташкенте и Москве',
+      'Более 500 учеников',
+    ],
+    whatsapp: '996555123456',
   },
   {
     id: '2',
@@ -34,6 +57,12 @@ const MASTERS = [
     specialization: 'Современные техники',
     quote: 'На гончарном круге время останавливается.',
     worksCount: 35,
+    achievements: [
+      'Специалист по центровке',
+      'Ведущий корпоративных МК',
+      'Сертификат ICA (Италия)',
+    ],
+    whatsapp: '996555123457',
   },
   {
     id: '3',
@@ -45,8 +74,19 @@ const MASTERS = [
     specialization: 'Авторская роспись',
     quote: 'В каждом орнаменте — история нашего народа.',
     worksCount: 62,
+    achievements: [
+      'Художник-оформитель',
+      'Автор уникальных орнаментов',
+      'Участник 10+ выставок',
+    ],
+    whatsapp: '996555123458',
   },
 ];
+
+function getWhatsAppLink(phone: string, masterName: string): string {
+  const message = encodeURIComponent(`Здравствуйте! Хочу записаться на мастер-класс к ${masterName}`);
+  return `https://wa.me/${phone}?text=${message}`;
+}
 
 export default function MastersPage() {
   const { setZone } = useZone();
@@ -97,10 +137,10 @@ export default function MastersPage() {
                   delay={index * 0.1}
                   className="group"
                 >
-                  <Link href={`/${locale}/masters/${master.slug}`}>
-                    <article className="glass-card overflow-hidden gpu-lift">
-                      {/* Photo */}
-                      <div className="relative aspect-[4/5] overflow-hidden">
+                  <article className="glass-card overflow-hidden">
+                    {/* Photo */}
+                    <Link href={`/${locale}/masters/${master.slug}`}>
+                      <div className="relative aspect-[4/3] overflow-hidden">
                         <Image
                           src={master.photo}
                           alt={master.name}
@@ -113,42 +153,73 @@ export default function MastersPage() {
                         <div className="absolute top-4 right-4 px-3 py-1 rounded-full glass text-white text-sm">
                           {master.worksCount} работ
                         </div>
-
-                        {/* Quote on hover */}
-                        <motion.div
-                          className="absolute bottom-0 left-0 right-0 p-6"
-                          initial={{ opacity: 0, y: 20 }}
-                          whileHover={{ opacity: 1, y: 0 }}
-                        >
-                          <p className="text-white/80 text-sm italic line-clamp-2">
-                            "{master.quote}"
-                          </p>
-                        </motion.div>
                       </div>
+                    </Link>
 
-                      {/* Info */}
-                      <div className="p-6">
+                    {/* Info */}
+                    <div className="p-6">
+                      <Link href={`/${locale}/masters/${master.slug}`}>
                         <h2 className="text-xl font-display font-medium text-white mb-1 group-hover:text-zone-300 transition-colors">
                           {master.name}
                         </h2>
-                        <p className="text-neutral-400 text-sm mb-3">
-                          {master.role}
-                        </p>
+                      </Link>
+                      <p className="text-neutral-400 text-sm mb-2">
+                        {master.role}
+                      </p>
+                      <p className="text-zone-400 text-sm mb-4">
+                        {master.experience} | {master.specialization}
+                      </p>
 
-                        <div className="flex items-center justify-between">
-                          <span className="text-zone-400 text-sm">
-                            {master.experience}
-                          </span>
-                          <span className="text-neutral-500 text-sm flex items-center gap-1 group-hover:text-zone-400 transition-colors">
-                            Подробнее
-                            <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </span>
+                      {/* Quote */}
+                      <p className="text-neutral-300 text-sm italic mb-4 line-clamp-2">
+                        "{master.quote}"
+                      </p>
+
+                      {/* Achievements */}
+                      {master.achievements && master.achievements.length > 0 && (
+                        <div className="mb-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Award className="w-4 h-4 text-zone-500" />
+                            <span className="text-sm text-neutral-400">Достижения</span>
+                          </div>
+                          <ul className="space-y-1">
+                            {master.achievements.slice(0, 3).map((achievement, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm text-neutral-300">
+                                <Star className="w-3 h-3 text-zone-500 mt-1 flex-shrink-0" />
+                                <span>{achievement}</span>
+                              </li>
+                            ))}
+                            {master.achievements.length > 3 && (
+                              <li className="text-sm text-neutral-500">
+                                +{master.achievements.length - 3} ещё...
+                              </li>
+                            )}
+                          </ul>
                         </div>
+                      )}
+
+                      {/* Actions */}
+                      <div className="flex gap-2 pt-4 border-t border-white/10">
+                        <Link
+                          href={`/${locale}/masters/${master.slug}`}
+                          className="flex-1 py-2 text-center text-sm text-neutral-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                        >
+                          Подробнее
+                        </Link>
+                        {master.whatsapp && (
+                          <a
+                            href={getWhatsAppLink(master.whatsapp, master.name)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 px-4 py-2 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-lg text-sm font-medium transition-colors"
+                          >
+                            <MessageCircle className="w-4 h-4" />
+                            WhatsApp
+                          </a>
+                        )}
                       </div>
-                    </article>
-                  </Link>
+                    </div>
+                  </article>
                 </FadeInOnScroll>
               ))}
             </div>
