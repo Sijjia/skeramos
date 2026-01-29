@@ -105,7 +105,7 @@ export function SplitScreen() {
               transition={{ duration: 0.8 }}
             />
 
-            {/* Content */}
+            {/* Content - simplified */}
             <motion.div
               className="relative z-10 text-center text-white px-8 max-w-md"
               animate={{
@@ -116,7 +116,7 @@ export function SplitScreen() {
               transition={{ duration: 0.3 }}
             >
               <motion.h2
-                className="text-3xl md:text-5xl lg:text-6xl font-display font-semibold mb-3"
+                className="text-3xl md:text-5xl lg:text-6xl font-display font-semibold mb-4"
                 animate={{
                   y: isHovered ? -5 : 0,
                 }}
@@ -126,26 +126,16 @@ export function SplitScreen() {
               </motion.h2>
 
               <motion.p
-                className="text-base md:text-lg lg:text-xl text-white/80 mb-2"
+                className="text-base md:text-lg text-white/70"
                 animate={{
                   opacity: isHovered ? 1 : 0.7,
-                }}
-                transition={{ duration: 0.3 }}
-              >
-                {subtitle}
-              </motion.p>
-
-              <motion.p
-                className="text-sm md:text-base text-white/60 italic"
-                animate={{
-                  opacity: isHovered ? 0.9 : 0.5,
                 }}
                 transition={{ duration: 0.3 }}
               >
                 {slogan}
               </motion.p>
 
-              {/* Hover button - always visible on mobile, hover-triggered on desktop */}
+              {/* Hover button */}
               <div
                 className={`mt-8 transition-all duration-300 md:opacity-0 md:translate-y-5 ${isHovered ? 'md:opacity-100 md:translate-y-0' : ''}`}
               >
