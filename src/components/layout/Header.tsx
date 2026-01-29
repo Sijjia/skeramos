@@ -65,14 +65,17 @@ export function Header() {
                 <NavLink href={`/${locale}/creativity`}>
                   Главная
                 </NavLink>
-                <NavLink href={`/${locale}/creativity#masterclasses`}>
-                  {t('masterclasses')}
+                <NavLink href={`/${locale}/creativity#about`}>
+                  О нас
                 </NavLink>
                 <NavLink href={`/${locale}/services`}>
                   {t('services') || 'Услуги'}
                 </NavLink>
                 <NavLink href={`/${locale}/masters`}>
                   {t('masters') || 'Мастера'}
+                </NavLink>
+                <NavLink href={`/${locale}/afisha`}>
+                  Афиша
                 </NavLink>
                 <NavLink href={`/${locale}/gallery`}>
                   {t('gallery') || 'Галерея'}
@@ -85,9 +88,6 @@ export function Header() {
                 </NavLink>
                 <NavLink href={`/${locale}/hotel/rooms`}>
                   {t('rooms')}
-                </NavLink>
-                <NavLink href={`/${locale}/hotel/cinema`}>
-                  {t('cinema') || 'Кинозал'}
                 </NavLink>
                 <NavLink href={`/${locale}/hotel/packages`}>
                   {t('packages') || 'Пакеты'}
@@ -149,10 +149,10 @@ export function Header() {
                     Главная
                   </MobileNavLink>
                   <MobileNavLink
-                    href={`/${locale}/creativity#masterclasses`}
+                    href={`/${locale}/creativity#about`}
                     onClick={() => setMenuOpen(false)}
                   >
-                    {t('masterclasses')}
+                    О нас
                   </MobileNavLink>
                   <MobileNavLink
                     href={`/${locale}/services`}
@@ -165,6 +165,12 @@ export function Header() {
                     onClick={() => setMenuOpen(false)}
                   >
                     {t('masters') || 'Мастера'}
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href={`/${locale}/afisha`}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Афиша
                   </MobileNavLink>
                   <MobileNavLink
                     href={`/${locale}/gallery`}
@@ -186,12 +192,6 @@ export function Header() {
                     onClick={() => setMenuOpen(false)}
                   >
                     {t('rooms')}
-                  </MobileNavLink>
-                  <MobileNavLink
-                    href={`/${locale}/hotel/cinema`}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {t('cinema') || 'Кинозал'}
                   </MobileNavLink>
                   <MobileNavLink
                     href={`/${locale}/hotel/packages`}
@@ -288,7 +288,7 @@ function SpiralToggle({ zone, onToggle }: SpiralToggleProps) {
       <motion.div
         className="absolute inset-0 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity"
         animate={{
-          backgroundColor: isCreativity ? '#5a7c48' : '#c42d54',
+          backgroundColor: isCreativity ? '#a93b24' : '#216b5e',
         }}
         transition={{ duration: 0.5 }}
       />
@@ -298,8 +298,8 @@ function SpiralToggle({ zone, onToggle }: SpiralToggleProps) {
         className="relative w-14 h-14 rounded-full border border-white/20 flex items-center justify-center overflow-hidden"
         animate={{
           backgroundColor: isCreativity
-            ? 'rgba(90, 124, 72, 0.3)'
-            : 'rgba(196, 45, 84, 0.3)',
+            ? 'rgba(169, 59, 36, 0.3)'
+            : 'rgba(33, 107, 94, 0.3)',
         }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -330,14 +330,14 @@ function SpiralToggle({ zone, onToggle }: SpiralToggleProps) {
           className="w-1.5 h-1.5 rounded-full"
           animate={{
             scale: isCreativity ? 1.3 : 0.8,
-            backgroundColor: isCreativity ? '#7a9c68' : '#4a4a4a',
+            backgroundColor: isCreativity ? '#a93b24' : '#4a4a4a',
           }}
         />
         <motion.div
           className="w-1.5 h-1.5 rounded-full"
           animate={{
             scale: !isCreativity ? 1.3 : 0.8,
-            backgroundColor: !isCreativity ? '#dc4b6f' : '#4a4a4a',
+            backgroundColor: !isCreativity ? '#216b5e' : '#4a4a4a',
           }}
         />
       </div>
