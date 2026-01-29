@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
+import { Palette, GraduationCap, Home, Gift, Clock, Users } from 'lucide-react';
 
 import { Footer } from '@/components/layout/Footer';
 import { OnboardingHint, StickyCTA, FAQAccordion } from '@/components/features';
@@ -119,27 +120,37 @@ const GALLERY_ITEMS = [
 ];
 
 
-// Advantages data
+// Advantages data with Lucide icons
 const ADVANTAGES = [
   {
-    icon: '🎨',
+    Icon: Palette,
     title: 'Уникальный опыт',
     description: 'Создайте что-то своими руками и заберите на память',
   },
   {
-    icon: '👨‍🏫',
+    Icon: GraduationCap,
     title: 'Опытные мастера',
     description: 'Наши преподаватели — профессионалы с многолетним опытом',
   },
   {
-    icon: '🏠',
+    Icon: Home,
     title: 'Уютная атмосфера',
     description: 'Творческое пространство, где хочется создавать',
   },
   {
-    icon: '🎁',
+    Icon: Gift,
     title: 'Всё включено',
     description: 'Материалы, обжиг и упаковка входят в стоимость',
+  },
+  {
+    Icon: Clock,
+    title: 'Гибкий график',
+    description: 'Занятия в удобное для вас время, включая выходные',
+  },
+  {
+    Icon: Users,
+    title: 'Для всех возрастов',
+    description: 'Программы для детей, взрослых и семейных групп',
   },
 ];
 
@@ -406,9 +417,9 @@ export default function CreativityPage() {
               whileInView="visible"
               viewport={{ once: true, margin: '-50px' }}
               variants={staggerContainer}
-              className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
-              {ADVANTAGES.map((adv, index) => (
+              {ADVANTAGES.map((adv) => (
                 <motion.div
                   key={adv.title}
                   variants={cardVariants}
@@ -421,11 +432,11 @@ export default function CreativityPage() {
                   style={{ transformStyle: 'preserve-3d' }}
                 >
                   <motion.div
-                    className="text-5xl mb-4"
+                    className="mb-4 flex justify-center"
                     whileHover={{ scale: 1.2, rotate: [0, -10, 10, 0] }}
                     transition={{ duration: 0.4 }}
                   >
-                    {adv.icon}
+                    <adv.Icon className="w-12 h-12 text-zone-500" strokeWidth={1.5} />
                   </motion.div>
                   <h3 className="text-xl font-display font-medium text-white mb-2">
                     {adv.title}

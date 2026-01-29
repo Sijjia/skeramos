@@ -1,5 +1,5 @@
 /* Google Fonts - must be first */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
 @import "tailwindcss";
 
@@ -29,31 +29,31 @@
   --gold-500: #d4a574;
   --gold-600: #b8860b;
 
-  /* Creativity zone - Earth/Forest */
-  --creativity-50: #f4f7f2;
-  --creativity-100: #e4ebe0;
-  --creativity-200: #c8d7bf;
-  --creativity-300: #a3bc95;
-  --creativity-400: #7a9c68;
-  --creativity-500: #5a7c48;
-  --creativity-600: #456338;
-  --creativity-700: #374f2d;
-  --creativity-800: #2d4026;
-  --creativity-900: #1a2617;
-  --creativity-950: #0f160d;
+  /* Creativity zone - Terracotta #A93B24 */
+  --creativity-50: #fef6f5;
+  --creativity-100: #fdeae8;
+  --creativity-200: #fbd6d2;
+  --creativity-300: #f7b1a9;
+  --creativity-400: #f0847a;
+  --creativity-500: #e5554a;
+  --creativity-600: #d03d32;
+  --creativity-700: #a93b24;
+  --creativity-800: #8c3320;
+  --creativity-900: #732f1f;
+  --creativity-950: #3e150d;
 
-  /* Hotel zone - Luxury Burgundy */
-  --hotel-50: #fdf4f6;
-  --hotel-100: #fce7eb;
-  --hotel-200: #f9cfd9;
-  --hotel-300: #f4a7ba;
-  --hotel-400: #eb7693;
-  --hotel-500: #dc4b6f;
-  --hotel-600: #c42d54;
-  --hotel-700: #a52145;
-  --hotel-800: #8a1e3d;
-  --hotel-900: #5c1428;
-  --hotel-950: #330a16;
+  /* Hotel zone - Emerald #216B5E */
+  --hotel-50: #f0fdf8;
+  --hotel-100: #d0f9ec;
+  --hotel-200: #a3f2db;
+  --hotel-300: #6ee5c6;
+  --hotel-400: #3acfab;
+  --hotel-500: #1db592;
+  --hotel-600: #129278;
+  --hotel-700: #216b5e;
+  --hotel-800: #1a584d;
+  --hotel-900: #194940;
+  --hotel-950: #092c26;
 
   /* Default to creativity zone */
   --zone-50: var(--creativity-50);
@@ -86,7 +86,7 @@
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-/* Creativity Zone */
+/* Creativity Zone - Light Theme */
 [data-zone="creativity"] {
   --zone-50: var(--creativity-50);
   --zone-100: var(--creativity-100);
@@ -100,12 +100,23 @@
   --zone-900: var(--creativity-900);
   --zone-950: var(--creativity-950);
 
-  --background: var(--creativity-950);
-  --background-soft: var(--creativity-900);
+  /* Light theme backgrounds */
+  --background: #faf8f5;
+  --background-soft: #f5f2ed;
+  --background-card: rgba(255, 255, 255, 0.8);
+  --foreground: var(--neutral-800);
+  --foreground-muted: var(--neutral-500);
   --primary-glow: var(--creativity-400);
+  --border: rgba(169, 59, 36, 0.1);
+  --border-light: rgba(169, 59, 36, 0.2);
+
+  /* Glass effects for light theme */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(169, 59, 36, 0.15);
+  --glass-shadow: 0 8px 32px rgba(169, 59, 36, 0.1);
 }
 
-/* Hotel Zone */
+/* Hotel Zone - Light Theme */
 [data-zone="hotel"] {
   --zone-50: var(--hotel-50);
   --zone-100: var(--hotel-100);
@@ -119,9 +130,20 @@
   --zone-900: var(--hotel-900);
   --zone-950: var(--hotel-950);
 
-  --background: var(--hotel-950);
-  --background-soft: var(--hotel-900);
+  /* Light theme backgrounds */
+  --background: #f8f6f4;
+  --background-soft: #f0eeeb;
+  --background-card: rgba(255, 255, 255, 0.8);
+  --foreground: var(--neutral-800);
+  --foreground-muted: var(--neutral-500);
   --primary-glow: var(--hotel-400);
+  --border: rgba(33, 107, 94, 0.1);
+  --border-light: rgba(33, 107, 94, 0.2);
+
+  /* Glass effects for light theme */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(33, 107, 94, 0.15);
+  --glass-shadow: 0 8px 32px rgba(33, 107, 94, 0.1);
 }
 
 /* Tailwind v4 Theme */
@@ -174,7 +196,7 @@
   --color-hotel-600: var(--hotel-600);
 
   /* Fonts */
-  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-display: 'Montserrat', system-ui, sans-serif;
   --font-sans: 'Montserrat', system-ui, sans-serif;
 
   /* Spacing */
@@ -201,10 +223,26 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   line-height: 1.7;
-  transition: background-color 0.8s ease, color 0.5s ease;
+  transition: background-color 0.5s ease, color 0.3s ease;
   overflow-x: hidden;
   position: relative;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Light theme text colors */
+[data-zone="creativity"] .text-white,
+[data-zone="hotel"] .text-white {
+  color: var(--neutral-800);
+}
+
+[data-zone="creativity"] .text-neutral-300,
+[data-zone="hotel"] .text-neutral-300 {
+  color: var(--neutral-600);
+}
+
+[data-zone="creativity"] .text-neutral-400,
+[data-zone="hotel"] .text-neutral-400 {
+  color: var(--neutral-500);
 }
 
 /* Fix for iOS fixed positioning */
@@ -244,30 +282,20 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .glass-card {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.02) 100%
-  );
+  background: var(--glass-bg);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--glass-border);
   border-radius: 1.5rem;
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: var(--glass-shadow);
 }
 
 .glass-card:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(255, 255, 255, 0.04) 100%
-  );
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.85);
+  border-color: var(--border-light);
   box-shadow:
-    0 16px 48px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 16px 48px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
   transform: translateY(-4px);
 }
 
@@ -300,11 +328,11 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Zone-specific glows */
 [data-zone="creativity"] .zone-glow {
-  box-shadow: 0 0 60px rgba(90, 124, 72, 0.4);
+  box-shadow: 0 0 60px rgba(169, 59, 36, 0.4);
 }
 
 [data-zone="hotel"] .zone-glow {
-  box-shadow: 0 0 60px rgba(165, 33, 69, 0.4);
+  box-shadow: 0 0 60px rgba(33, 107, 94, 0.4);
 }
 
 /* ==========================================================================

@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
+import { Bed, Tv, Palette, Car, Wifi, Shield } from 'lucide-react';
 
 import { Footer } from '@/components/layout/Footer';
 import { OnboardingHint, StickyCTA, FAQAccordion, RoomCard, PackageCard } from '@/components/features';
@@ -61,27 +62,37 @@ function getWhatsAppLink(serviceName: string): string {
   return `https://wa.me/${phone}?text=${message}`;
 }
 
-// Hotel features
+// Hotel features with Lucide icons
 const HOTEL_FEATURES = [
   {
-    icon: '🛏️',
+    Icon: Bed,
     title: 'Уютные номера',
     description: 'Комфортные номера с современным ремонтом и всем необходимым',
   },
   {
-    icon: '🎬',
+    Icon: Tv,
     title: 'Приватный кинозал',
     description: 'Смотрите фильмы на большом экране в романтической обстановке',
   },
   {
-    icon: '🎨',
+    Icon: Palette,
     title: 'Мастер-классы рядом',
     description: 'Совместите отдых с творчеством — мастерская в том же здании',
   },
   {
-    icon: '🚗',
+    Icon: Car,
     title: 'Бесплатная парковка',
     description: 'Охраняемая парковка для гостей отеля',
+  },
+  {
+    Icon: Wifi,
+    title: 'Бесплатный Wi-Fi',
+    description: 'Высокоскоростной интернет во всех номерах и общих зонах',
+  },
+  {
+    Icon: Shield,
+    title: 'Безопасность',
+    description: 'Видеонаблюдение, сейфы в номерах и круглосуточная охрана',
   },
 ];
 
@@ -159,7 +170,7 @@ export default function HotelPage() {
               {/* Badge */}
               <motion.div variants={fadeInUp} className="mb-6">
                 <span className="inline-block px-4 py-2 rounded-full glass text-sm text-zone-300 font-medium">
-                  Мини-отель в центре Бишкека
+                  Бутик-отель в сердце Кыргызстана
                 </span>
               </motion.div>
 
@@ -255,7 +266,7 @@ export default function HotelPage() {
                 Почему мы
               </motion.span>
               <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-white mt-4">
-                Особенности отеля
+                Преимущества отеля
               </motion.h2>
             </motion.div>
 
@@ -264,7 +275,7 @@ export default function HotelPage() {
               whileInView="visible"
               viewport={{ once: true, margin: '-50px' }}
               variants={staggerContainer}
-              className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
               {HOTEL_FEATURES.map((feature) => (
                 <motion.div
@@ -274,11 +285,11 @@ export default function HotelPage() {
                   className="glass-card p-8 text-center group cursor-pointer"
                 >
                   <motion.div
-                    className="text-5xl mb-4"
+                    className="mb-4 flex justify-center"
                     whileHover={{ scale: 1.2, rotate: [0, -10, 10, 0] }}
                     transition={{ duration: 0.4 }}
                   >
-                    {feature.icon}
+                    <feature.Icon className="w-12 h-12 text-zone-500" strokeWidth={1.5} />
                   </motion.div>
                   <h3 className="text-xl font-display font-medium text-white mb-2">
                     {feature.title}

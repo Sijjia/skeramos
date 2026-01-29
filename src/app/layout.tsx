@@ -1,24 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin", "cyrillic"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
   title: "Skeramos — Креативный дом",
-  description: "Гончарная мастерская и мини-отель в Бишкеке. Творчество, отдых и вдохновение в одном месте.",
-  keywords: ["Skeramos", "гончарная мастерская", "мини-отель", "Бишкек", "творчество", "керамика"],
+  description: "Творческая арт-студия и бутик-отель в Бишкеке. Творчество, отдых и вдохновение в одном месте.",
+  keywords: ["Skeramos", "творческая арт-студия", "бутик-отель", "Бишкек", "творчество", "керамика", "Кыргызстан"],
   openGraph: {
     title: "Skeramos — Креативный дом",
-    description: "Гончарная мастерская и мини-отель в Бишкеке",
+    description: "Творческая арт-студия и бутик-отель в сердце Кыргызстана",
     type: "website",
   },
 };
@@ -31,7 +27,7 @@ export default function RootLayout({
   return (
     <html data-zone="creativity" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${montserrat.variable} antialiased`}
       >
         {children}
       </body>

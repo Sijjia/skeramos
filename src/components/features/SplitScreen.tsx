@@ -21,15 +21,15 @@ export function SplitScreen() {
       zone: 'creativity' as Zone,
       title: t('creativityTitle'),
       subtitle: t('creativitySubtitle'),
+      slogan: t('creativitySlogan'),
       bgImage: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=1920&q=80',
-      icon: '🎨',
     },
     {
       zone: 'hotel' as Zone,
       title: t('hotelTitle'),
       subtitle: t('hotelSubtitle'),
+      slogan: t('hotelSlogan'),
       bgImage: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1920&q=80',
-      icon: '🏨',
     },
   ];
 
@@ -40,7 +40,7 @@ export function SplitScreen() {
 
   return (
     <div className="fixed inset-0 flex flex-col md:flex-row overflow-hidden" style={{ height: '100dvh' }}>
-      {zones.map(({ zone, title, subtitle, bgImage, icon }) => {
+      {zones.map(({ zone, title, subtitle, slogan, bgImage }) => {
         const isHovered = hoveredZone === zone;
         const isOtherHovered = hoveredZone !== null && hoveredZone !== zone;
         const isCreativity = zone === 'creativity';
@@ -115,20 +115,8 @@ export function SplitScreen() {
               }}
               transition={{ duration: 0.3 }}
             >
-              {/* Icon */}
-              <motion.div
-                className="text-5xl md:text-6xl mb-4"
-                animate={{
-                  scale: isHovered ? 1.2 : 1,
-                  rotate: isHovered ? [0, -10, 10, 0] : 0,
-                }}
-                transition={{ duration: 0.4 }}
-              >
-                {icon}
-              </motion.div>
-
               <motion.h2
-                className="text-3xl md:text-5xl lg:text-6xl font-display font-medium mb-3"
+                className="text-3xl md:text-5xl lg:text-6xl font-display font-semibold mb-3"
                 animate={{
                   y: isHovered ? -5 : 0,
                 }}
@@ -138,13 +126,23 @@ export function SplitScreen() {
               </motion.h2>
 
               <motion.p
-                className="text-base md:text-lg lg:text-xl text-white/80"
+                className="text-base md:text-lg lg:text-xl text-white/80 mb-2"
                 animate={{
                   opacity: isHovered ? 1 : 0.7,
                 }}
                 transition={{ duration: 0.3 }}
               >
                 {subtitle}
+              </motion.p>
+
+              <motion.p
+                className="text-sm md:text-base text-white/60 italic"
+                animate={{
+                  opacity: isHovered ? 0.9 : 0.5,
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                {slogan}
               </motion.p>
 
               {/* Hover button - always visible on mobile, hover-triggered on desktop */}

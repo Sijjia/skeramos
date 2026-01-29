@@ -13,20 +13,22 @@
     "from": "from"
   },
   "zones": {
-    "creativity": "Creativity",
-    "hotel": "Hotel",
+    "creativity": "Creative Art Studio",
+    "hotel": "Boutique Hotel",
     "switchTo": "Switch to {zone}"
   },
   "landing": {
-    "creativityTitle": "Creativity",
-    "creativitySubtitle": "Pottery workshop",
-    "hotelTitle": "Hotel",
-    "hotelSubtitle": "Cozy mini-hotel"
+    "creativityTitle": "Creative Art Studio",
+    "creativitySubtitle": "Creative Workshop",
+    "creativitySlogan": "Shaping happiness with our hands",
+    "hotelTitle": "Boutique Hotel",
+    "hotelSubtitle": "Stay at Boutique Hotel",
+    "hotelSlogan": "Comfort and creativity in every moment"
   },
   "creativity": {
-    "title": "Creativity Zone",
-    "description": "Discover the art of ceramics in our pottery workshop",
-    "heroSubtitle": "Pottery workshop in the heart of Bishkek",
+    "title": "Creative Art Studio",
+    "description": "Discover the art of ceramics in our creative workshop",
+    "heroSubtitle": "Shaping happiness with our hands",
     "masterclasses": "Masterclasses",
     "masterclassesDesc": "Try your hand at pottery under the guidance of experienced masters",
     "masterclassesSubtitle": "For beginners and those who want to try something new",
@@ -40,9 +42,9 @@
     "faqSubtitle": "Answers to popular questions about our masterclasses"
   },
   "hotel": {
-    "title": "Hotel Zone",
-    "description": "A cozy mini-hotel in the heart of Bishkek",
-    "heroSubtitle": "Comfort and coziness in the city center",
+    "title": "Boutique Hotel",
+    "description": "Boutique hotel in the heart of Kyrgyzstan",
+    "heroSubtitle": "Comfort and creativity in every moment",
     "rooms": "Rooms",
     "roomsDesc": "From standard to luxury",
     "roomsSubtitle": "Choose the perfect room for your stay",
