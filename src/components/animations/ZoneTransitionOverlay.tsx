@@ -68,8 +68,9 @@ interface ZoneOverlayProps {
 
 function ZoneOverlay({ zone, onAnimationComplete }: ZoneOverlayProps) {
   const isHotel = zone === 'hotel';
-  const bgColor = isHotel ? '#1a0a10' : '#0a120a';
-  const accentColor = isHotel ? '#c42d54' : '#5a7c48';
+  // Correct colors: Creativity = terracotta, Hotel = emerald
+  const bgColor = isHotel ? '#092420' : '#2d110b';
+  const accentColor = isHotel ? '#216b5e' : '#a93b24';
 
   return (
     <motion.div

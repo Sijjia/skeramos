@@ -39,9 +39,9 @@ export function Header() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? 'bg-neutral-950/90 backdrop-blur-md py-2 shadow-lg'
+          ? 'glass py-2 shadow-lg'
           : 'bg-transparent py-3 md:py-4'
       }`}
       style={{ transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)' }}
@@ -62,7 +62,11 @@ export function Header() {
                 src="/logo.png"
                 alt="Skeramos"
                 fill
-                className="object-contain brightness-0 invert opacity-90 group-hover:opacity-100 transition-opacity"
+                className={`object-contain transition-all ${
+                  scrolled
+                    ? 'brightness-0 opacity-90 group-hover:opacity-100'
+                    : 'brightness-0 invert opacity-90 group-hover:opacity-100'
+                }`}
               />
             </motion.div>
           </Link>
@@ -71,42 +75,42 @@ export function Header() {
           <nav className="hidden lg:flex items-center gap-6">
             {zone === 'creativity' ? (
               <>
-                <NavLink href={`/${locale}/creativity`}>
+                <NavLink href={`/${locale}/creativity`} scrolled={scrolled}>
                   Главная
                 </NavLink>
-                <NavLink href={`/${locale}/creativity#about`}>
+                <NavLink href={`/${locale}/creativity#about`} scrolled={scrolled}>
                   О нас
                 </NavLink>
-                <NavLink href={`/${locale}/services`}>
+                <NavLink href={`/${locale}/services`} scrolled={scrolled}>
                   {t('services') || 'Услуги'}
                 </NavLink>
-                <NavLink href={`/${locale}/masters`}>
+                <NavLink href={`/${locale}/masters`} scrolled={scrolled}>
                   {t('masters') || 'Мастера'}
                 </NavLink>
-                <NavLink href={`/${locale}/afisha`}>
+                <NavLink href={`/${locale}/afisha`} scrolled={scrolled}>
                   Афиша
                 </NavLink>
-                <NavLink href={`/${locale}/gallery`}>
+                <NavLink href={`/${locale}/gallery`} scrolled={scrolled}>
                   {t('gallery') || 'Галерея'}
                 </NavLink>
               </>
             ) : (
               <>
-                <NavLink href={`/${locale}/hotel`}>
+                <NavLink href={`/${locale}/hotel`} scrolled={scrolled}>
                   Главная
                 </NavLink>
-                <NavLink href={`/${locale}/hotel/rooms`}>
+                <NavLink href={`/${locale}/hotel/rooms`} scrolled={scrolled}>
                   {t('rooms')}
                 </NavLink>
-                <NavLink href={`/${locale}/hotel/packages`}>
+                <NavLink href={`/${locale}/hotel/packages`} scrolled={scrolled}>
                   {t('packages') || 'Пакеты'}
                 </NavLink>
-                <NavLink href={`/${locale}/gallery`}>
+                <NavLink href={`/${locale}/gallery`} scrolled={scrolled}>
                   {t('gallery') || 'Галерея'}
                 </NavLink>
               </>
             )}
-            <NavLink href={`/${locale}/contacts`}>
+            <NavLink href={`/${locale}/contacts`} scrolled={scrolled}>
               {t('contacts')}
             </NavLink>
           </nav>
@@ -146,7 +150,7 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-neutral-900/95 backdrop-blur-md mt-2 mx-4 rounded-2xl overflow-hidden border border-white/10"
+            className="lg:hidden glass mt-2 mx-4 rounded-2xl overflow-hidden"
           >
             <nav className="flex flex-col p-4 gap-2">
               {zone === 'creativity' ? (
@@ -233,11 +237,15 @@ export function Header() {
   );
 }
 
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+function NavLink({ href, children, scrolled }: { href: string; children: React.ReactNode; scrolled?: boolean }) {
   return (
     <Link
       href={href}
-      className="relative text-neutral-300 hover:text-white transition-colors link-magic"
+      className={`relative transition-colors link-magic ${
+        scrolled
+          ? 'text-neutral-700 hover:text-neutral-900'
+          : 'text-white/80 hover:text-white'
+      }`}
     >
       {children}
     </Link>
