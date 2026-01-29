@@ -27,8 +27,9 @@ export const galleryItem = defineType({
     }),
     defineField({
       name: 'category',
-      title: 'Категория',
+      title: 'Категория (старое поле)',
       type: 'string',
+      hidden: true, // Скрыто, используем categoryRef
       options: {
         list: [
           { title: 'Работы мастерской', value: 'works' },
@@ -38,6 +39,23 @@ export const galleryItem = defineType({
           { title: 'Отель', value: 'hotel' },
         ],
       },
+    }),
+    defineField({
+      name: 'categoryRef',
+      title: 'Категория',
+      type: 'reference',
+      to: [{ type: 'galleryCategory' }],
+      description: 'Выберите категорию из справочника',
+    }),
+    defineField({
+      name: 'tags',
+      title: 'Теги',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: {
+        layout: 'tags',
+      },
+      description: 'Дополнительные теги для фильтрации',
     }),
     defineField({
       name: 'date',

@@ -74,9 +74,19 @@ export const review = defineType({
           { title: 'Google', value: 'google' },
           { title: '2GIS', value: '2gis' },
           { title: 'Instagram', value: 'instagram' },
+          { title: 'Яндекс', value: 'yandex' },
           { title: 'Сайт', value: 'website' },
         ],
       },
+    }),
+    defineField({
+      name: 'sourceUrl',
+      title: 'Ссылка на источник',
+      type: 'url',
+      description: 'Ссылка на оригинальный отзыв (Google Maps, 2GIS и т.д.)',
+      validation: (Rule) => Rule.uri({
+        scheme: ['http', 'https'],
+      }),
     }),
     defineField({
       name: 'isFeatured',
