@@ -17,7 +17,7 @@ interface FloatingOrbsProps {
   count?: number;
 }
 
-export function FloatingOrbs({ zone = 'creativity', count = 3 }: FloatingOrbsProps) {
+export function FloatingOrbs({ zone = 'creativity', count = 2 }: FloatingOrbsProps) {
   const [isMounted, setIsMounted] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
@@ -25,16 +25,16 @@ export function FloatingOrbs({ zone = 'creativity', count = 3 }: FloatingOrbsPro
     setIsMounted(true);
   }, []);
 
-  // SSR-safe: render empty on server, check motion preference on client
   if (!isMounted) return null;
   if (shouldReduceMotion) return null;
 
-  const color = zone === 'creativity' ? 'rgb(90, 124, 72)' : 'rgb(196, 45, 84)';
+  // Correct zone colors - terracotta for creativity, emerald for hotel
+  const color = zone === 'creativity' ? '#a93b24' : '#216b5e';
 
+  // Simplified - only 2 orbs for performance
   const orbs = [
-    { size: 300, top: '10%', right: '5%', delay: '0s', duration: '20s' },
-    { size: 200, top: '50%', left: '3%', delay: '5s', duration: '25s' },
-    { size: 150, bottom: '20%', right: '10%', delay: '10s', duration: '18s' },
+    { size: 400, top: '10%', right: '-5%' },
+    { size: 300, bottom: '20%', left: '-5%' },
   ].slice(0, count);
 
   return (
@@ -42,7 +42,7 @@ export function FloatingOrbs({ zone = 'creativity', count = 3 }: FloatingOrbsPro
       {orbs.map((orb, i) => (
         <div
           key={i}
-          className="absolute rounded-full animate-float-gentle"
+          className="absolute rounded-full"
           style={{
             width: orb.size,
             height: orb.size,
@@ -50,9 +50,8 @@ export function FloatingOrbs({ zone = 'creativity', count = 3 }: FloatingOrbsPro
             bottom: orb.bottom,
             left: orb.left,
             right: orb.right,
-            background: `radial-gradient(circle, ${color}15 0%, transparent 70%)`,
-            animationDelay: orb.delay,
-            animationDuration: orb.duration,
+            background: `radial-gradient(circle, ${color}20 0%, transparent 70%)`,
+            filter: 'blur(60px)',
           }}
         />
       ))}
@@ -208,7 +207,8 @@ export function GlowingAccent({
   size = 400,
   className = '',
 }: GlowingAccentProps) {
-  const color = zone === 'creativity' ? 'rgb(90, 124, 72)' : 'rgb(196, 45, 84)';
+  // Correct zone colors - terracotta for creativity, emerald for hotel
+  const color = zone === 'creativity' ? '#a93b24' : '#216b5e';
 
   const positions = {
     'top-left': 'top-0 left-0 -translate-x-1/2 -translate-y-1/2',
