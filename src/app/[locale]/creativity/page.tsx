@@ -7,8 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
 import {
   Palette, GraduationCap, Home, Gift, Clock, Users,
-  Sparkles, Heart, Camera, Package, Award, Smile,
-  Shield, Lock, Eye, Key, Coffee
+  Sparkles, Heart, Camera, Package, Award, Smile, Coffee
 } from 'lucide-react';
 
 import { Footer } from '@/components/layout/Footer';
@@ -169,15 +168,6 @@ const WHAT_YOU_GET = [
   { Icon: Heart, title: 'Тёплая атмосфера', description: 'Музыка и уютная обстановка' },
   { Icon: Smile, title: 'Положительные эмоции', description: 'Гарантия хорошего настроения' },
 ];
-
-// Security data (for hotel guests)
-const SECURITY = [
-  { Icon: Lock, title: 'Сейфы в номерах', description: 'Индивидуальный сейф для ценных вещей' },
-  { Icon: Eye, title: 'Видеонаблюдение', description: 'Камеры на всей территории' },
-  { Icon: Shield, title: 'Охрана', description: 'Круглосуточная охрана' },
-  { Icon: Key, title: 'Собственные ключи', description: 'Электронный ключ от номера' },
-];
-
 
 export default function CreativityPage() {
   const { setZone } = useZone();
