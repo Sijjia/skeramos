@@ -48,7 +48,7 @@ export function Header() {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo - always dark for light theme */}
           <Link
             href={`/${locale}/${zone}`}
             className="flex items-center group"
@@ -62,11 +62,7 @@ export function Header() {
                 src="/logo.png"
                 alt="Skeramos"
                 fill
-                className={`object-contain transition-all ${
-                  scrolled
-                    ? 'brightness-0 opacity-90 group-hover:opacity-100'
-                    : 'brightness-0 invert opacity-90 group-hover:opacity-100'
-                }`}
+                className="object-contain brightness-0 opacity-80 group-hover:opacity-100 transition-opacity"
               />
             </motion.div>
           </Link>
@@ -75,44 +71,22 @@ export function Header() {
           <nav className="hidden lg:flex items-center gap-6">
             {zone === 'creativity' ? (
               <>
-                <NavLink href={`/${locale}/creativity`} scrolled={scrolled}>
-                  Главная
-                </NavLink>
-                <NavLink href={`/${locale}/creativity#about`} scrolled={scrolled}>
-                  О нас
-                </NavLink>
-                <NavLink href={`/${locale}/services`} scrolled={scrolled}>
-                  {t('services') || 'Услуги'}
-                </NavLink>
-                <NavLink href={`/${locale}/masters`} scrolled={scrolled}>
-                  {t('masters') || 'Мастера'}
-                </NavLink>
-                <NavLink href={`/${locale}/afisha`} scrolled={scrolled}>
-                  Афиша
-                </NavLink>
-                <NavLink href={`/${locale}/gallery`} scrolled={scrolled}>
-                  {t('gallery') || 'Галерея'}
-                </NavLink>
+                <NavLink href={`/${locale}/creativity`}>Главная</NavLink>
+                <NavLink href={`/${locale}/creativity#about`}>О нас</NavLink>
+                <NavLink href={`/${locale}/services`}>{t('services') || 'Услуги'}</NavLink>
+                <NavLink href={`/${locale}/masters`}>{t('masters') || 'Мастера'}</NavLink>
+                <NavLink href={`/${locale}/afisha`}>Афиша</NavLink>
+                <NavLink href={`/${locale}/gallery`}>{t('gallery') || 'Галерея'}</NavLink>
               </>
             ) : (
               <>
-                <NavLink href={`/${locale}/hotel`} scrolled={scrolled}>
-                  Главная
-                </NavLink>
-                <NavLink href={`/${locale}/hotel/rooms`} scrolled={scrolled}>
-                  {t('rooms')}
-                </NavLink>
-                <NavLink href={`/${locale}/hotel/packages`} scrolled={scrolled}>
-                  {t('packages') || 'Пакеты'}
-                </NavLink>
-                <NavLink href={`/${locale}/gallery`} scrolled={scrolled}>
-                  {t('gallery') || 'Галерея'}
-                </NavLink>
+                <NavLink href={`/${locale}/hotel`}>Главная</NavLink>
+                <NavLink href={`/${locale}/hotel/rooms`}>{t('rooms')}</NavLink>
+                <NavLink href={`/${locale}/hotel/packages`}>{t('packages') || 'Пакеты'}</NavLink>
+                <NavLink href={`/${locale}/gallery`}>{t('gallery') || 'Галерея'}</NavLink>
               </>
             )}
-            <NavLink href={`/${locale}/contacts`} scrolled={scrolled}>
-              {t('contacts')}
-            </NavLink>
+            <NavLink href={`/${locale}/contacts`}>{t('contacts')}</NavLink>
           </nav>
 
           {/* Right side */}
@@ -237,15 +211,11 @@ export function Header() {
   );
 }
 
-function NavLink({ href, children, scrolled }: { href: string; children: React.ReactNode; scrolled?: boolean }) {
+function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <Link
       href={href}
-      className={`relative transition-colors link-magic ${
-        scrolled
-          ? 'text-neutral-700 hover:text-neutral-900'
-          : 'text-white/80 hover:text-white'
-      }`}
+      className="relative text-neutral-700 hover:text-neutral-900 transition-colors link-magic"
     >
       {children}
     </Link>
