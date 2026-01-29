@@ -11,8 +11,25 @@ import { Footer } from '@/components/layout/Footer';
 import { FadeInOnScroll } from '@/components/animations/OptimizedAnimations';
 import { EtnoPatternOverlay, GlowingAccent, SectionDivider } from '@/components/animations/EtnoDecorations';
 
+// Service type with optional external link
+interface Service {
+  id: string;
+  slug: string;
+  title: string;
+  shortDescription: string;
+  fullDescription: string;
+  image: string;
+  price: number;
+  priceNote?: string;
+  duration: string;
+  groupSize: string;
+  includes: string[];
+  category: 'masterclass' | 'course' | 'event';
+  externalLink?: string; // Optional external booking link (e.g., Altegio)
+}
+
 // Mock data - будет из Sanity
-const ALL_SERVICES = [
+const ALL_SERVICES: Service[] = [
   {
     id: '1',
     slug: 'pottery-wheel-intro',
@@ -25,6 +42,7 @@ const ALL_SERVICES = [
     groupSize: '1-4 человека',
     includes: ['Все материалы', 'Работа мастера', 'Обжиг изделия', 'Упаковка'],
     category: 'masterclass',
+    // externalLink: 'https://altegio.com/booking/skeramos/pottery-wheel', // Example
   },
   {
     id: '2',
@@ -277,12 +295,26 @@ export default function ServicesPage() {
                         >
                           Записаться
                         </button>
-                        <Link
-                          href={`/${locale}/services/${service.slug}`}
-                          className="px-6 py-3 glass hover:bg-white/10 text-white rounded-xl font-medium transition-all"
-                        >
-                          Подробнее
-                        </Link>
+                        {service.externalLink ? (
+                          <a
+                            href={service.externalLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-6 py-3 glass hover:bg-white/10 text-white rounded-xl font-medium transition-all"
+                          >
+                            Подробнее
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        ) : (
+                          <Link
+                            href={`/${locale}/services/${service.slug}`}
+                            className="px-6 py-3 glass hover:bg-white/10 text-white rounded-xl font-medium transition-all"
+                          >
+                            Подробнее
+                          </Link>
+                        )}
                       </div>
                     </div>
                   </article>
