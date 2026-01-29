@@ -15,6 +15,7 @@ import { OnboardingHint, StickyCTA, FAQAccordion } from '@/components/features';
 import { FloatingOrbs, EtnoPatternOverlay, SectionDivider, GlowingAccent } from '@/components/animations/EtnoDecorations';
 import { FadeInOnScroll, CountUp } from '@/components/animations/OptimizedAnimations';
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from '@/components/animations/ScrollAnimations';
+import { SThreadAnimation, SThreadDivider } from '@/components/animations/SThreadAnimation';
 import { ReviewsSlider } from '@/components/sections/ReviewsSlider';
 import { useMasterclasses, useCourses, useEvents, useFAQ } from '@/hooks/useSanityData';
 
@@ -204,6 +205,10 @@ export default function CreativityPage() {
           <GlowingAccent position="top-left" zone="creativity" size={500} />
           <GlowingAccent position="bottom-right" zone="creativity" size={400} />
 
+          {/* S-Thread Animation - signature Skeramos element */}
+          <SThreadAnimation position="left" scale={1.2} opacity={0.12} />
+          <SThreadAnimation position="right" scale={1} opacity={0.08} />
+
           <div className="container mx-auto px-4 pt-24 pb-16 relative z-10">
             <motion.div
               initial="hidden"
@@ -312,8 +317,8 @@ export default function CreativityPage() {
           </motion.div>
         </motion.section>
 
-        {/* Этно-разделитель */}
-        <div className="etno-divider" />
+        {/* S-Thread разделитель */}
+        <SThreadDivider />
 
         {/* About Section */}
         <section id="about" className="py-24 md:py-32 relative etno-texture">

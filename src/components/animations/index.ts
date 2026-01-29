@@ -27,3 +27,13 @@ export {
 export { ZoneColorTransition, useZoneColors } from './ZoneColorTransition';
 export { ZoneTransitionProvider, useZoneTransition } from './ZoneTransitionOverlay';
 export { PageTransition } from './PageTransition';
+
+// S-Thread animations (Skeramos signature element)
+export { SThreadAnimation, SThreadDivider, SParticles } from './SThreadAnimation';
+
+// Parallax Hero with dynamic images
+export {
+  ParallaxHero,
+  ParallaxBackground as ParallaxBg,
+  KenBurnsHero,
+} from './ParallaxHero';

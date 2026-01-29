@@ -11,6 +11,7 @@ import { Footer } from '@/components/layout/Footer';
 import { OnboardingHint, StickyCTA, FAQAccordion, RoomCard, PackageCard } from '@/components/features';
 import { FloatingOrbs, EtnoPatternOverlay, GlowingAccent } from '@/components/animations/EtnoDecorations';
 import { CountUp } from '@/components/animations/OptimizedAnimations';
+import { SThreadAnimation, SThreadDivider } from '@/components/animations/SThreadAnimation';
 import { ReviewsSlider } from '@/components/sections/ReviewsSlider';
 import { useRooms, usePackages, useFAQ } from '@/hooks/useSanityData';
 
@@ -141,6 +142,10 @@ export default function HotelPage() {
           <GlowingAccent position="top-left" zone="hotel" size={500} />
           <GlowingAccent position="bottom-right" zone="hotel" size={600} />
 
+          {/* S-Thread Animation - signature Skeramos element */}
+          <SThreadAnimation position="right" scale={1.2} opacity={0.1} />
+          <SThreadAnimation position="left" scale={0.8} opacity={0.06} />
+
           <div className="container mx-auto px-4 pt-24 pb-16 relative z-10">
             <motion.div
               initial="hidden"
@@ -249,8 +254,8 @@ export default function HotelPage() {
           </motion.div>
         </motion.section>
 
-        {/* Этно-разделитель */}
-        <div className="etno-divider" />
+        {/* S-Thread разделитель */}
+        <SThreadDivider />
 
         {/* Features Section */}
         <section className="py-24 bg-zone-950/50 etno-shyrdak">
