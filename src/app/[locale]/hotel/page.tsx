@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
-import { Bed, Tv, Palette, Car, Wifi, Shield } from 'lucide-react';
+import { Bed, Palette, Car, Wifi, Shield } from 'lucide-react';
 
 import { Footer } from '@/components/layout/Footer';
 import { OnboardingHint, StickyCTA, FAQAccordion, RoomCard, PackageCard } from '@/components/features';
@@ -69,11 +69,6 @@ const HOTEL_FEATURES = [
     Icon: Bed,
     title: 'Уютные номера',
     description: 'Комфортные номера с современным ремонтом и всем необходимым',
-  },
-  {
-    Icon: Tv,
-    title: 'Приватный кинозал',
-    description: 'Смотрите фильмы на большом экране в романтической обстановке',
   },
   {
     Icon: Palette,
@@ -412,111 +407,6 @@ export default function HotelPage() {
                 ))}
               </div>
             </motion.div>
-          </div>
-        </section>
-
-        {/* Cinema Section */}
-        <section id="cinema" className="py-24 bg-zone-950/50 etno-tunduk">
-          <div className="container mx-auto px-4">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid lg:grid-cols-2 gap-12 items-center">
-                {/* Image */}
-                <motion.div
-                  initial={{ opacity: 0, x: -50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                  className="relative"
-                >
-                  <div className="relative aspect-video rounded-3xl overflow-hidden">
-                    <Image
-                      src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&q=80"
-                      alt="Приватный кинозал"
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-background/60 to-transparent" />
-                  </div>
-
-                  {/* Play button overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <motion.div
-                      whileHover={{ scale: 1.1 }}
-                      className="w-20 h-20 rounded-full glass flex items-center justify-center cursor-pointer"
-                    >
-                      <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </motion.div>
-                  </div>
-                </motion.div>
-
-                {/* Content */}
-                <motion.div
-                  initial={{ opacity: 0, x: 50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                >
-                  <span className="text-zone-400 text-sm font-medium tracking-wider uppercase">
-                    Эксклюзив
-                  </span>
-                  <h2 className="text-3xl md:text-5xl font-display font-medium text-white mt-4 mb-6">
-                    {t('cinema')}
-                  </h2>
-                  <p className="text-neutral-300 mb-6">
-                    {t('cinemaSubtitle')}
-                  </p>
-
-                  <div className="space-y-4 mb-8">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-zone-500/20 flex items-center justify-center">
-                        <span className="text-xl">🎬</span>
-                      </div>
-                      <div>
-                        <div className="text-white font-medium">Большой экран 120"</div>
-                        <div className="text-sm text-neutral-400">Проектор Full HD</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-zone-500/20 flex items-center justify-center">
-                        <span className="text-xl">🔊</span>
-                      </div>
-                      <div>
-                        <div className="text-white font-medium">Объёмный звук</div>
-                        <div className="text-sm text-neutral-400">Система 5.1</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-zone-500/20 flex items-center justify-center">
-                        <span className="text-xl">🛋️</span>
-                      </div>
-                      <div>
-                        <div className="text-white font-medium">До 6 человек</div>
-                        <div className="text-sm text-neutral-400">Мягкие диваны и пледы</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-6">
-                    <div>
-                      <div className="text-3xl font-display font-bold text-zone-400">
-                        3 000 сом
-                      </div>
-                      <div className="text-sm text-neutral-400">за час</div>
-                    </div>
-                    <a
-                      href={getWhatsAppLink('Кинозал')}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-6 py-3 bg-zone-500 hover:bg-zone-600 text-white rounded-xl font-medium transition-all hover-lift"
-                    >
-                      Забронировать
-                    </a>
-                  </div>
-                </motion.div>
-              </div>
-            </div>
           </div>
         </section>
 

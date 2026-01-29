@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
 import { LanguageSwitcher } from '@/components/features/LanguageSwitcher';
@@ -13,9 +13,13 @@ import { useZoneTransition } from '@/components/animations/ZoneTransitionOverlay
 export function Header() {
   const { zone, toggleZone } = useZone();
   const locale = useLocale();
+  const pathname = usePathname();
   const t = useTranslations('header');
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Hide header on landing/split screen page
+  const isLandingPage = pathname === `/${locale}` || pathname === `/${locale}/`;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,6 +28,11 @@ export function Header() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Don't render header on landing page
+  if (isLandingPage) {
+    return null;
+  }
 
   return (
     <motion.header

@@ -229,20 +229,45 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Light theme text colors */
-[data-zone="creativity"] .text-white,
-[data-zone="hotel"] .text-white {
-  color: var(--neutral-800);
+/* Light theme text colors - ONLY for body sections, NOT for dark areas */
+/* Dark backgrounds (gradient-mesh, zone-950, glass-card, fixed overlays) keep white text */
+
+/* Override text-white ONLY in light-background areas (not hero, not glass, not dark sections) */
+[data-zone="creativity"] main > section:not(.gradient-mesh):not(.etno-texture):not(.bg-zone-950\/50) > div > .text-white,
+[data-zone="hotel"] main > section:not(.gradient-mesh):not(.etno-texture):not(.bg-zone-950\/50) > div > .text-white {
+  /* Don't override - keep white text as-is in most sections */
 }
 
-[data-zone="creativity"] .text-neutral-300,
-[data-zone="hotel"] .text-neutral-300 {
-  color: var(--neutral-600);
+/* Hero sections and dark backgrounds always keep white text */
+.gradient-mesh .text-white,
+.gradient-radial .text-white,
+.bg-zone-950\/50 .text-white,
+.etno-texture .text-white,
+.glass-card .text-white,
+.glass .text-white,
+[class*="bg-zone-9"] .text-white,
+[class*="bg-zone-8"] .text-white {
+  color: white !important;
 }
 
-[data-zone="creativity"] .text-neutral-400,
-[data-zone="hotel"] .text-neutral-400 {
-  color: var(--neutral-500);
+.gradient-mesh .text-neutral-300,
+.gradient-radial .text-neutral-300,
+.bg-zone-950\/50 .text-neutral-300,
+.etno-texture .text-neutral-300,
+.glass-card .text-neutral-300,
+[class*="bg-zone-9"] .text-neutral-300,
+[class*="bg-zone-8"] .text-neutral-300 {
+  color: #c4bfb6 !important;
+}
+
+.gradient-mesh .text-neutral-400,
+.gradient-radial .text-neutral-400,
+.bg-zone-950\/50 .text-neutral-400,
+.etno-texture .text-neutral-400,
+.glass-card .text-neutral-400,
+[class*="bg-zone-9"] .text-neutral-400,
+[class*="bg-zone-8"] .text-neutral-400 {
+  color: #9a948a !important;
 }
 
 /* Fix for iOS fixed positioning */
@@ -290,11 +315,15 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--glass-shadow);
 }
 
+.glass-card {
+  transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
 .glass-card:hover {
   background: rgba(255, 255, 255, 0.85);
   border-color: var(--border-light);
   box-shadow:
-    0 16px 48px rgba(0, 0, 0, 0.12),
+    0 12px 40px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
   transform: translateY(-4px);
 }
@@ -475,34 +504,40 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ==========================================================================
-   Hover Effects
+   Hover Effects - Smooth and Premium
    ========================================================================== */
 
 .hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+              box-shadow 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .hover-lift:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
 }
 
 .hover-scale {
-  transition: transform 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .hover-scale:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 .hover-glow {
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .hover-glow:hover {
   box-shadow:
-    0 0 30px var(--primary-glow),
-    0 10px 40px rgba(0, 0, 0, 0.3);
+    0 0 25px var(--primary-glow),
+    0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Smooth hover for all interactive elements */
+.hover-smooth {
+  transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 /* Link underline */
@@ -519,7 +554,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 0;
   height: 2px;
   background: linear-gradient(90deg, var(--zone-400), var(--gold-500));
-  transition: width 0.4s ease;
+  transition: width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .link-magic:hover::after {
@@ -559,9 +594,9 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(0);
 }
 
-/* All buttons - base hover */
+/* All buttons - base hover - smoother transitions */
 button, a[href] {
-  transition: all 0.2s ease;
+  transition: all 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 /* Glass button hover */
