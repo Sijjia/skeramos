@@ -382,17 +382,17 @@ export default function ServicesPage() {
                     setSelectedService(null);
                     setContactMethod(null);
                   }}
-                  className="absolute top-4 right-4 w-8 h-8 rounded-full glass flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-700 hover:bg-neutral-200 transition-colors"
                 >
                   ×
                 </button>
 
-                <h3 className="text-xl font-display font-medium text-white mb-2">
+                <h3 className="text-xl font-display font-medium card-title mb-2">
                   Записаться на
                 </h3>
-                <p className="text-zone-400 mb-6">{selectedServiceData.title}</p>
+                <p className="text-zone-500 mb-6">{selectedServiceData.title}</p>
 
-                <p className="text-neutral-300 text-sm mb-6">
+                <p className="card-text text-sm mb-6">
                   Выберите удобный способ связи:
                 </p>
 
@@ -401,7 +401,7 @@ export default function ServicesPage() {
                     href={getContactLink(selectedServiceData, 'whatsapp')}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-4 p-4 glass rounded-xl hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-4 p-4 bg-neutral-100 rounded-xl hover:bg-neutral-200 transition-colors"
                   >
                     <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
                       <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -409,8 +409,8 @@ export default function ServicesPage() {
                       </svg>
                     </div>
                     <div>
-                      <div className="text-white font-medium">WhatsApp</div>
-                      <div className="text-neutral-400 text-sm">Быстрый ответ</div>
+                      <div className="text-neutral-800 font-medium">WhatsApp</div>
+                      <div className="text-neutral-500 text-sm">Быстрый ответ</div>
                     </div>
                   </a>
 
@@ -418,7 +418,7 @@ export default function ServicesPage() {
                     href={getContactLink(selectedServiceData, 'telegram')}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-4 p-4 glass rounded-xl hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-4 p-4 bg-neutral-100 rounded-xl hover:bg-neutral-200 transition-colors"
                   >
                     <div className="w-10 h-10 bg-sky-500 rounded-full flex items-center justify-center">
                       <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -426,14 +426,14 @@ export default function ServicesPage() {
                       </svg>
                     </div>
                     <div>
-                      <div className="text-white font-medium">Telegram</div>
-                      <div className="text-neutral-400 text-sm">Написать в чат</div>
+                      <div className="text-neutral-800 font-medium">Telegram</div>
+                      <div className="text-neutral-500 text-sm">Написать в чат</div>
                     </div>
                   </a>
 
                   <a
                     href={getContactLink(selectedServiceData, 'phone')}
-                    className="flex items-center gap-4 p-4 glass rounded-xl hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-4 p-4 bg-neutral-100 rounded-xl hover:bg-neutral-200 transition-colors"
                   >
                     <div className="w-10 h-10 bg-zone-500 rounded-full flex items-center justify-center">
                       <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -441,8 +441,8 @@ export default function ServicesPage() {
                       </svg>
                     </div>
                     <div>
-                      <div className="text-white font-medium">Позвонить</div>
-                      <div className="text-neutral-400 text-sm">+996 555 123 456</div>
+                      <div className="text-neutral-800 font-medium">Позвонить</div>
+                      <div className="text-neutral-500 text-sm">+996 555 123 456</div>
                     </div>
                   </a>
                 </div>

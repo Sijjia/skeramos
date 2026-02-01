@@ -187,7 +187,7 @@ export function ReviewsSlider({
             </div>
 
             {/* Quote */}
-            <blockquote className="text-lg md:text-xl text-white leading-relaxed mb-8">
+            <blockquote className="text-lg md:text-xl card-title leading-relaxed mb-8">
               "{currentReview.text}"
             </blockquote>
 
@@ -201,13 +201,13 @@ export function ReviewsSlider({
                   {currentReview.author.charAt(0)}
                 </div>
                 <div>
-                  <div className="font-medium text-white">{currentReview.author}</div>
-                  <div className="text-sm text-neutral-400">{currentReview.date}</div>
+                  <div className="font-medium card-title">{currentReview.author}</div>
+                  <div className="text-sm card-muted">{currentReview.date}</div>
                 </div>
               </div>
 
               {/* Source badge */}
-              <div className="flex items-center gap-2 px-3 py-1 rounded-full glass text-sm text-neutral-300">
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 text-sm text-neutral-600">
                 <span>{SOURCE_ICONS[currentReview.source]}</span>
                 <span>{SOURCE_NAMES[currentReview.source]}</span>
               </div>
@@ -231,7 +231,7 @@ export function ReviewsSlider({
         <div className="flex gap-2">
           <button
             onClick={goToPrev}
-            className="w-10 h-10 rounded-full glass flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+            className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm border border-neutral-200 flex items-center justify-center text-neutral-700 hover:bg-white transition-colors"
             aria-label="Предыдущий отзыв"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -240,7 +240,7 @@ export function ReviewsSlider({
           </button>
           <button
             onClick={goToNext}
-            className="w-10 h-10 rounded-full glass flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+            className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm border border-neutral-200 flex items-center justify-center text-neutral-700 hover:bg-white transition-colors"
             aria-label="Следующий отзыв"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -258,7 +258,7 @@ export function ReviewsSlider({
               className={`w-2 h-2 rounded-full transition-all duration-300 ${
                 index === currentIndex
                   ? 'w-6 bg-zone-500'
-                  : 'bg-neutral-600 hover:bg-neutral-500'
+                  : 'bg-white/50 hover:bg-white/70'
               }`}
               aria-label={`Перейти к отзыву ${index + 1}`}
             />
@@ -266,7 +266,7 @@ export function ReviewsSlider({
         </div>
 
         {/* Counter */}
-        <div className="text-neutral-500 text-sm">
+        <div className="text-white/70 text-sm">
           {currentIndex + 1} / {filteredReviews.length}
         </div>
       </div>

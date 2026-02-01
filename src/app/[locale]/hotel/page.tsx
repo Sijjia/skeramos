@@ -257,7 +257,7 @@ export default function HotelPage() {
         <SThreadDivider />
 
         {/* Features Section */}
-        <section className="py-24 bg-zone-950/50 etno-shyrdak">
+        <section className="py-24 bg-zone-950/50 etno-shyrdak dark-section">
           <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
@@ -269,7 +269,7 @@ export default function HotelPage() {
               <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
                 Почему мы
               </motion.span>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-white mt-4">
+              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium section-title mt-4">
                 Преимущества отеля
               </motion.h2>
             </motion.div>
@@ -295,10 +295,10 @@ export default function HotelPage() {
                   >
                     <feature.Icon className="w-12 h-12 text-zone-500" strokeWidth={1.5} />
                   </motion.div>
-                  <h3 className="text-xl font-display font-medium text-white mb-2">
+                  <h3 className="text-xl font-display font-medium card-title mb-2">
                     {feature.title}
                   </h3>
-                  <p className="text-neutral-400 text-sm">
+                  <p className="card-muted text-sm">
                     {feature.description}
                   </p>
                 </motion.div>
@@ -308,7 +308,7 @@ export default function HotelPage() {
         </section>
 
         {/* Rooms Section */}
-        <section id="rooms" className="py-24 md:py-32">
+        <section id="rooms" className="py-24 md:py-32 light-section">
           <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
@@ -320,10 +320,10 @@ export default function HotelPage() {
               <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
                 Размещение
               </motion.span>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-white mt-4">
+              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
                 {t('rooms')}
               </motion.h2>
-              <motion.p variants={fadeInUp} className="text-neutral-400 mt-4 max-w-2xl mx-auto">
+              <motion.p variants={fadeInUp} className="text-neutral-500 mt-4 max-w-2xl mx-auto">
                 {t('roomsSubtitle')}
               </motion.p>
             </motion.div>
@@ -357,10 +357,10 @@ export default function HotelPage() {
                   </div>
 
                   <div className="p-6">
-                    <h3 className="text-xl font-display font-medium text-white mb-2">
+                    <h3 className="text-xl font-display font-medium card-title mb-2">
                       {room.title}
                     </h3>
-                    <p className="text-neutral-400 text-sm mb-4 line-clamp-2">
+                    <p className="card-muted text-sm mb-4 line-clamp-2">
                       {room.description}
                     </p>
 
@@ -369,7 +369,7 @@ export default function HotelPage() {
                       {room.amenities.slice(0, 4).map((amenity, idx) => (
                         <span
                           key={idx}
-                          className="px-3 py-1 rounded-full bg-zone-900/50 text-zone-300 text-xs"
+                          className="px-3 py-1 rounded-full bg-zone-500/10 text-zone-600 text-xs"
                         >
                           {amenity.label}
                         </span>
@@ -396,7 +396,7 @@ export default function HotelPage() {
               viewport={{ once: true }}
               className="mt-16 max-w-3xl mx-auto"
             >
-              <h3 className="text-center text-lg font-display text-white mb-6">
+              <h3 className="text-center text-lg font-display text-neutral-800 mb-6">
                 Во всех номерах
               </h3>
               <div className="flex flex-wrap justify-center gap-4">
@@ -406,7 +406,7 @@ export default function HotelPage() {
                     className="flex items-center gap-2 px-4 py-2 glass rounded-full"
                   >
                     <span>{item.icon}</span>
-                    <span className="text-sm text-neutral-300">{item.label}</span>
+                    <span className="text-sm text-neutral-600">{item.label}</span>
                   </div>
                 ))}
               </div>
@@ -415,7 +415,7 @@ export default function HotelPage() {
         </section>
 
         {/* Packages Section */}
-        <section id="packages" className="py-24 md:py-32">
+        <section id="packages" className="py-24 md:py-32 light-section">
           <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
@@ -427,10 +427,10 @@ export default function HotelPage() {
               <motion.span variants={fadeInUp} className="text-zone-400 text-sm font-medium tracking-wider uppercase">
                 Выгодно
               </motion.span>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-white mt-4">
+              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
                 {t('packages')}
               </motion.h2>
-              <motion.p variants={fadeInUp} className="text-neutral-400 mt-4 max-w-2xl mx-auto">
+              <motion.p variants={fadeInUp} className="text-neutral-500 mt-4 max-w-2xl mx-auto">
                 {t('packagesSubtitle')}
               </motion.p>
             </motion.div>
@@ -467,24 +467,24 @@ export default function HotelPage() {
                   </div>
 
                   <div className="p-6">
-                    <h3 className="text-xl font-display font-medium text-white mb-2">
+                    <h3 className="text-xl font-display font-medium card-title mb-2">
                       {pkg.title}
                     </h3>
-                    <p className="text-neutral-400 text-sm mb-4">
+                    <p className="card-muted text-sm mb-4">
                       {pkg.description}
                     </p>
 
                     <ul className="space-y-2 mb-6">
                       {pkg.includes.map((item, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-sm text-neutral-300">
-                          <span className="text-zone-400">✓</span>
+                        <li key={idx} className="flex items-center gap-2 text-sm text-neutral-600">
+                          <span className="text-zone-500">✓</span>
                           {item}
                         </li>
                       ))}
                     </ul>
 
                     <div className="flex items-center justify-between">
-                      <div className="text-2xl font-display font-bold text-zone-400">
+                      <div className="text-2xl font-display font-bold text-zone-500">
                         {pkg.price.toLocaleString()} сом
                       </div>
                       <a
@@ -507,7 +507,7 @@ export default function HotelPage() {
         <div className="etno-divider" />
 
         {/* Reviews Section */}
-        <section className="py-24 bg-zone-950/50 etno-kochkor">
+        <section className="py-24 bg-zone-950/50 etno-kochkor dark-section">
           <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
@@ -519,7 +519,7 @@ export default function HotelPage() {
               <motion.span variants={fadeInUp} className="text-zone-400 text-sm font-medium tracking-wider uppercase">
                 Отзывы
               </motion.span>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-white mt-4">
+              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium section-title mt-4">
                 Что говорят гости
               </motion.h2>
             </motion.div>
@@ -536,7 +536,7 @@ export default function HotelPage() {
         </section>
 
         {/* FAQ Section */}
-        <section id="faq" className="py-24 md:py-32">
+        <section id="faq" className="py-24 md:py-32 light-section">
           <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
@@ -548,7 +548,7 @@ export default function HotelPage() {
               <motion.span variants={fadeInUp} className="text-zone-400 text-sm font-medium tracking-wider uppercase">
                 FAQ
               </motion.span>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-white mt-4">
+              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
                 {t('faq')}
               </motion.h2>
             </motion.div>

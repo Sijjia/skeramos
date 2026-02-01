@@ -193,15 +193,6 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--neutral-800);
 }
 
-/* Glass text overrides */
-.glass .text-white {
-  color: var(--neutral-800) !important;
-}
-
-.glass .text-neutral-300 {
-  color: var(--neutral-600) !important;
-}
-
 .glass-card {
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(20px);
@@ -217,19 +208,6 @@ h1, h2, h3, h4, h5, h6 {
   background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
   transform: translateY(-4px);
-}
-
-/* Glass card text overrides */
-.glass-card .text-white {
-  color: var(--neutral-800) !important;
-}
-
-.glass-card .text-neutral-300 {
-  color: var(--neutral-600) !important;
-}
-
-.glass-card .text-neutral-400 {
-  color: var(--neutral-500) !important;
 }
 
 /* Dark glass for dark sections */
@@ -260,56 +238,99 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ==========================================================================
-   Text Colors for Light Theme
-   Make text readable on light backgrounds
+   Text Colors System
+   Semantic classes for consistent text colors across contexts
    ========================================================================== */
 
-/* Force dark text on light body background */
-body .text-white {
-  color: var(--neutral-800);
+/* Card text - for glass-card and light backgrounds */
+.card-title {
+  color: var(--neutral-800) !important;
 }
 
-body .text-neutral-100,
-body .text-neutral-200 {
-  color: var(--neutral-700);
+.card-text {
+  color: var(--neutral-600) !important;
 }
 
-body .text-neutral-300 {
-  color: var(--neutral-600);
+.card-muted {
+  color: var(--neutral-500) !important;
 }
 
-body .text-neutral-400 {
-  color: var(--neutral-500);
+/* Section text - for dark section backgrounds */
+.section-title {
+  color: white !important;
 }
 
-/* EXCEPTION: Keep white text on dark backgrounds */
+.section-text {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.section-muted {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Dark section - wrapper for sections with dark backgrounds */
+.dark-section {
+  --text-primary: white;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-muted: rgba(255, 255, 255, 0.6);
+}
+
+.dark-section .text-white {
+  color: white !important;
+}
+
+.dark-section .text-neutral-300 {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.dark-section .text-neutral-400 {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Light section - default for most content */
+.light-section {
+  --text-primary: var(--neutral-800);
+  --text-secondary: var(--neutral-600);
+  --text-muted: var(--neutral-500);
+}
+
+/* Glass card text overrides - CRITICAL: use high specificity */
+.glass-card h1,
+.glass-card h2,
+.glass-card h3,
+.glass-card h4,
+.glass-card h5,
+.glass-card h6,
+.glass-card .text-white {
+  color: var(--neutral-800) !important;
+}
+
+.glass-card p,
+.glass-card .text-neutral-300,
+.glass-card .text-neutral-400 {
+  color: var(--neutral-500) !important;
+}
+
+/* Gradient backgrounds (hero sections) - always white text */
+.gradient-mesh,
+.gradient-radial {
+  --text-primary: white;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-muted: rgba(255, 255, 255, 0.6);
+}
+
 .gradient-mesh .text-white,
-.gradient-radial .text-white,
-[class*="bg-zone-9"] .text-white,
-[class*="bg-zone-8"] .text-white,
-[class*="bg-creativity-9"] .text-white,
-[class*="bg-creativity-8"] .text-white,
-[class*="bg-hotel-9"] .text-white,
-[class*="bg-hotel-8"] .text-white,
-[class*="bg-neutral-9"] .text-white,
-[class*="bg-neutral-8"] .text-white,
-.glass-dark .text-white {
+.gradient-radial .text-white {
   color: white !important;
 }
 
 .gradient-mesh .text-neutral-300,
-.gradient-radial .text-neutral-300,
-[class*="bg-zone-9"] .text-neutral-300,
-[class*="bg-zone-8"] .text-neutral-300,
-[class*="bg-neutral-9"] .text-neutral-300 {
+.gradient-radial .text-neutral-300 {
   color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .gradient-mesh .text-neutral-400,
-.gradient-radial .text-neutral-400,
-[class*="bg-zone-9"] .text-neutral-400,
-[class*="bg-zone-8"] .text-neutral-400,
-[class*="bg-neutral-9"] .text-neutral-400 {
+.gradient-radial .text-neutral-400 {
   color: rgba(255, 255, 255, 0.6) !important;
 }
 

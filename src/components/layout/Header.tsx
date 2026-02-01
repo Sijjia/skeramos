@@ -102,7 +102,7 @@ export function Header() {
             {/* Mobile menu button */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="lg:hidden p-2 text-neutral-300 hover:text-white transition-colors"
+              className="lg:hidden p-2 text-neutral-700 hover:text-neutral-900 transition-colors"
               aria-label="Menu"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -200,7 +200,7 @@ export function Header() {
               >
                 {t('contacts')}
               </MobileNavLink>
-              <div className="pt-2 border-t border-white/10">
+              <div className="pt-2 border-t border-neutral-200">
                 <LanguageSwitcher />
               </div>
             </nav>
@@ -235,7 +235,7 @@ function MobileNavLink({
     <Link
       href={href}
       onClick={onClick}
-      className="px-4 py-3 text-neutral-200 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+      className="px-4 py-3 text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl transition-colors"
     >
       {children}
     </Link>

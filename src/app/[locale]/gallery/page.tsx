@@ -420,37 +420,37 @@ export default function GalleryPage() {
                     <span className="text-2xl">
                       {CATEGORIES.find(c => c.value === selectedItem.category)?.icon}
                     </span>
-                    <span className="text-zone-300 text-sm">
+                    <span className="text-zone-500 text-sm">
                       {CATEGORIES.find(c => c.value === selectedItem.category)?.label}
                     </span>
                   </div>
 
-                  <h2 className="text-2xl font-display font-medium text-white mb-3">
+                  <h2 className="text-2xl font-display font-medium card-title mb-3">
                     {selectedItem.title}
                   </h2>
 
                   {selectedItem.description && (
-                    <p className="text-neutral-300 mb-4">
+                    <p className="card-text mb-4">
                       {selectedItem.description}
                     </p>
                   )}
 
                   {selectedItem.author && (
-                    <div className="flex items-center gap-2 text-sm text-neutral-400 mb-2">
+                    <div className="flex items-center gap-2 text-sm card-muted mb-2">
                       <span>👤</span>
                       <span>{selectedItem.author}</span>
                     </div>
                   )}
 
                   {selectedItem.date && (
-                    <div className="flex items-center gap-2 text-sm text-neutral-400">
+                    <div className="flex items-center gap-2 text-sm card-muted">
                       <span>📅</span>
                       <span>{selectedItem.date}</span>
                     </div>
                   )}
 
                   {/* Counter */}
-                  <div className="mt-6 pt-4 border-t border-white/10 text-center text-neutral-500 text-sm">
+                  <div className="mt-6 pt-4 border-t border-neutral-200 text-center text-neutral-500 text-sm">
                     {currentIndex + 1} / {filteredItems.length}
                   </div>
                 </div>

@@ -25,7 +25,7 @@ export default function ContactsPage() {
 
       <main className="min-h-screen bg-background pt-24">
         {/* Hero Section */}
-        <section className="py-12 md:py-16">
+        <section className="py-12 md:py-16 light-section">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -33,10 +33,10 @@ export default function ContactsPage() {
               transition={{ duration: 0.5 }}
               className="text-center max-w-2xl mx-auto"
             >
-              <h1 className="text-4xl md:text-5xl font-display font-medium text-white mb-4">
+              <h1 className="text-4xl md:text-5xl font-display font-medium text-neutral-800 mb-4">
                 {t('title')}
               </h1>
-              <p className="text-lg text-neutral-300">
+              <p className="text-lg text-neutral-600">
                 {t('subtitle')}
               </p>
             </motion.div>
@@ -58,19 +58,19 @@ export default function ContactsPage() {
                 <div className="glass-card p-6">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-zone-500/20 rounded-full flex items-center justify-center shrink-0">
-                      <svg className="w-6 h-6 text-zone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-6 h-6 text-zone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white mb-1">{tFooter('address')}</h3>
-                      <p className="text-neutral-300">{t('address')}</p>
+                      <h3 className="font-semibold card-title mb-1">{tFooter('address')}</h3>
+                      <p className="card-text">{t('address')}</p>
                       <a
                         href={`https://2gis.kg/bishkek/search/${encodeURIComponent(t('address'))}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-zone-400 hover:text-zone-300 mt-2 text-sm transition-colors"
+                        className="inline-flex items-center gap-1 text-zone-500 hover:text-zone-600 mt-2 text-sm transition-colors"
                       >
                         {t('getDirections')}
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -85,13 +85,13 @@ export default function ContactsPage() {
                 <div className="glass-card p-6">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-zone-500/20 rounded-full flex items-center justify-center shrink-0">
-                      <Icon name="phone" size="lg" className="text-zone-400" />
+                      <Icon name="phone" size="lg" className="text-zone-500" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white mb-1">{tFooter('phone')}</h3>
+                      <h3 className="font-semibold card-title mb-1">{tFooter('phone')}</h3>
                       <a
                         href={`tel:+${PHONE}`}
-                        className="text-neutral-300 hover:text-zone-400 transition-colors text-lg"
+                        className="card-text hover:text-zone-500 transition-colors text-lg"
                       >
                         +996 555 123 456
                       </a>
@@ -103,21 +103,21 @@ export default function ContactsPage() {
                 <div className="glass-card p-6">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-zone-500/20 rounded-full flex items-center justify-center shrink-0">
-                      <svg className="w-6 h-6 text-zone-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-6 h-6 text-zone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <circle cx="12" cy="12" r="10" />
                         <path d="M12 6v6l4 2" />
                       </svg>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white mb-1">{t('workingHours')}</h3>
-                      <p className="text-neutral-300">{t('workingHoursValue')}</p>
+                      <h3 className="font-semibold card-title mb-1">{t('workingHours')}</h3>
+                      <p className="card-text">{t('workingHoursValue')}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Contact buttons */}
                 <div className="glass-card p-6">
-                  <h3 className="font-semibold text-white mb-4">{t('contactUs')}</h3>
+                  <h3 className="font-semibold card-title mb-4">{t('contactUs')}</h3>
                   <div className="flex flex-col gap-3">
                     <a
                       href={`https://wa.me/${PHONE}`}
@@ -140,7 +140,7 @@ export default function ContactsPage() {
 
                 {/* Social links */}
                 <div className="glass-card p-6">
-                  <h3 className="font-semibold text-white mb-4">{tFooter('social')}</h3>
+                  <h3 className="font-semibold card-title mb-4">{tFooter('social')}</h3>
                   <div className="flex gap-3">
                     <a
                       href="https://instagram.com/skeramos"
@@ -180,7 +180,7 @@ export default function ContactsPage() {
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
                 <div className="glass-card p-4 h-full min-h-[400px]">
-                  <h3 className="font-semibold text-white mb-4">{t('howToFind')}</h3>
+                  <h3 className="font-semibold card-title mb-4">{t('howToFind')}</h3>
                   <div className="rounded-xl overflow-hidden h-[calc(100%-2rem)] min-h-[350px]">
                     <Suspense
                       fallback={
