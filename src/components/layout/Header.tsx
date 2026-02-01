@@ -21,11 +21,9 @@ export function Header() {
   // Hide header on landing/split screen page
   const isLandingPage = pathname === `/${locale}` || pathname === `/${locale}/`;
 
-  // Pages with dark hero backgrounds (need white header initially)
+  // Only main creativity/hotel pages have dark hero backgrounds
   const isDarkHeroPage = pathname === `/${locale}/creativity` ||
-                         pathname === `/${locale}/hotel` ||
-                         pathname.startsWith(`/${locale}/creativity`) ||
-                         pathname.startsWith(`/${locale}/hotel`);
+                         pathname === `/${locale}/hotel`;
 
   // Header should be light (white text) when on dark hero and not scrolled
   const isLightHeader = isDarkHeroPage && !scrolled;
