@@ -21,6 +21,15 @@ export function Header() {
   // Hide header on landing/split screen page
   const isLandingPage = pathname === `/${locale}` || pathname === `/${locale}/`;
 
+  // Pages with dark hero backgrounds (need white header initially)
+  const isDarkHeroPage = pathname === `/${locale}/creativity` ||
+                         pathname === `/${locale}/hotel` ||
+                         pathname.startsWith(`/${locale}/creativity`) ||
+                         pathname.startsWith(`/${locale}/hotel`);
+
+  // Header should be light (white text) when on dark hero and not scrolled
+  const isLightHeader = isDarkHeroPage && !scrolled;
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -48,7 +57,7 @@ export function Header() {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
-          {/* Logo - always dark for light theme */}
+          {/* Logo - adapts to background */}
           <Link
             href={`/${locale}/${zone}`}
             className="flex items-center group"
@@ -62,7 +71,9 @@ export function Header() {
                 src="/logo.png"
                 alt="Skeramos"
                 fill
-                className="object-contain brightness-0 opacity-80 group-hover:opacity-100 transition-opacity"
+                className={`object-contain opacity-80 group-hover:opacity-100 transition-all duration-300 ${
+                  isLightHeader ? 'brightness-0 invert' : 'brightness-0'
+                }`}
               />
             </motion.div>
           </Link>
@@ -71,22 +82,22 @@ export function Header() {
           <nav className="hidden lg:flex items-center gap-6">
             {zone === 'creativity' ? (
               <>
-                <NavLink href={`/${locale}/creativity`}>Главная</NavLink>
-                <NavLink href={`/${locale}/creativity#about`}>О нас</NavLink>
-                <NavLink href={`/${locale}/services`}>{t('services') || 'Услуги'}</NavLink>
-                <NavLink href={`/${locale}/masters`}>{t('masters') || 'Мастера'}</NavLink>
-                <NavLink href={`/${locale}/afisha`}>Афиша</NavLink>
-                <NavLink href={`/${locale}/gallery`}>{t('gallery') || 'Галерея'}</NavLink>
+                <NavLink href={`/${locale}/creativity`} light={isLightHeader}>Главная</NavLink>
+                <NavLink href={`/${locale}/creativity#about`} light={isLightHeader}>О нас</NavLink>
+                <NavLink href={`/${locale}/services`} light={isLightHeader}>{t('services') || 'Услуги'}</NavLink>
+                <NavLink href={`/${locale}/masters`} light={isLightHeader}>{t('masters') || 'Мастера'}</NavLink>
+                <NavLink href={`/${locale}/afisha`} light={isLightHeader}>Афиша</NavLink>
+                <NavLink href={`/${locale}/gallery`} light={isLightHeader}>{t('gallery') || 'Галерея'}</NavLink>
               </>
             ) : (
               <>
-                <NavLink href={`/${locale}/hotel`}>Главная</NavLink>
-                <NavLink href={`/${locale}/hotel/rooms`}>{t('rooms')}</NavLink>
-                <NavLink href={`/${locale}/hotel/packages`}>{t('packages') || 'Пакеты'}</NavLink>
-                <NavLink href={`/${locale}/gallery`}>{t('gallery') || 'Галерея'}</NavLink>
+                <NavLink href={`/${locale}/hotel`} light={isLightHeader}>Главная</NavLink>
+                <NavLink href={`/${locale}/hotel/rooms`} light={isLightHeader}>{t('rooms')}</NavLink>
+                <NavLink href={`/${locale}/hotel/packages`} light={isLightHeader}>{t('packages') || 'Пакеты'}</NavLink>
+                <NavLink href={`/${locale}/gallery`} light={isLightHeader}>{t('gallery') || 'Галерея'}</NavLink>
               </>
             )}
-            <NavLink href={`/${locale}/contacts`}>{t('contacts')}</NavLink>
+            <NavLink href={`/${locale}/contacts`} light={isLightHeader}>{t('contacts')}</NavLink>
           </nav>
 
           {/* Right side */}
@@ -102,7 +113,11 @@ export function Header() {
             {/* Mobile menu button */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="lg:hidden p-2 text-neutral-700 hover:text-neutral-900 transition-colors"
+              className={`lg:hidden p-2 transition-colors ${
+                isLightHeader
+                  ? 'text-white/80 hover:text-white'
+                  : 'text-neutral-700 hover:text-neutral-900'
+              }`}
               aria-label="Menu"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -211,11 +226,15 @@ export function Header() {
   );
 }
 
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+function NavLink({ href, children, light = false }: { href: string; children: React.ReactNode; light?: boolean }) {
   return (
     <Link
       href={href}
-      className="relative text-neutral-700 hover:text-neutral-900 transition-colors link-magic"
+      className={`relative transition-colors link-magic ${
+        light
+          ? 'text-white/80 hover:text-white'
+          : 'text-neutral-700 hover:text-neutral-900'
+      }`}
     >
       {children}
     </Link>
