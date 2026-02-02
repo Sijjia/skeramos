@@ -178,12 +178,12 @@ export default function MasterDetailPage() {
           </div>
         </section>
 
-        {/* Achievements Section */}
+        {/* Achievements Section - Timeline */}
         {master.achievements && master.achievements.length > 0 && (
           <section className="py-16 md:py-24">
             <div className="container mx-auto px-4">
               <FadeInOnScroll>
-                <div className="flex items-center gap-3 mb-8">
+                <div className="flex items-center gap-3 mb-12">
                   <Award className="w-8 h-8 text-zone-500" />
                   <h2 className="text-3xl font-display font-medium text-white">
                     Достижения
@@ -191,17 +191,58 @@ export default function MasterDetailPage() {
                 </div>
               </FadeInOnScroll>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                {master.achievements.map((achievement, idx) => (
-                  <FadeInOnScroll key={idx} delay={idx * 0.1}>
-                    <div className="glass-card p-6 flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-zone-500/20 flex items-center justify-center flex-shrink-0">
-                        <Star className="w-5 h-5 text-zone-500" />
-                      </div>
-                      <p className="text-neutral-300">{achievement}</p>
-                    </div>
-                  </FadeInOnScroll>
-                ))}
+              {/* Timeline */}
+              <div className="relative max-w-3xl mx-auto">
+                {/* Vertical line */}
+                <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-zone-500/30 transform md:-translate-x-1/2" />
+
+                {/* Achievements */}
+                <div className="space-y-8">
+                  {(master.achievements as Array<{ year: number; text: string } | string>).map((achievement, idx) => {
+                    // Support both old (string) and new (object) format
+                    const isOldFormat = typeof achievement === 'string';
+                    const year = isOldFormat ? '' : achievement.year;
+                    const text = isOldFormat ? achievement : achievement.text;
+
+                    return (
+                      <FadeInOnScroll key={idx} delay={idx * 0.1} direction={idx % 2 === 0 ? 'left' : 'right'}>
+                        <div className={`relative flex items-start gap-4 md:gap-8 ${
+                          idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+                        }`}>
+                          {/* Year badge */}
+                          <div className={`hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-20 h-20 rounded-full bg-zone-500 items-center justify-center z-10`}>
+                            <span className="text-white font-bold text-lg">{year || '•'}</span>
+                          </div>
+
+                          {/* Content */}
+                          <div className={`flex-1 ml-16 md:ml-0 ${idx % 2 === 0 ? 'md:pr-16 md:text-right' : 'md:pl-16'}`}>
+                            <div className="glass-card p-6">
+                              {/* Mobile year */}
+                              {year && (
+                                <div className="md:hidden flex items-center gap-2 mb-2">
+                                  <div className="w-8 h-8 rounded-full bg-zone-500 flex items-center justify-center">
+                                    <span className="text-white text-xs font-bold">{year}</span>
+                                  </div>
+                                </div>
+                              )}
+                              {/* Desktop year */}
+                              {year && (
+                                <span className="hidden md:block text-zone-400 font-bold text-lg mb-2">{year}</span>
+                              )}
+                              <p className="text-neutral-300">{text}</p>
+                            </div>
+                          </div>
+
+                          {/* Spacer for opposite side */}
+                          <div className="hidden md:block flex-1" />
+
+                          {/* Mobile dot */}
+                          <div className="absolute left-8 top-6 w-4 h-4 rounded-full bg-zone-500 transform -translate-x-1/2 md:hidden" />
+                        </div>
+                      </FadeInOnScroll>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </section>

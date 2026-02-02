@@ -76,13 +76,42 @@ export default function SettingsAdmin() {
       const data = await res.json();
       // Initialize with defaults if not set
       setSettings({
-        ...data,
+        siteName: data.siteName || '',
+        phone: data.phone || '',
+        whatsapp: data.whatsapp || '',
+        email: data.email || '',
+        address: data.address || '',
+        workingHours: data.workingHours || '',
+        social: {
+          instagram: data.social?.instagram || '',
+          facebook: data.social?.facebook || '',
+          telegram: data.social?.telegram || '',
+        },
+        cinemaPrice: data.cinemaPrice || 0,
         galleryCategories: data.galleryCategories || DEFAULT_GALLERY_CATEGORIES,
         advantages: data.advantages || [],
         whatYouGet: data.whatYouGet || [],
       });
     } catch (error) {
       console.error('Error loading:', error);
+      // Set defaults on error
+      setSettings({
+        siteName: '',
+        phone: '',
+        whatsapp: '',
+        email: '',
+        address: '',
+        workingHours: '',
+        social: {
+          instagram: '',
+          facebook: '',
+          telegram: '',
+        },
+        cinemaPrice: 0,
+        galleryCategories: DEFAULT_GALLERY_CATEGORIES,
+        advantages: [],
+        whatYouGet: [],
+      });
     } finally {
       setLoading(false);
     }
@@ -335,7 +364,7 @@ export default function SettingsAdmin() {
               <label className="block text-neutral-300 mb-2">Instagram</label>
               <input
                 type="url"
-                value={settings.social.instagram}
+                value={settings.social?.instagram || ''}
                 onChange={(e) =>
                   setSettings({
                     ...settings,
@@ -351,7 +380,7 @@ export default function SettingsAdmin() {
               <label className="block text-neutral-300 mb-2">Facebook</label>
               <input
                 type="url"
-                value={settings.social.facebook}
+                value={settings.social?.facebook || ''}
                 onChange={(e) =>
                   setSettings({
                     ...settings,
@@ -367,7 +396,7 @@ export default function SettingsAdmin() {
               <label className="block text-neutral-300 mb-2">Telegram</label>
               <input
                 type="url"
-                value={settings.social.telegram}
+                value={settings.social?.telegram || ''}
                 onChange={(e) =>
                   setSettings({
                     ...settings,

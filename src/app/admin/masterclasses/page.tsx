@@ -11,6 +11,8 @@ interface Masterclass {
   duration: string;
   capacity: string;
   active: boolean;
+  tags: string[];
+  externalLink: string;
 }
 
 const EMPTY_ITEM: Omit<Masterclass, 'id'> = {
@@ -21,6 +23,8 @@ const EMPTY_ITEM: Omit<Masterclass, 'id'> = {
   duration: '',
   capacity: '',
   active: true,
+  tags: [],
+  externalLink: '',
 };
 
 export default function MasterclassesAdmin() {
@@ -29,6 +33,7 @@ export default function MasterclassesAdmin() {
   const [editingItem, setEditingItem] = useState<Masterclass | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [tagInput, setTagInput] = useState('');
 
   const loadItems = async () => {
     try {
@@ -106,6 +111,23 @@ export default function MasterclassesAdmin() {
     } catch (error) {
       console.error('Error toggling:', error);
     }
+  };
+
+  const addTag = () => {
+    if (!tagInput.trim() || !editingItem) return;
+    setEditingItem({
+      ...editingItem,
+      tags: [...(editingItem.tags || []), tagInput.trim()],
+    });
+    setTagInput('');
+  };
+
+  const removeTag = (index: number) => {
+    if (!editingItem) return;
+    setEditingItem({
+      ...editingItem,
+      tags: (editingItem.tags || []).filter((_, i) => i !== index),
+    });
   };
 
   if (loading) {
@@ -291,6 +313,61 @@ export default function MasterclassesAdmin() {
                   className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
                   placeholder="до 6 человек"
                 />
+              </div>
+
+              {/* Tags */}
+              <div>
+                <label className="block text-neutral-300 mb-2">Теги (особенности)</label>
+                <div className="flex gap-2 mb-2">
+                  <input
+                    type="text"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                    className="flex-1 px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                    placeholder="Добавить тег"
+                  />
+                  <button
+                    type="button"
+                    onClick={addTag}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg"
+                  >
+                    +
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {editingItem.tags?.map((tag, i) => (
+                    <span
+                      key={i}
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-green-600/20 text-green-400 rounded-full text-sm"
+                    >
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => removeTag(i)}
+                        className="text-red-400 hover:text-red-300 ml-1"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                <p className="text-neutral-500 text-xs mt-1">Например: Для начинающих, Романтика, С обжигом</p>
+              </div>
+
+              {/* External Link */}
+              <div>
+                <label className="block text-neutral-300 mb-2">Внешняя ссылка (для кнопки "Подробнее")</label>
+                <input
+                  type="url"
+                  value={editingItem.externalLink || ''}
+                  onChange={(e) =>
+                    setEditingItem({ ...editingItem, externalLink: e.target.value })
+                  }
+                  className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                  placeholder="https://example.com/booking"
+                />
+                <p className="text-neutral-500 text-xs mt-1">Если указана, кнопка "Подробнее" будет вести на эту ссылку</p>
               </div>
 
               <div className="flex items-center gap-2">

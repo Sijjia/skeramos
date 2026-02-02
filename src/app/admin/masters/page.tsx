@@ -3,6 +3,11 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
+interface Achievement {
+  year: number;
+  text: string;
+}
+
 interface Master {
   id: string;
   name: string;
@@ -11,7 +16,7 @@ interface Master {
   image: string;
   experience: string;
   specialties: string[];
-  achievements: string[];
+  achievements: Achievement[];
   whatsapp?: string;
   active: boolean;
 }
@@ -35,7 +40,8 @@ export default function MastersAdmin() {
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
   const [specialtyInput, setSpecialtyInput] = useState('');
-  const [achievementInput, setAchievementInput] = useState('');
+  const [achievementYear, setAchievementYear] = useState(new Date().getFullYear());
+  const [achievementText, setAchievementText] = useState('');
 
   const loadItems = async () => {
     try {
@@ -123,12 +129,18 @@ export default function MastersAdmin() {
   };
 
   const addAchievement = () => {
-    if (!achievementInput.trim() || !editingItem) return;
+    if (!achievementText.trim() || !editingItem) return;
+    const newAchievement: Achievement = {
+      year: achievementYear,
+      text: achievementText.trim(),
+    };
+    // Sort achievements by year (newest first)
+    const updated = [...(editingItem.achievements || []), newAchievement].sort((a, b) => b.year - a.year);
     setEditingItem({
       ...editingItem,
-      achievements: [...(editingItem.achievements || []), achievementInput.trim()],
+      achievements: updated,
     });
-    setAchievementInput('');
+    setAchievementText('');
   };
 
   const removeAchievement = (index: number) => {
@@ -341,15 +353,24 @@ export default function MastersAdmin() {
 
               {/* Achievements */}
               <div>
-                <label className="block text-neutral-300 mb-2">Достижения</label>
-                <div className="flex gap-2 mb-2">
+                <label className="block text-neutral-300 mb-2">Достижения (по годам)</label>
+                <div className="flex gap-2 mb-3">
+                  <input
+                    type="number"
+                    value={achievementYear}
+                    onChange={(e) => setAchievementYear(parseInt(e.target.value) || new Date().getFullYear())}
+                    className="w-24 px-3 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-amber-500"
+                    placeholder="Год"
+                    min={1990}
+                    max={2030}
+                  />
                   <input
                     type="text"
-                    value={achievementInput}
-                    onChange={(e) => setAchievementInput(e.target.value)}
+                    value={achievementText}
+                    onChange={(e) => setAchievementText(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addAchievement())}
                     className="flex-1 px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-amber-500"
-                    placeholder="Добавить достижение"
+                    placeholder="Описание достижения"
                   />
                   <button
                     type="button"
@@ -359,23 +380,28 @@ export default function MastersAdmin() {
                     +
                   </button>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                {/* Timeline view */}
+                <div className="space-y-2 max-h-48 overflow-y-auto">
                   {editingItem.achievements?.map((ach, i) => (
-                    <span
+                    <div
                       key={i}
-                      className="inline-flex items-center gap-1 px-3 py-1 bg-neutral-700 text-neutral-300 rounded-full text-sm"
+                      className="flex items-start gap-3 p-3 bg-neutral-700/50 rounded-lg"
                     >
-                      {ach}
+                      <span className="text-amber-400 font-bold min-w-[50px]">{ach.year}</span>
+                      <span className="flex-1 text-neutral-300 text-sm">{ach.text}</span>
                       <button
                         type="button"
                         onClick={() => removeAchievement(i)}
-                        className="text-red-400 hover:text-red-300 ml-1"
+                        className="text-red-400 hover:text-red-300"
                       >
-                        x
+                        ×
                       </button>
-                    </span>
+                    </div>
                   ))}
                 </div>
+                {(!editingItem.achievements || editingItem.achievements.length === 0) && (
+                  <p className="text-neutral-500 text-sm text-center py-4">Нет достижений</p>
+                )}
               </div>
 
               <div className="flex items-center gap-2">

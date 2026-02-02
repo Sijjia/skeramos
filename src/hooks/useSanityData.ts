@@ -12,6 +12,8 @@ export interface MasterclassUI {
   capacity: string;
   price: number;
   slug?: string;
+  tags?: string[];
+  externalLink?: string;
 }
 
 export interface CourseUI {
@@ -59,6 +61,11 @@ export interface PackageUI {
   slug?: string;
 }
 
+export interface AchievementUI {
+  year: number;
+  text: string;
+}
+
 export interface MasterUI {
   id: string;
   name: string;
@@ -67,7 +74,7 @@ export interface MasterUI {
   image: string;
   experience?: string;
   specialties: string[];
-  achievements: string[];
+  achievements: AchievementUI[] | string[]; // Support both old and new format
   whatsapp?: string;
   active?: boolean;
 }

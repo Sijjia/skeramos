@@ -143,12 +143,16 @@ export default function MastersPage() {
                               <span className="text-sm text-neutral-400">Достижения</span>
                             </div>
                             <ul className="space-y-1">
-                              {master.achievements.slice(0, 3).map((achievement, idx) => (
-                                <li key={idx} className="flex items-start gap-2 text-sm text-neutral-300">
-                                  <Star className="w-3 h-3 text-zone-500 mt-1 flex-shrink-0" />
-                                  <span>{achievement}</span>
-                                </li>
-                              ))}
+                              {master.achievements.slice(0, 3).map((achievement, idx) => {
+                                const text = typeof achievement === 'string' ? achievement : achievement.text;
+                                const year = typeof achievement === 'string' ? null : achievement.year;
+                                return (
+                                  <li key={idx} className="flex items-start gap-2 text-sm text-neutral-300">
+                                    <Star className="w-3 h-3 text-zone-500 mt-1 flex-shrink-0" />
+                                    <span>{year ? `${year}: ` : ''}{text}</span>
+                                  </li>
+                                );
+                              })}
                             </ul>
                           </div>
                         )}

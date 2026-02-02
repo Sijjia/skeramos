@@ -14,8 +14,13 @@ import { EtnoPatternOverlay, GlowingAccent, SectionDivider } from '@/components/
 
 const ITEMS_PER_PAGE = 8;
 
+// Extended ServiceUI with tags
+interface ServiceWithTags extends ServiceUI {
+  tags?: string[];
+}
+
 // Convert masterclass to service format
-function masterclassToService(mc: MasterclassUI): ServiceUI {
+function masterclassToService(mc: MasterclassUI): ServiceWithTags {
   return {
     id: `mc_${mc.id}`,
     slug: mc.slug || mc.id,
@@ -28,6 +33,8 @@ function masterclassToService(mc: MasterclassUI): ServiceUI {
     groupSize: mc.capacity,
     includes: [],
     category: 'masterclass' as const,
+    externalLink: mc.externalLink,
+    tags: mc.tags,
   };
 }
 
@@ -46,7 +53,7 @@ export default function ServicesPage() {
   // Combine services and masterclasses
   const loading = servicesLoading || masterclassesLoading;
   const masterclassesAsServices = masterclassesData.map(masterclassToService);
-  const services = [...servicesData, ...masterclassesAsServices];
+  const services: ServiceWithTags[] = [...servicesData, ...masterclassesAsServices];
 
   const totalPages = Math.ceil(services.length / ITEMS_PER_PAGE);
   const paginatedServices = services.slice(
@@ -144,12 +151,27 @@ export default function ServicesPage() {
 
                         {/* Content */}
                         <div className={`${index % 2 === 1 ? 'md:order-1' : ''}`}>
-                          <span className="text-zone-400 text-sm font-medium tracking-wider uppercase">
-                            {service.category === 'masterclass' && 'Мастер-класс'}
-                            {service.category === 'course' && 'Курс'}
-                            {service.category === 'event' && 'Мероприятие'}
-                          </span>
-                          <h2 className="text-2xl md:text-3xl font-display font-medium text-white mt-2 mb-4">
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <span className="text-zone-400 text-sm font-medium tracking-wider uppercase">
+                              {service.category === 'masterclass' && 'Мастер-класс'}
+                              {service.category === 'course' && 'Курс'}
+                              {service.category === 'event' && 'Мероприятие'}
+                            </span>
+                            {/* Tags */}
+                            {service.tags && service.tags.length > 0 && (
+                              <>
+                                {service.tags.map((tag, tagIdx) => (
+                                  <span
+                                    key={tagIdx}
+                                    className="px-2 py-0.5 bg-zone-500/20 text-zone-300 text-xs rounded-full"
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                              </>
+                            )}
+                          </div>
+                          <h2 className="text-2xl md:text-3xl font-display font-medium text-white mb-4">
                             {service.title}
                           </h2>
                           <p className="text-neutral-300 mb-6">
