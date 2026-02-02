@@ -109,7 +109,6 @@ export default function HotelPage() {
   const tCommon = useTranslations('common');
   const { scrollYProgress } = useScroll();
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
 
   const { data: rooms } = useRooms();
   const { data: packages } = usePackages();
@@ -130,7 +129,7 @@ export default function HotelPage() {
       <main className="min-h-screen bg-background etno-section">
         {/* Hero Section */}
         <motion.section
-          style={{ opacity: heroOpacity, scale: heroScale }}
+          style={{ opacity: heroOpacity }}
           className="relative min-h-screen flex items-center justify-center gradient-mesh noise-overlay"
         >
           {/* Decorative elements - optimized */}
