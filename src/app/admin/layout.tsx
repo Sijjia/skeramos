@@ -23,10 +23,12 @@ const MENU_ITEMS = [
   { href: '/admin', label: 'Главная', icon: '🏠' },
   { href: '/admin/masterclasses', label: 'Мастер-классы', icon: '🎨' },
   { href: '/admin/masters', label: 'Мастера', icon: '👨‍🎨' },
+  { href: '/admin/afisha', label: 'Афиша', icon: '📅' },
   { href: '/admin/rooms', label: 'Номера', icon: '🛏️' },
   { href: '/admin/packages', label: 'Пакеты', icon: '📦' },
   { href: '/admin/gallery', label: 'Галерея', icon: '🖼️' },
   { href: '/admin/reviews', label: 'Отзывы', icon: '⭐' },
+  { href: '/admin/history', label: 'История', icon: '📜' },
   { href: '/admin/settings', label: 'Настройки', icon: '⚙️' },
 ];
 

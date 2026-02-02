@@ -15,6 +15,8 @@ const COLLECTIONS = [
   'packages',
   'masters',
   'services',
+  'afisha',
+  'history',
   'settings',
 ];
 

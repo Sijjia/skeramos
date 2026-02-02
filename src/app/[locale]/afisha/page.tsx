@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useZone } from '@/contexts/ZoneContext';
+import { useAfisha } from '@/hooks/useSanityData';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 
 import { Footer } from '@/components/layout/Footer';
@@ -20,40 +21,6 @@ const staggerContainer = {
   visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
-// Mock data - будет из Sanity/админки
-const EVENTS = [
-  {
-    id: 1,
-    title: 'Мастер-класс "Весенние вазы"',
-    description: 'Создаём вазы с весенними мотивами. Идеально для подарка к 8 марта!',
-    date: '2026-03-01',
-    time: '14:00 - 17:00',
-    image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80',
-    location: 'Skeramos, ул. Шукурова 8',
-    type: 'masterclass',
-  },
-  {
-    id: 2,
-    title: 'Наурыз в Skeramos',
-    description: 'Праздничная программа: традиционная керамика, музыка и угощения.',
-    date: '2026-03-21',
-    time: '12:00 - 20:00',
-    image: 'https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?w=600&q=80',
-    location: 'Skeramos, ул. Шукурова 8',
-    type: 'holiday',
-  },
-  {
-    id: 3,
-    title: 'Выставка работ учеников',
-    description: 'Лучшие работы наших учеников за 2025 год. Вход свободный.',
-    date: '2026-04-15',
-    time: '10:00 - 18:00',
-    image: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=600&q=80',
-    location: 'Skeramos, ул. Шукурова 8',
-    type: 'exhibition',
-  },
-];
-
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   return date.toLocaleDateString('ru-RU', {
@@ -65,10 +32,14 @@ function formatDate(dateString: string): string {
 
 export default function AfishaPage() {
   const { setZone } = useZone();
+  const { data: events, loading } = useAfisha();
 
   useEffect(() => {
     setZone('creativity');
   }, [setZone]);
+
+  // Фильтруем только активные события
+  const activeEvents = events.filter(e => e.active !== false);
 
   return (
     <>
@@ -89,74 +60,98 @@ export default function AfishaPage() {
             </div>
           </FadeInOnScroll>
 
-          {/* Events Grid */}
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={staggerContainer}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {EVENTS.map((event) => (
-              <motion.div
-                key={event.id}
-                variants={fadeInUp}
-                className="glass-card overflow-hidden group"
-              >
-                {/* Image */}
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <Image
-                    src={event.image}
-                    alt={event.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <span className={`
-                      px-3 py-1 rounded-full text-xs font-medium text-white
-                      ${event.type === 'masterclass' ? 'bg-zone-500' : ''}
-                      ${event.type === 'holiday' ? 'bg-amber-500' : ''}
-                      ${event.type === 'exhibition' ? 'bg-purple-500' : ''}
-                    `}>
-                      {event.type === 'masterclass' && 'Мастер-класс'}
-                      {event.type === 'holiday' && 'Праздник'}
-                      {event.type === 'exhibition' && 'Выставка'}
-                    </span>
+          {/* Loading */}
+          {loading ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="glass-card overflow-hidden animate-pulse">
+                  <div className="aspect-[16/10] bg-white/10"></div>
+                  <div className="p-6 space-y-3">
+                    <div className="h-6 bg-white/10 rounded w-3/4"></div>
+                    <div className="h-4 bg-white/10 rounded w-full"></div>
+                    <div className="h-4 bg-white/10 rounded w-1/2"></div>
                   </div>
                 </div>
-
-                {/* Content */}
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">
-                    {event.title}
-                  </h3>
-                  <p className="text-neutral-500 text-sm mb-4 line-clamp-2">
-                    {event.description}
-                  </p>
-
-                  <div className="space-y-2 text-sm text-neutral-600">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-zone-500" />
-                      <span>{formatDate(event.date)}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-zone-500" />
-                      <span>{event.time}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-zone-500" />
-                      <span>{event.location}</span>
+              ))}
+            </div>
+          ) : activeEvents.length > 0 ? (
+            /* Events Grid */
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+              {activeEvents.map((event) => (
+                <motion.div
+                  key={event.id}
+                  variants={fadeInUp}
+                  className="glass-card overflow-hidden group"
+                >
+                  {/* Image */}
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    {event.image ? (
+                      <Image
+                        src={event.image}
+                        alt={event.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-zone-500/20 flex items-center justify-center">
+                        <span className="text-4xl">📅</span>
+                      </div>
+                    )}
+                    <div className="absolute top-4 left-4">
+                      <span className={`
+                        px-3 py-1 rounded-full text-xs font-medium text-white
+                        ${event.type === 'masterclass' ? 'bg-zone-500' : ''}
+                        ${event.type === 'holiday' ? 'bg-amber-500' : ''}
+                        ${event.type === 'exhibition' ? 'bg-purple-500' : ''}
+                        ${event.type === 'other' ? 'bg-blue-500' : ''}
+                      `}>
+                        {event.type === 'masterclass' && 'Мастер-класс'}
+                        {event.type === 'holiday' && 'Праздник'}
+                        {event.type === 'exhibition' && 'Выставка'}
+                        {event.type === 'other' && 'Событие'}
+                      </span>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
 
-          {/* Empty state placeholder */}
-          {EVENTS.length === 0 && (
+                  {/* Content */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2 card-title">
+                      {event.title}
+                    </h3>
+                    <p className="text-neutral-500 text-sm mb-4 line-clamp-2">
+                      {event.description}
+                    </p>
+
+                    <div className="space-y-2 text-sm text-neutral-600">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-zone-500" />
+                        <span>{formatDate(event.date)}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-zone-500" />
+                        <span>{event.time}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4 text-zone-500" />
+                        <span>{event.location}</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            /* Empty state */
             <div className="text-center py-16">
+              <span className="text-6xl mb-4 block">📅</span>
+              <h3 className="text-xl font-semibold mb-2">Пока нет предстоящих событий</h3>
               <p className="text-neutral-500">
-                Пока нет предстоящих событий. Следите за обновлениями!
+                Следите за обновлениями! Скоро мы добавим новые мероприятия.
               </p>
             </div>
           )}

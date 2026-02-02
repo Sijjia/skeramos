@@ -267,3 +267,34 @@ export interface ReviewUI {
 export function useReviews() {
   return useDataFetch<ReviewUI[]>('reviews', EMPTY_ARRAY);
 }
+
+export interface EventUI {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  image: string;
+  location: string;
+  type: 'masterclass' | 'holiday' | 'exhibition' | 'other';
+  active?: boolean;
+}
+
+export function useAfisha() {
+  return useDataFetch<EventUI[]>('afisha', EMPTY_ARRAY);
+}
+
+export interface HistoryItemUI {
+  id: string;
+  year: number;
+  month: string;
+  title: string;
+  description: string;
+  image: string;
+  milestone: 'founding' | 'achievement' | 'expansion' | 'award' | 'event';
+  active?: boolean;
+}
+
+export function useHistory() {
+  return useDataFetch<HistoryItemUI[]>('history', EMPTY_ARRAY);
+}
