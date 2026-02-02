@@ -17,7 +17,7 @@ import { FadeInOnScroll, CountUp } from '@/components/animations/OptimizedAnimat
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from '@/components/animations/ScrollAnimations';
 import { SThreadAnimation, SThreadDivider } from '@/components/animations/SThreadAnimation';
 import { ReviewsSlider } from '@/components/sections/ReviewsSlider';
-import { useMasterclasses, useCourses, useEvents, useFAQ } from '@/hooks/useSanityData';
+import { useMasterclasses, useCourses, useEvents, useFAQ, useMasters, useGallery } from '@/hooks/useSanityData';
 
 // Custom easing curve for smooth animations
 const smoothEase = [0.25, 0.1, 0.25, 1] as const;
@@ -85,42 +85,48 @@ function getWhatsAppLink(serviceName: string): string {
   return `https://wa.me/${phone}?text=${message}`;
 }
 
-// Mock data for masters
-const MASTERS = [
+// Fallback data for gallery when API is empty
+const GALLERY_FALLBACK = [
+  { id: '1', image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80', title: 'Ваза с орнаментом' },
+  { id: '2', image: 'https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?w=600&q=80', title: 'Набор посуды' },
+  { id: '3', image: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=400&q=80', title: 'Декоративная тарелка' },
+  { id: '4', image: 'https://images.unsplash.com/photo-1605622371817-cc28e4a7dfc1?w=600&q=80', title: 'Кувшин' },
+  { id: '5', image: 'https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?w=400&q=80', title: 'Пиала' },
+  { id: '6', image: 'https://images.unsplash.com/photo-1609686764508-e8e5d3a9c77a?w=600&q=80', title: 'Скульптура' },
+];
+
+// Fallback data for masters when API is empty
+const MASTERS_FALLBACK = [
   {
-    id: 1,
+    id: '1',
     name: 'Айгуль Сатарова',
     role: 'Основатель, мастер керамики',
     image: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=400&q=80',
     experience: '15 лет опыта',
-    specialization: 'Традиционная кыргызская керамика',
+    bio: '',
+    specialties: ['Традиционная кыргызская керамика'],
+    achievements: [],
   },
   {
-    id: 2,
+    id: '2',
     name: 'Бакыт Токтогулов',
     role: 'Мастер гончарного круга',
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
     experience: '10 лет опыта',
-    specialization: 'Современные техники',
+    bio: '',
+    specialties: ['Современные техники'],
+    achievements: [],
   },
   {
-    id: 3,
+    id: '3',
     name: 'Нургуль Асанова',
     role: 'Художник по росписи',
     image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80',
     experience: '8 лет опыта',
-    specialization: 'Авторская роспись',
+    bio: '',
+    specialties: ['Авторская роспись'],
+    achievements: [],
   },
-];
-
-// Mock data for gallery
-const GALLERY_ITEMS = [
-  { id: 1, image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80', title: 'Ваза с орнаментом' },
-  { id: 2, image: 'https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?w=600&q=80', title: 'Набор посуды' },
-  { id: 3, image: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=400&q=80', title: 'Декоративная тарелка' },
-  { id: 4, image: 'https://images.unsplash.com/photo-1605622371817-cc28e4a7dfc1?w=600&q=80', title: 'Кувшин' },
-  { id: 5, image: 'https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?w=400&q=80', title: 'Пиала' },
-  { id: 6, image: 'https://images.unsplash.com/photo-1609686764508-e8e5d3a9c77a?w=600&q=80', title: 'Скульптура' },
 ];
 
 
@@ -181,6 +187,16 @@ export default function CreativityPage() {
   const { data: courses } = useCourses();
   const { data: events } = useEvents();
   const { data: faqItems } = useFAQ('creativity');
+  const { data: mastersData } = useMasters();
+  const { data: galleryData } = useGallery();
+
+  // Use API data with fallback
+  const masters = mastersData.length > 0
+    ? mastersData.filter(m => m.active !== false)
+    : MASTERS_FALLBACK;
+  const galleryItems = galleryData.length > 0
+    ? galleryData.slice(0, 6)
+    : GALLERY_FALLBACK;
 
   useEffect(() => {
     setZone('creativity');
@@ -543,7 +559,7 @@ export default function CreativityPage() {
               variants={staggerContainer}
               className="grid md:grid-cols-3 gap-8"
             >
-              {MASTERS.map((master, index) => (
+              {masters.slice(0, 3).map((master) => (
                 <motion.div
                   key={master.id}
                   variants={cardVariants}
@@ -574,7 +590,7 @@ export default function CreativityPage() {
                     {/* Info on hover */}
                     <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
                       <div className="glass-card p-4">
-                        <p className="text-sm card-muted">{master.specialization}</p>
+                        <p className="text-sm card-muted">{master.specialties?.[0] || ''}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -587,6 +603,24 @@ export default function CreativityPage() {
                 </motion.div>
               ))}
             </motion.div>
+
+            {/* Link to all masters */}
+            {masters.length > 3 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                className="text-center mt-12"
+              >
+                <a
+                  href="/masters"
+                  className="inline-flex items-center gap-2 px-6 py-3 glass text-neutral-700 hover:text-zone-500 rounded-xl font-medium transition-colors"
+                >
+                  Все мастера
+                  <span>→</span>
+                </a>
+              </motion.div>
+            )}
           </div>
         </section>
 
@@ -618,7 +652,7 @@ export default function CreativityPage() {
               variants={staggerContainer}
               className="grid grid-cols-2 md:grid-cols-3 gap-4"
             >
-              {GALLERY_ITEMS.map((item, index) => (
+              {galleryItems.map((item, index) => (
                 <motion.div
                   key={item.id}
                   variants={cardVariants}
@@ -653,6 +687,22 @@ export default function CreativityPage() {
                   </motion.div>
                 </motion.div>
               ))}
+            </motion.div>
+
+            {/* Link to full gallery */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-center mt-12"
+            >
+              <a
+                href="/gallery"
+                className="inline-flex items-center gap-2 px-6 py-3 glass text-white hover:text-zone-400 rounded-xl font-medium transition-colors"
+              >
+                Смотреть всю галерею
+                <span>→</span>
+              </a>
             </motion.div>
           </div>
         </section>
@@ -737,6 +787,22 @@ export default function CreativityPage() {
                   </div>
                 </motion.div>
               ))}
+            </motion.div>
+
+            {/* Link to all services */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-center mt-12"
+            >
+              <a
+                href="/services"
+                className="inline-flex items-center gap-2 px-6 py-3 glass text-neutral-700 hover:text-zone-500 rounded-xl font-medium transition-colors"
+              >
+                Все услуги
+                <span>→</span>
+              </a>
             </motion.div>
           </div>
         </section>
