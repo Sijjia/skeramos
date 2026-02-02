@@ -86,6 +86,7 @@ export function Header() {
                 <NavLink href={`/${locale}/masters`} light={isLightHeader}>{t('masters') || 'Мастера'}</NavLink>
                 <NavLink href={`/${locale}/afisha`} light={isLightHeader}>Афиша</NavLink>
                 <NavLink href={`/${locale}/gallery`} light={isLightHeader}>{t('gallery') || 'Галерея'}</NavLink>
+                <NavLink href={`/${locale}/history`} light={isLightHeader}>История</NavLink>
               </>
             ) : (
               <>
@@ -177,6 +178,12 @@ export function Header() {
                     onClick={() => setMenuOpen(false)}
                   >
                     {t('gallery') || 'Галерея'}
+                  </MobileNavLink>
+                  <MobileNavLink
+                    href={`/${locale}/history`}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    История
                   </MobileNavLink>
                 </>
               ) : (
