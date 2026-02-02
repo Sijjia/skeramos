@@ -20,6 +20,12 @@ interface WhatYouGetItem {
   description: string;
 }
 
+interface HotelAdvantageItem {
+  icon: string;
+  title: string;
+  description: string;
+}
+
 interface Settings {
   siteName: string;
   phone: string;
@@ -36,6 +42,7 @@ interface Settings {
   galleryCategories?: GalleryCategory[];
   advantages?: AdvantageItem[];
   whatYouGet?: WhatYouGetItem[];
+  hotelAdvantages?: HotelAdvantageItem[];
 }
 
 const DEFAULT_GALLERY_CATEGORIES: GalleryCategory[] = [
@@ -61,6 +68,12 @@ const ICON_OPTIONS = [
   { value: 'smile', label: '😊 Улыбка' },
   { value: 'coffee', label: '☕ Кофе' },
   { value: 'star', label: '⭐ Звезда' },
+  { value: 'bed', label: '🛏️ Кровать' },
+  { value: 'car', label: '🚗 Парковка' },
+  { value: 'wifi', label: '📶 Wi-Fi' },
+  { value: 'shield', label: '🛡️ Безопасность' },
+  { value: 'key', label: '🔑 Ключ' },
+  { value: 'sun', label: '☀️ Солнце' },
 ];
 
 export default function SettingsAdmin() {
@@ -91,6 +104,7 @@ export default function SettingsAdmin() {
         galleryCategories: data.galleryCategories || DEFAULT_GALLERY_CATEGORIES,
         advantages: data.advantages || [],
         whatYouGet: data.whatYouGet || [],
+        hotelAdvantages: data.hotelAdvantages || [],
       });
     } catch (error) {
       console.error('Error loading:', error);
@@ -111,6 +125,7 @@ export default function SettingsAdmin() {
         galleryCategories: DEFAULT_GALLERY_CATEGORIES,
         advantages: [],
         whatYouGet: [],
+        hotelAdvantages: [],
       });
     } finally {
       setLoading(false);
@@ -197,6 +212,32 @@ export default function SettingsAdmin() {
     const updated = [...settings.whatYouGet];
     updated[index] = { ...updated[index], [field]: value };
     setSettings({ ...settings, whatYouGet: updated });
+  };
+
+  // Hotel Advantages helpers
+  const addHotelAdvantage = () => {
+    if (!settings) return;
+    setSettings({
+      ...settings,
+      hotelAdvantages: [
+        ...(settings.hotelAdvantages || []),
+        { icon: 'bed', title: '', description: '' },
+      ],
+    });
+  };
+
+  const removeHotelAdvantage = (index: number) => {
+    if (!settings?.hotelAdvantages) return;
+    const updated = [...settings.hotelAdvantages];
+    updated.splice(index, 1);
+    setSettings({ ...settings, hotelAdvantages: updated });
+  };
+
+  const updateHotelAdvantage = (index: number, field: keyof HotelAdvantageItem, value: string) => {
+    if (!settings?.hotelAdvantages) return;
+    const updated = [...settings.hotelAdvantages];
+    updated[index] = { ...updated[index], [field]: value };
+    setSettings({ ...settings, hotelAdvantages: updated });
   };
 
   const handleSave = async () => {
@@ -597,6 +638,66 @@ export default function SettingsAdmin() {
               {(!settings.whatYouGet || settings.whatYouGet.length === 0) && (
                 <p className="text-neutral-400 text-center py-8">
                   Нет элементов. Нажмите "Добавить" чтобы создать первый.
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Hotel Advantages */}
+          <div className="bg-neutral-800 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <span>🏨</span> Преимущества отеля
+              </h2>
+              <button
+                onClick={addHotelAdvantage}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" /> Добавить
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {settings.hotelAdvantages?.map((item, index) => (
+                <div key={index} className="p-4 bg-neutral-700/50 rounded-lg">
+                  <div className="flex gap-3 items-start">
+                    <select
+                      value={item.icon}
+                      onChange={(e) => updateHotelAdvantage(index, 'icon', e.target.value)}
+                      className="px-3 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                    >
+                      {ICON_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                    <div className="flex-1 space-y-2">
+                      <input
+                        type="text"
+                        value={item.title}
+                        onChange={(e) => updateHotelAdvantage(index, 'title', e.target.value)}
+                        className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                        placeholder="Заголовок (напр. Уютные номера)"
+                      />
+                      <input
+                        type="text"
+                        value={item.description}
+                        onChange={(e) => updateHotelAdvantage(index, 'description', e.target.value)}
+                        className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                        placeholder="Описание"
+                      />
+                    </div>
+                    <button
+                      onClick={() => removeHotelAdvantage(index)}
+                      className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {(!settings.hotelAdvantages || settings.hotelAdvantages.length === 0) && (
+                <p className="text-neutral-400 text-center py-8">
+                  Нет преимуществ отеля. Нажмите "Добавить" чтобы создать первое.
                 </p>
               )}
             </div>

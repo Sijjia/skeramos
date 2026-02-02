@@ -13,7 +13,7 @@ import { FloatingOrbs, EtnoPatternOverlay, GlowingAccent } from '@/components/an
 import { CountUp } from '@/components/animations/OptimizedAnimations';
 import { SThreadAnimation, SThreadDivider } from '@/components/animations/SThreadAnimation';
 import { ReviewsSlider } from '@/components/sections/ReviewsSlider';
-import { useRooms, usePackages, useFAQ } from '@/hooks/useSanityData';
+import { useRooms, usePackages, useFAQ, useSettings } from '@/hooks/useSanityData';
 
 // Custom easing curve for smooth animations
 const smoothEase = [0.25, 0.1, 0.25, 1] as const;
@@ -63,30 +63,39 @@ function getWhatsAppLink(serviceName: string): string {
   return `https://wa.me/${phone}?text=${message}`;
 }
 
-// Hotel features with Lucide icons
-const HOTEL_FEATURES = [
+// Icon mapping for hotel features
+const ICON_MAP: Record<string, typeof Bed> = {
+  bed: Bed,
+  palette: Palette,
+  car: Car,
+  wifi: Wifi,
+  shield: Shield,
+};
+
+// Default hotel features (fallback)
+const DEFAULT_HOTEL_FEATURES = [
   {
-    Icon: Bed,
+    icon: 'bed',
     title: 'Уютные номера',
     description: 'Комфортные номера с современным ремонтом и всем необходимым',
   },
   {
-    Icon: Palette,
+    icon: 'palette',
     title: 'Мастер-классы рядом',
     description: 'Совместите отдых с творчеством — мастерская в том же здании',
   },
   {
-    Icon: Car,
+    icon: 'car',
     title: 'Бесплатная парковка',
     description: 'Охраняемая парковка для гостей отеля',
   },
   {
-    Icon: Wifi,
+    icon: 'wifi',
     title: 'Бесплатный Wi-Fi',
     description: 'Высокоскоростной интернет во всех номерах и общих зонах',
   },
   {
-    Icon: Shield,
+    icon: 'shield',
     title: 'Безопасность',
     description: 'Видеонаблюдение, сейфы в номерах и круглосуточная охрана',
   },
@@ -143,9 +152,13 @@ export default function HotelPage() {
   const { data: rooms } = useRooms();
   const { data: packagesData } = usePackages();
   const { data: faqItems } = useFAQ('hotel');
+  const { data: settings } = useSettings();
 
   // Use API data with fallback
   const packages = packagesData.length > 0 ? packagesData : PACKAGES_FALLBACK;
+  const hotelFeatures = settings.hotelAdvantages && settings.hotelAdvantages.length > 0
+    ? settings.hotelAdvantages
+    : DEFAULT_HOTEL_FEATURES;
 
   useEffect(() => {
     setZone('hotel');
@@ -313,28 +326,31 @@ export default function HotelPage() {
               variants={staggerContainer}
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
-              {HOTEL_FEATURES.map((feature) => (
-                <motion.div
-                  key={feature.title}
-                  variants={cardVariants}
-                  whileHover={{ y: -10, scale: 1.02 }}
-                  className="glass-card p-8 text-center group cursor-pointer"
-                >
+              {hotelFeatures.map((feature) => {
+                const IconComponent = ICON_MAP[feature.icon] || Bed;
+                return (
                   <motion.div
-                    className="mb-4 flex justify-center"
-                    whileHover={{ scale: 1.2, rotate: [0, -10, 10, 0] }}
-                    transition={{ duration: 0.4 }}
+                    key={feature.title}
+                    variants={cardVariants}
+                    whileHover={{ y: -10, scale: 1.02 }}
+                    className="glass-card p-8 text-center group cursor-pointer"
                   >
-                    <feature.Icon className="w-12 h-12 text-zone-500" strokeWidth={1.5} />
+                    <motion.div
+                      className="mb-4 flex justify-center"
+                      whileHover={{ scale: 1.2, rotate: [0, -10, 10, 0] }}
+                      transition={{ duration: 0.4 }}
+                    >
+                      <IconComponent className="w-12 h-12 text-zone-500" strokeWidth={1.5} />
+                    </motion.div>
+                    <h3 className="text-xl font-display font-medium card-title mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="card-muted text-sm">
+                      {feature.description}
+                    </p>
                   </motion.div>
-                  <h3 className="text-xl font-display font-medium card-title mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="card-muted text-sm">
-                    {feature.description}
-                  </p>
-                </motion.div>
-              ))}
+                );
+              })}
             </motion.div>
           </div>
         </section>

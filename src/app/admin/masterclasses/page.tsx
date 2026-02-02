@@ -57,7 +57,12 @@ export default function MasterclassesAdmin() {
   };
 
   const handleEdit = (item: Masterclass) => {
-    setEditingItem({ ...item });
+    // Ensure arrays are initialized for old items
+    setEditingItem({
+      ...item,
+      tags: item.tags || [],
+      externalLink: item.externalLink || '',
+    });
     setIsNew(false);
   };
 

@@ -322,6 +322,7 @@ export interface SettingsUI {
   galleryCategories?: { value: string; label: string }[];
   advantages?: { icon: string; title: string; description: string }[];
   whatYouGet?: { icon: string; title: string; description: string }[];
+  hotelAdvantages?: { icon: string; title: string; description: string }[];
 }
 
 const EMPTY_SETTINGS: SettingsUI = {};
