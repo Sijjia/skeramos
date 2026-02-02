@@ -102,6 +102,36 @@ const AMENITIES = [
   { icon: '🧴', label: 'Косметика' },
 ];
 
+// Fallback packages when API is empty
+const PACKAGES_FALLBACK = [
+  {
+    id: '1',
+    title: 'Романтический уикенд',
+    description: 'Идеальный отдых для двоих с ужином и мастер-классом',
+    image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80',
+    includes: ['Проживание 2 ночи', 'Завтрак в номер', 'Мастер-класс для двоих', 'Ужин при свечах'],
+    price: 15000,
+    featured: true,
+  },
+  {
+    id: '2',
+    title: 'Творческий отпуск',
+    description: 'Погрузитесь в мир керамики с полным курсом обучения',
+    image: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=800&q=80',
+    includes: ['Проживание 3 ночи', 'Завтраки', '3 мастер-класса', 'Сертификат'],
+    price: 20000,
+    featured: false,
+  },
+  {
+    id: '3',
+    title: 'Семейный пакет',
+    description: 'Отдых для всей семьи с детскими мастер-классами',
+    image: 'https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?w=800&q=80',
+    includes: ['Проживание 2 ночи', 'Завтраки', 'Детский МК', 'Кинозал 2 часа'],
+    price: 18000,
+    featured: false,
+  },
+];
 
 export default function HotelPage() {
   const { setZone } = useZone();
@@ -111,8 +141,11 @@ export default function HotelPage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
   const { data: rooms } = useRooms();
-  const { data: packages } = usePackages();
+  const { data: packagesData } = usePackages();
   const { data: faqItems } = useFAQ('hotel');
+
+  // Use API data with fallback
+  const packages = packagesData.length > 0 ? packagesData : PACKAGES_FALLBACK;
 
   useEffect(() => {
     setZone('hotel');
