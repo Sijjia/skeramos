@@ -908,6 +908,36 @@ export default function CreativityPage() {
           </div>
         </section>
 
+        {/* History Section */}
+        <section className="py-24 bg-zone-950/50 etno-shyrdak">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="max-w-3xl mx-auto text-center"
+            >
+              <span className="text-zone-400 text-sm font-medium tracking-wider uppercase">
+                С 2019 года
+              </span>
+              <h2 className="text-3xl md:text-4xl font-display font-medium text-white mt-4 mb-6">
+                Наша история
+              </h2>
+              <p className="text-neutral-300 mb-8">
+                От одного гончарного круга до творческого дома — узнайте, как мы росли
+                и развивались вместе с нашими учениками.
+              </p>
+              <a
+                href="/history"
+                className="inline-flex items-center gap-2 px-8 py-4 glass hover:bg-white/10 text-white rounded-2xl font-medium transition-all"
+              >
+                Узнать историю Skeramos
+                <span>→</span>
+              </a>
+            </motion.div>
+          </div>
+        </section>
+
         {/* CTA Section */}
         <section className="py-24 relative overflow-hidden">
           <div className="absolute inset-0 gradient-radial" />

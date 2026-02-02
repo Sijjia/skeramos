@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useZone } from '@/contexts/ZoneContext';
-import { useServices, type ServiceUI } from '@/hooks/useSanityData';
+import { useServices, useMasterclasses, type ServiceUI, type MasterclassUI } from '@/hooks/useSanityData';
 
 import { Footer } from '@/components/layout/Footer';
 import { FadeInOnScroll } from '@/components/animations/OptimizedAnimations';
@@ -14,16 +14,39 @@ import { EtnoPatternOverlay, GlowingAccent, SectionDivider } from '@/components/
 
 const ITEMS_PER_PAGE = 8;
 
+// Convert masterclass to service format
+function masterclassToService(mc: MasterclassUI): ServiceUI {
+  return {
+    id: `mc_${mc.id}`,
+    slug: mc.slug || mc.id,
+    title: mc.title,
+    shortDescription: mc.description,
+    fullDescription: mc.description,
+    image: mc.image,
+    price: mc.price,
+    duration: mc.duration,
+    groupSize: mc.capacity,
+    includes: [],
+    category: 'masterclass' as const,
+  };
+}
+
 export default function ServicesPage() {
   const { setZone } = useZone();
   const locale = useLocale();
-  const { data: services, loading } = useServices();
+  const { data: servicesData, loading: servicesLoading } = useServices();
+  const { data: masterclassesData, loading: masterclassesLoading } = useMasterclasses();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedService, setSelectedService] = useState<string | null>(null);
 
   useEffect(() => {
     setZone('creativity');
   }, [setZone]);
+
+  // Combine services and masterclasses
+  const loading = servicesLoading || masterclassesLoading;
+  const masterclassesAsServices = masterclassesData.map(masterclassToService);
+  const services = [...servicesData, ...masterclassesAsServices];
 
   const totalPages = Math.ceil(services.length / ITEMS_PER_PAGE);
   const paginatedServices = services.slice(

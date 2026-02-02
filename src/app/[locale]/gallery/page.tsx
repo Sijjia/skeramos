@@ -4,14 +4,11 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useZone } from '@/contexts/ZoneContext';
-import { useGallery, type GalleryItemUI } from '@/hooks/useSanityData';
+import { useGallery, useSettings, type GalleryItemUI } from '@/hooks/useSanityData';
 
 import { Footer } from '@/components/layout/Footer';
 import { FadeInOnScroll } from '@/components/animations/OptimizedAnimations';
 import { EtnoPatternOverlay, GlowingAccent, SectionDivider } from '@/components/animations/EtnoDecorations';
-
-// Типы категорий
-type GalleryCategory = 'all' | 'works' | 'masterclasses' | 'events' | 'interior' | 'hotel';
 
 interface GalleryItem extends GalleryItemUI {
   description?: string;
@@ -19,21 +16,31 @@ interface GalleryItem extends GalleryItemUI {
   date?: string;
 }
 
-const CATEGORIES: { value: GalleryCategory; label: string; icon: string }[] = [
-  { value: 'all', label: 'Все', icon: '✨' },
-  { value: 'works', label: 'Работы', icon: '🏺' },
-  { value: 'masterclasses', label: 'Мастер-классы', icon: '🎨' },
-  { value: 'events', label: 'Мероприятия', icon: '🎉' },
-  { value: 'interior', label: 'Интерьер', icon: '🏠' },
-  { value: 'hotel', label: 'Отель', icon: '🛏️' },
+interface CategoryOption {
+  value: string;
+  label: string;
+}
+
+const DEFAULT_CATEGORIES: CategoryOption[] = [
+  { value: 'works', label: 'Работы' },
+  { value: 'masterclasses', label: 'Мастер-классы' },
+  { value: 'events', label: 'Мероприятия' },
+  { value: 'interior', label: 'Интерьер' },
+  { value: 'hotel', label: 'Отель' },
 ];
 
 export default function GalleryPage() {
   const { setZone } = useZone();
   const { data: galleryData, loading } = useGallery();
-  const [activeCategory, setActiveCategory] = useState<GalleryCategory>('all');
+  const { data: settings } = useSettings();
+  const [activeCategory, setActiveCategory] = useState<string>('all');
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Use categories from settings or defaults
+  const categories: CategoryOption[] = settings.galleryCategories && settings.galleryCategories.length > 0
+    ? settings.galleryCategories
+    : DEFAULT_CATEGORIES;
 
   useEffect(() => {
     setZone('creativity');
@@ -42,7 +49,7 @@ export default function GalleryPage() {
   // Преобразуем данные из API в формат для отображения
   const galleryItems: GalleryItem[] = galleryData.map(item => ({
     ...item,
-    category: (item.category || 'works') as Exclude<GalleryCategory, 'all'>,
+    category: item.category || 'works',
   }));
 
   const filteredItems = activeCategory === 'all'
@@ -128,7 +135,22 @@ export default function GalleryPage() {
         <section className="py-8 sticky top-16 z-30 bg-background/80 backdrop-blur-lg border-b border-white/5">
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap justify-center gap-2 md:gap-3">
-              {CATEGORIES.map((cat) => (
+              {/* All button */}
+              <button
+                onClick={() => setActiveCategory('all')}
+                className={`
+                  px-4 py-2 md:px-6 md:py-3 rounded-xl text-sm font-medium transition-all duration-300
+                  ${activeCategory === 'all'
+                    ? 'bg-zone-500 text-white shadow-lg shadow-zone-500/30'
+                    : 'glass text-neutral-300 hover:text-white hover:bg-white/10'
+                  }
+                `}
+              >
+                <span className="mr-2">✨</span>
+                Все
+              </button>
+              {/* Dynamic categories */}
+              {categories.map((cat) => (
                 <button
                   key={cat.value}
                   onClick={() => setActiveCategory(cat.value)}
@@ -140,7 +162,6 @@ export default function GalleryPage() {
                     }
                   `}
                 >
-                  <span className="mr-2">{cat.icon}</span>
                   {cat.label}
                 </button>
               ))}
@@ -200,7 +221,7 @@ export default function GalleryPage() {
 
                           {/* Category badge */}
                           <div className="absolute top-3 left-3 px-2 py-1 rounded-full glass text-white text-xs">
-                            {CATEGORIES.find(c => c.value === item.category)?.icon}
+                            {categories.find((c: CategoryOption) => c.value === item.category)?.label || item.category}
                           </div>
                         </div>
                       </div>
@@ -302,12 +323,9 @@ export default function GalleryPage() {
 
                 {/* Info */}
                 <div className="glass-card p-6 flex flex-col justify-center">
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="text-2xl">
-                      {CATEGORIES.find(c => c.value === selectedItem.category)?.icon}
-                    </span>
-                    <span className="text-zone-500 text-sm">
-                      {CATEGORIES.find(c => c.value === selectedItem.category)?.label}
+                  <div className="mb-4">
+                    <span className="px-3 py-1 rounded-full bg-zone-500/20 text-zone-300 text-sm">
+                      {categories.find((c: CategoryOption) => c.value === selectedItem.category)?.label || selectedItem.category}
                     </span>
                   </div>
 

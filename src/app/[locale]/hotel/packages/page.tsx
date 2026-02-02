@@ -6,122 +6,11 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useLocale } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
+import { usePackages } from '@/hooks/useSanityData';
 
 import { Footer } from '@/components/layout/Footer';
 import { FadeInOnScroll } from '@/components/animations/OptimizedAnimations';
 import { EtnoPatternOverlay, GlowingAccent, SectionDivider } from '@/components/animations/EtnoDecorations';
-
-// Mock data - будет из Sanity
-const PACKAGES = [
-  {
-    id: '1',
-    title: 'Романтический вечер',
-    description: 'Идеальное свидание для двоих с кинозалом и уютной атмосферой',
-    image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80',
-    price: 12000,
-    originalPrice: 15000,
-    includes: [
-      'Комфортный номер на ночь',
-      '2 часа кинозала',
-      'Бутылка шампанского',
-      'Фруктовая тарелка',
-      'Романтическое оформление',
-      'Поздний выезд до 14:00',
-    ],
-    featured: true,
-    badge: 'Хит продаж',
-  },
-  {
-    id: '2',
-    title: 'Творческий уикенд',
-    description: 'Совместите отдых в отеле с мастер-классом по керамике',
-    image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80',
-    price: 15000,
-    originalPrice: 18000,
-    includes: [
-      'Номер Комфорт на 2 ночи',
-      'Мастер-класс на гончарном круге (2 чел)',
-      'Завтрак оба дня',
-      '1 час кинозала',
-      'Готовое изделие в подарок',
-    ],
-    featured: false,
-    badge: 'Уникально',
-  },
-  {
-    id: '3',
-    title: 'День рождения',
-    description: 'Отметьте праздник в приватной обстановке с друзьями',
-    image: 'https://images.unsplash.com/photo-1464349153735-7db50ed83c84?w=800&q=80',
-    price: 20000,
-    originalPrice: 25000,
-    includes: [
-      '3 часа кинозала',
-      'Оформление шарами',
-      'Торт на заказ (до 2 кг)',
-      'Фотозона',
-      'Караоке',
-      'Напитки и закуски',
-    ],
-    featured: false,
-    badge: 'Праздник',
-  },
-  {
-    id: '4',
-    title: 'Киномарафон',
-    description: 'Ночь кино с друзьями: PlayStation, попкорн и любимые фильмы',
-    image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&q=80',
-    price: 18000,
-    originalPrice: 22000,
-    includes: [
-      'Кинозал с 22:00 до 08:00',
-      'PlayStation 5',
-      'Безлимитный попкорн',
-      'Напитки',
-      'Пледы и подушки',
-      'Завтрак утром',
-    ],
-    featured: false,
-    badge: 'Ночь',
-  },
-  {
-    id: '5',
-    title: 'Девичник Делюкс',
-    description: 'Незабываемый девичник с подругами в роскошной обстановке',
-    image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&q=80',
-    price: 25000,
-    originalPrice: 32000,
-    includes: [
-      'Романтический люкс',
-      '3 часа кинозала',
-      'Просекко и закуски',
-      'Мастер-класс по керамике',
-      'Фотосессия (20 фото)',
-      'Караоке',
-      'Оформление',
-    ],
-    featured: true,
-    badge: 'Люкс',
-  },
-  {
-    id: '6',
-    title: 'Семейный отдых',
-    description: 'Выходные всей семьёй с развлечениями для детей и взрослых',
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
-    price: 22000,
-    originalPrice: 28000,
-    includes: [
-      'Семейный номер на 2 ночи',
-      '2 часа кинозала',
-      'Детский мастер-класс',
-      'Завтраки',
-      'Мультфильмы и игры',
-      'Детские подарки',
-    ],
-    featured: false,
-    badge: 'Семья',
-  },
-];
 
 function getWhatsAppLink(packageName: string): string {
   const phone = '996555123456';
@@ -132,6 +21,7 @@ function getWhatsAppLink(packageName: string): string {
 export default function PackagesPage() {
   const { setZone } = useZone();
   const locale = useLocale();
+  const { data: packages, loading } = usePackages();
 
   useEffect(() => {
     setZone('hotel');
@@ -189,85 +79,106 @@ export default function PackagesPage() {
         {/* Packages Grid */}
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {PACKAGES.map((pkg, idx) => (
-                <FadeInOnScroll key={pkg.id} delay={idx * 0.1}>
-                  <article className={`glass-card overflow-hidden group hover-lift relative ${
-                    pkg.featured ? 'ring-2 ring-zone-400' : ''
-                  }`}>
-                    {/* Badge */}
-                    <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-zone-500/90 text-white text-sm font-medium">
-                      {pkg.badge}
+            {loading ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="glass-card overflow-hidden animate-pulse">
+                    <div className="aspect-[4/3] bg-white/10"></div>
+                    <div className="p-6 space-y-3">
+                      <div className="h-6 bg-white/10 rounded w-3/4"></div>
+                      <div className="h-4 bg-white/10 rounded w-full"></div>
+                      <div className="h-20 bg-white/10 rounded"></div>
                     </div>
+                  </div>
+                ))}
+              </div>
+            ) : packages.length > 0 ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {packages.map((pkg, idx) => (
+                  <FadeInOnScroll key={pkg.id} delay={idx * 0.1}>
+                    <article className={`glass-card overflow-hidden group hover-lift relative ${
+                      pkg.featured ? 'ring-2 ring-zone-400' : ''
+                    }`}>
+                      {/* Featured badge */}
+                      {pkg.featured && (
+                        <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-zone-500/90 text-white text-sm font-medium">
+                          Популярный
+                        </div>
+                      )}
 
-                    {/* Discount badge */}
-                    {pkg.originalPrice > pkg.price && (
-                      <div className="absolute top-4 right-4 z-10 px-3 py-1 rounded-full bg-gold-500 text-white text-sm font-medium">
-                        -{Math.round((1 - pkg.price / pkg.originalPrice) * 100)}%
+                      {/* Image */}
+                      <div className="relative aspect-[4/3]">
+                        <Image
+                          src={pkg.image}
+                          alt={pkg.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
                       </div>
-                    )}
 
-                    {/* Image */}
-                    <div className="relative aspect-[4/3]">
-                      <Image
-                        src={pkg.image}
-                        alt={pkg.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
-                    </div>
+                      {/* Content */}
+                      <div className="p-6">
+                        <h3 className="text-xl font-display font-medium text-white mb-2">
+                          {pkg.title}
+                        </h3>
+                        <p className="text-neutral-400 text-sm mb-4">
+                          {pkg.description}
+                        </p>
 
-                    {/* Content */}
-                    <div className="p-6">
-                      <h3 className="text-xl font-display font-medium text-white mb-2">
-                        {pkg.title}
-                      </h3>
-                      <p className="text-neutral-400 text-sm mb-4">
-                        {pkg.description}
-                      </p>
-
-                      {/* Includes */}
-                      <ul className="space-y-2 mb-6">
-                        {pkg.includes.slice(0, 4).map((item, i) => (
-                          <li key={i} className="flex items-start gap-2 text-sm text-neutral-300">
-                            <span className="text-zone-400 mt-0.5">✓</span>
-                            {item}
-                          </li>
-                        ))}
-                        {pkg.includes.length > 4 && (
-                          <li className="text-zone-400 text-sm">
-                            +{pkg.includes.length - 4} ещё
-                          </li>
+                        {/* Includes */}
+                        {pkg.includes && pkg.includes.length > 0 && (
+                          <ul className="space-y-2 mb-6">
+                            {pkg.includes.slice(0, 4).map((item, i) => (
+                              <li key={i} className="flex items-start gap-2 text-sm text-neutral-300">
+                                <span className="text-zone-400 mt-0.5">✓</span>
+                                {item}
+                              </li>
+                            ))}
+                            {pkg.includes.length > 4 && (
+                              <li className="text-zone-400 text-sm">
+                                +{pkg.includes.length - 4} ещё
+                              </li>
+                            )}
+                          </ul>
                         )}
-                      </ul>
 
-                      {/* Price */}
-                      <div className="flex items-end gap-3 mb-4">
-                        <span className="text-2xl font-display font-bold text-white">
-                          {pkg.price.toLocaleString()} сом
-                        </span>
-                        {pkg.originalPrice > pkg.price && (
-                          <span className="text-neutral-500 line-through text-sm mb-1">
-                            {pkg.originalPrice.toLocaleString()}
+                        {/* Price */}
+                        <div className="flex items-end gap-3 mb-4">
+                          <span className="text-2xl font-display font-bold text-white">
+                            {pkg.price.toLocaleString()} сом
                           </span>
-                        )}
-                      </div>
+                        </div>
 
-                      {/* CTA */}
-                      <a
-                        href={getWhatsAppLink(pkg.title)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block w-full py-3 bg-zone-500 hover:bg-zone-600 text-white text-center rounded-xl font-medium transition-colors"
-                      >
-                        Забронировать
-                      </a>
-                    </div>
-                  </article>
-                </FadeInOnScroll>
-              ))}
-            </div>
+                        {/* CTA */}
+                        <a
+                          href={getWhatsAppLink(pkg.title)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block w-full py-3 bg-zone-500 hover:bg-zone-600 text-white text-center rounded-xl font-medium transition-colors"
+                        >
+                          Забронировать
+                        </a>
+                      </div>
+                    </article>
+                  </FadeInOnScroll>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20">
+                <span className="text-6xl mb-4 block">📦</span>
+                <h3 className="text-xl text-white mb-2">Пакеты скоро появятся</h3>
+                <p className="text-neutral-400 mb-6">Мы готовим для вас выгодные предложения</p>
+                <a
+                  href="https://wa.me/996555123456?text=Здравствуйте! Хочу узнать о пакетах"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-zone-500 hover:bg-zone-600 text-white rounded-xl transition-colors"
+                >
+                  Связаться в WhatsApp
+                </a>
+              </div>
+            )}
           </div>
         </section>
 

@@ -84,29 +84,30 @@ export default function MastersPage() {
                     delay={index * 0.1}
                     className="group"
                   >
-                    <article className="glass-card overflow-hidden">
-                      {/* Photo */}
-                      <div className="relative aspect-[4/3] overflow-hidden">
-                        {master.image ? (
-                          <Image
-                            src={master.image}
-                            alt={master.name}
-                            fill
-                            className="object-cover transition-transform duration-700 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-zone-500/20 flex items-center justify-center">
-                            <span className="text-6xl text-zone-500/50">👨‍🎨</span>
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
-                      </div>
+                    <Link href={`/${locale}/masters/${master.id}`}>
+                      <article className="glass-card overflow-hidden cursor-pointer">
+                        {/* Photo */}
+                        <div className="relative aspect-[4/3] overflow-hidden">
+                          {master.image ? (
+                            <Image
+                              src={master.image}
+                              alt={master.name}
+                              fill
+                              className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-zone-500/20 flex items-center justify-center">
+                              <span className="text-6xl text-zone-500/50">👨‍🎨</span>
+                            </div>
+                          )}
+                          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+                        </div>
 
-                      {/* Info */}
-                      <div className="p-6">
-                        <h2 className="text-xl font-display font-medium text-white mb-1 group-hover:text-zone-300 transition-colors">
-                          {master.name}
-                        </h2>
+                        {/* Info */}
+                        <div className="p-6">
+                          <h2 className="text-xl font-display font-medium text-white mb-1 group-hover:text-zone-300 transition-colors">
+                            {master.name}
+                          </h2>
                         <p className="text-neutral-400 text-sm mb-2">
                           {master.role}
                         </p>
@@ -152,22 +153,15 @@ export default function MastersPage() {
                           </div>
                         )}
 
-                        {/* Actions */}
-                        {master.whatsapp && (
-                          <div className="pt-4 border-t border-white/10">
-                            <a
-                              href={getWhatsAppLink(master.whatsapp, master.name)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-lg text-sm font-medium transition-colors"
-                            >
-                              <MessageCircle className="w-4 h-4" />
-                              Записаться через WhatsApp
-                            </a>
-                          </div>
-                        )}
+                        {/* View more link */}
+                        <div className="pt-4 border-t border-white/10">
+                          <span className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-zone-500/20 hover:bg-zone-500/30 text-zone-300 rounded-lg text-sm font-medium transition-colors">
+                            Подробнее о мастере →
+                          </span>
+                        </div>
                       </div>
                     </article>
+                  </Link>
                   </FadeInOnScroll>
                 ))}
               </div>

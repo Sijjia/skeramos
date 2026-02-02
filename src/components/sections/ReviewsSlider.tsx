@@ -38,7 +38,7 @@ export function ReviewsSlider({
 
   // Фильтруем отзывы по текущей зоне и активности
   const filteredReviews = reviews.filter(
-    review => (review.zone === zone || zone === 'creativity') && review.active !== false
+    review => review.zone === zone && review.active !== false
   );
 
   const currentReview = filteredReviews[currentIndex];
