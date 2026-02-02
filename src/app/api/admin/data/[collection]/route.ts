@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import fs from 'fs/promises';
-import path from 'path';
 import crypto from 'crypto';
+import { put, list, del } from '@vercel/blob';
 
 const SESSION_SECRET = process.env.SESSION_SECRET || 'default-secret';
 const COOKIE_NAME = 'admin_session';
-const DATA_DIR = path.join(process.cwd(), 'data');
 
 // Доступные коллекции
 const COLLECTIONS = [
@@ -16,6 +14,7 @@ const COLLECTIONS = [
   'gallery',
   'packages',
   'masters',
+  'services',
   'settings',
 ];
 
@@ -43,19 +42,57 @@ async function isAuthenticated(): Promise<boolean> {
   return token ? verifyToken(token) : false;
 }
 
+// Читаем данные из Vercel Blob
 async function readData(collection: string): Promise<unknown> {
-  const filePath = path.join(DATA_DIR, `${collection}.json`);
   try {
-    const data = await fs.readFile(filePath, 'utf-8');
-    return JSON.parse(data);
-  } catch {
+    // Проверяем есть ли BLOB_READ_WRITE_TOKEN
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      console.warn('BLOB_READ_WRITE_TOKEN not set, returning empty data');
+      return collection === 'settings' ? {} : [];
+    }
+
+    // Ищем файл в Blob storage
+    const { blobs } = await list({ prefix: `data/${collection}.json` });
+
+    if (blobs.length === 0) {
+      return collection === 'settings' ? {} : [];
+    }
+
+    // Читаем данные из blob
+    const response = await fetch(blobs[0].url);
+    if (!response.ok) {
+      return collection === 'settings' ? {} : [];
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Error reading ${collection}:`, error);
     return collection === 'settings' ? {} : [];
   }
 }
 
+// Записываем данные в Vercel Blob
 async function writeData(collection: string, data: unknown): Promise<void> {
-  const filePath = path.join(DATA_DIR, `${collection}.json`);
-  await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    throw new Error('BLOB_READ_WRITE_TOKEN not configured');
+  }
+
+  // Сначала удаляем старый файл если есть
+  try {
+    const { blobs } = await list({ prefix: `data/${collection}.json` });
+    for (const blob of blobs) {
+      await del(blob.url);
+    }
+  } catch {
+    // Игнорируем ошибки удаления
+  }
+
+  // Записываем новый файл
+  await put(`data/${collection}.json`, JSON.stringify(data, null, 2), {
+    access: 'public',
+    contentType: 'application/json',
+  });
 }
 
 type RouteContext = {
@@ -126,8 +163,9 @@ export async function POST(
 
     return NextResponse.json({ success: true, item: itemWithId });
   } catch (error) {
+    console.error('POST error:', error);
     return NextResponse.json(
-      { error: 'Ошибка сохранения' },
+      { error: 'Ошибка сохранения: ' + (error instanceof Error ? error.message : 'Unknown') },
       { status: 500 }
     );
   }
@@ -175,8 +213,9 @@ export async function PUT(
 
     return NextResponse.json({ success: true, item: data[index] });
   } catch (error) {
+    console.error('PUT error:', error);
     return NextResponse.json(
-      { error: 'Ошибка обновления' },
+      { error: 'Ошибка обновления: ' + (error instanceof Error ? error.message : 'Unknown') },
       { status: 500 }
     );
   }
@@ -225,8 +264,9 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error('DELETE error:', error);
     return NextResponse.json(
-      { error: 'Ошибка удаления' },
+      { error: 'Ошибка удаления: ' + (error instanceof Error ? error.message : 'Unknown') },
       { status: 500 }
     );
   }

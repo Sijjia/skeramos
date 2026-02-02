@@ -6,162 +6,34 @@ import Link from 'next/link';
 import { useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useZone } from '@/contexts/ZoneContext';
+import { useServices, type ServiceUI } from '@/hooks/useSanityData';
 
 import { Footer } from '@/components/layout/Footer';
 import { FadeInOnScroll } from '@/components/animations/OptimizedAnimations';
 import { EtnoPatternOverlay, GlowingAccent, SectionDivider } from '@/components/animations/EtnoDecorations';
-
-// Service type with optional external link
-interface Service {
-  id: string;
-  slug: string;
-  title: string;
-  shortDescription: string;
-  fullDescription: string;
-  image: string;
-  price: number;
-  priceNote?: string;
-  duration: string;
-  groupSize: string;
-  includes: string[];
-  category: 'masterclass' | 'course' | 'event';
-  externalLink?: string; // Optional external booking link (e.g., Altegio)
-}
-
-// Mock data - будет из Sanity
-const ALL_SERVICES: Service[] = [
-  {
-    id: '1',
-    slug: 'pottery-wheel-intro',
-    title: 'Знакомство с гончарным кругом',
-    shortDescription: 'Первый шаг в мир керамики. Создайте свою первую чашу или вазу.',
-    fullDescription: 'Идеальный мастер-класс для новичков! Вы познакомитесь с гончарным кругом, научитесь центровать глину и создадите своё первое изделие. Мастер поможет на каждом этапе — от подготовки глины до формирования стенок. В конце занятия вы выберете глазурь для обжига.',
-    image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80',
-    price: 2500,
-    duration: '2 часа',
-    groupSize: '1-4 человека',
-    includes: ['Все материалы', 'Работа мастера', 'Обжиг изделия', 'Упаковка'],
-    category: 'masterclass',
-    // externalLink: 'https://altegio.com/booking/skeramos/pottery-wheel', // Example
-  },
-  {
-    id: '2',
-    slug: 'hand-building',
-    title: 'Лепка из пласта',
-    shortDescription: 'Освойте технику ручной лепки и создайте уникальную тарелку.',
-    fullDescription: 'На этом мастер-классе вы освоите технику работы с глиняным пластом. Научитесь раскатывать глину, вырезать формы и собирать изделие. Создадите авторскую тарелку или блюдо с декором по вашему выбору.',
-    image: 'https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?w=800&q=80',
-    price: 2800,
-    duration: '2.5 часа',
-    groupSize: '1-6 человек',
-    includes: ['Все материалы', 'Работа мастера', 'Обжиг', 'Декорирование'],
-    category: 'masterclass',
-  },
-  {
-    id: '3',
-    slug: 'painting',
-    title: 'Роспись керамики',
-    shortDescription: 'Украсьте готовое изделие глазурью и ангобами.',
-    fullDescription: 'Идеальный вариант для тех, кто хочет творить без работы с глиной. Вы получите готовое бисквитное изделие и распишете его специальными красками. Узнаете о техниках росписи, смешивании цветов и создании орнаментов.',
-    image: 'https://images.unsplash.com/photo-1603665301175-57ba46f392bf?w=800&q=80',
-    price: 2000,
-    duration: '1.5 часа',
-    groupSize: '1-8 человек',
-    includes: ['Изделие для росписи', 'Краски и кисти', 'Глазурь', 'Обжиг'],
-    category: 'masterclass',
-  },
-  {
-    id: '4',
-    slug: 'couple-pottery',
-    title: 'Свидание на гончарном круге',
-    shortDescription: 'Романтический мастер-класс для пар.',
-    fullDescription: 'Проведите незабываемое свидание за гончарным кругом! Вы с партнёром будете работать на соседних кругах, помогая друг другу. Создадите парные изделия — например, набор чашек. Романтическая атмосфера и памятные сувениры гарантированы.',
-    image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&q=80',
-    price: 5500,
-    duration: '2 часа',
-    groupSize: '2 человека',
-    includes: ['Отдельные круги', 'Все материалы', 'Чай и сладости', 'Фотосессия'],
-    category: 'masterclass',
-  },
-  {
-    id: '5',
-    slug: 'basic-course',
-    title: 'Базовый курс гончарного мастерства',
-    shortDescription: 'Полный курс для начинающих: от центровки до обжига.',
-    fullDescription: '8 занятий по 3 часа — полное погружение в гончарное искусство. Вы освоите все базовые техники: центровку, вытягивание стенок, формирование разных изделий. Узнаете о типах глины, глазурях и обжиге. К концу курса создадите целую коллекцию!',
-    image: 'https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?w=800&q=80',
-    price: 35000,
-    duration: '8 занятий × 3 часа',
-    groupSize: '4-6 человек',
-    includes: ['24 часа обучения', 'Все материалы', '8+ изделий', 'Сертификат'],
-    category: 'course',
-  },
-  {
-    id: '6',
-    slug: 'teambuilding',
-    title: 'Корпоративный тимбилдинг',
-    shortDescription: 'Объедините команду за творческим процессом.',
-    fullDescription: 'Уникальный формат тимбилдинга! Ваша команда будет работать вместе над керамическими проектами. Можно создать общее панно или индивидуальные изделия. Мы подготовим программу под ваши задачи и количество участников.',
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80',
-    price: 3000,
-    priceNote: 'за человека',
-    duration: '3 часа',
-    groupSize: 'до 20 человек',
-    includes: ['Индивидуальная программа', 'Все материалы', 'Фотоотчёт', 'Кофе-брейк'],
-    category: 'event',
-  },
-  {
-    id: '7',
-    slug: 'birthday',
-    title: 'День рождения в мастерской',
-    shortDescription: 'Незабываемый праздник для детей и взрослых.',
-    fullDescription: 'Отметьте день рождения творчески! Мы организуем мастер-класс для именинника и гостей, украсим зал, подготовим зону для чаепития. Каждый гость создаст подарок для именинника, а он сам — особенное изделие.',
-    image: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?w=800&q=80',
-    price: 25000,
-    priceNote: 'от',
-    duration: '2.5 часа',
-    groupSize: 'до 12 человек',
-    includes: ['Мастер-класс', 'Украшение зала', 'Чаепитие', 'Фото'],
-    category: 'event',
-  },
-  {
-    id: '8',
-    slug: 'bachelorette',
-    title: 'Девичник в мастерской',
-    shortDescription: 'Творческое время с подругами.',
-    fullDescription: 'Проведите девичник с пользой! Создайте керамику, которая напомнит о весёлом дне. Мы подготовим особую программу, украсим пространство и обеспечим фотозону. Можно добавить шампанское и закуски.',
-    image: 'https://images.unsplash.com/photo-1529543544277-750e1b25e5f4?w=800&q=80',
-    price: 20000,
-    priceNote: 'от',
-    duration: '2.5 часа',
-    groupSize: 'до 8 человек',
-    includes: ['Мастер-класс', 'Декор и фотозона', 'Напитки', 'Сувениры'],
-    category: 'event',
-  },
-];
 
 const ITEMS_PER_PAGE = 8;
 
 export default function ServicesPage() {
   const { setZone } = useZone();
   const locale = useLocale();
+  const { data: services, loading } = useServices();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [contactMethod, setContactMethod] = useState<'whatsapp' | 'telegram' | 'phone' | null>(null);
 
   useEffect(() => {
     setZone('creativity');
   }, [setZone]);
 
-  const totalPages = Math.ceil(ALL_SERVICES.length / ITEMS_PER_PAGE);
-  const paginatedServices = ALL_SERVICES.slice(
+  const totalPages = Math.ceil(services.length / ITEMS_PER_PAGE);
+  const paginatedServices = services.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
 
-  const selectedServiceData = ALL_SERVICES.find(s => s.id === selectedService);
+  const selectedServiceData = services.find(s => s.id === selectedService);
 
-  const getContactLink = (service: typeof ALL_SERVICES[0], method: 'whatsapp' | 'telegram' | 'phone') => {
+  const getContactLink = (service: ServiceUI, method: 'whatsapp' | 'telegram' | 'phone') => {
     const message = encodeURIComponent(`Здравствуйте! Хочу записаться на "${service.title}"`);
     switch (method) {
       case 'whatsapp':
@@ -175,7 +47,7 @@ export default function ServicesPage() {
 
   return (
     <>
-      
+
       <EtnoPatternOverlay pattern="mixed" opacity={0.02} />
 
       <main className="min-h-screen bg-background pt-20">
@@ -207,151 +79,176 @@ export default function ServicesPage() {
         {/* Services List */}
         <section className="py-12 md:py-20">
           <div className="container mx-auto px-4">
-            <div className="space-y-16">
-              {paginatedServices.map((service, index) => (
-                <FadeInOnScroll
-                  key={service.id}
-                  direction={index % 2 === 0 ? 'left' : 'right'}
-                  delay={0.1}
-                >
-                  <article
-                    className={`grid md:grid-cols-2 gap-8 items-center ${
-                      index % 2 === 1 ? 'md:flex-row-reverse' : ''
-                    }`}
-                  >
-                    {/* Image - чередование лево/право */}
-                    <div className={`${index % 2 === 1 ? 'md:order-2' : ''}`}>
-                      <div className="relative aspect-[4/3] rounded-3xl overflow-hidden group">
-                        <Image
-                          src={service.image}
-                          alt={service.title}
-                          fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+            {loading ? (
+              <div className="text-center py-20">
+                <div className="inline-block w-8 h-8 border-2 border-zone-500 border-t-transparent rounded-full animate-spin mb-4" />
+                <p className="text-neutral-400">Загрузка...</p>
+              </div>
+            ) : services.length > 0 ? (
+              <>
+                <div className="space-y-16">
+                  {paginatedServices.map((service, index) => (
+                    <FadeInOnScroll
+                      key={service.id}
+                      direction={index % 2 === 0 ? 'left' : 'right'}
+                      delay={0.1}
+                    >
+                      <article
+                        className={`grid md:grid-cols-2 gap-8 items-center ${
+                          index % 2 === 1 ? 'md:flex-row-reverse' : ''
+                        }`}
+                      >
+                        {/* Image - чередование лево/право */}
+                        <div className={`${index % 2 === 1 ? 'md:order-2' : ''}`}>
+                          <div className="relative aspect-[4/3] rounded-3xl overflow-hidden group">
+                            <Image
+                              src={service.image}
+                              alt={service.title}
+                              fill
+                              className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
 
-                        {/* Price badge */}
-                        <div className="absolute top-4 right-4 px-4 py-2 rounded-full glass">
-                          <span className="text-white font-medium">
-                            {service.priceNote && `${service.priceNote} `}
-                            {service.price.toLocaleString()} сом
-                          </span>
+                            {/* Price badge */}
+                            <div className="absolute top-4 right-4 px-4 py-2 rounded-full glass">
+                              <span className="text-white font-medium">
+                                {service.priceNote && `${service.priceNote} `}
+                                {service.price.toLocaleString()} сом
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
 
-                    {/* Content */}
-                    <div className={`${index % 2 === 1 ? 'md:order-1' : ''}`}>
-                      <span className="text-zone-400 text-sm font-medium tracking-wider uppercase">
-                        {service.category === 'masterclass' && 'Мастер-класс'}
-                        {service.category === 'course' && 'Курс'}
-                        {service.category === 'event' && 'Мероприятие'}
-                      </span>
-                      <h2 className="text-2xl md:text-3xl font-display font-medium text-white mt-2 mb-4">
-                        {service.title}
-                      </h2>
-                      <p className="text-neutral-300 mb-6">
-                        {service.shortDescription}
-                      </p>
-
-                      {/* Meta */}
-                      <div className="flex flex-wrap gap-4 text-sm text-neutral-400 mb-6">
-                        <span className="flex items-center gap-2">
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          {service.duration}
-                        </span>
-                        <span className="flex items-center gap-2">
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                          </svg>
-                          {service.groupSize}
-                        </span>
-                      </div>
-
-                      {/* Includes */}
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {service.includes.slice(0, 3).map((item) => (
-                          <span
-                            key={item}
-                            className="px-3 py-1 rounded-full bg-zone-900/50 text-zone-300 text-sm"
-                          >
-                            {item}
+                        {/* Content */}
+                        <div className={`${index % 2 === 1 ? 'md:order-1' : ''}`}>
+                          <span className="text-zone-400 text-sm font-medium tracking-wider uppercase">
+                            {service.category === 'masterclass' && 'Мастер-класс'}
+                            {service.category === 'course' && 'Курс'}
+                            {service.category === 'event' && 'Мероприятие'}
                           </span>
-                        ))}
-                        {service.includes.length > 3 && (
-                          <span className="px-3 py-1 rounded-full bg-zone-900/50 text-zone-400 text-sm">
-                            +{service.includes.length - 3}
-                          </span>
-                        )}
-                      </div>
+                          <h2 className="text-2xl md:text-3xl font-display font-medium text-white mt-2 mb-4">
+                            {service.title}
+                          </h2>
+                          <p className="text-neutral-300 mb-6">
+                            {service.shortDescription}
+                          </p>
 
-                      {/* Actions */}
-                      <div className="flex flex-wrap gap-3">
-                        <button
-                          onClick={() => setSelectedService(service.id)}
-                          className="px-6 py-3 bg-zone-500 hover:bg-zone-600 text-white rounded-xl font-medium transition-all"
-                        >
-                          Записаться
-                        </button>
-                        {service.externalLink ? (
-                          <a
-                            href={service.externalLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-6 py-3 glass hover:bg-white/10 text-white rounded-xl font-medium transition-all"
-                          >
-                            Подробнее
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                          </a>
-                        ) : (
-                          <Link
-                            href={`/${locale}/services/${service.slug}`}
-                            className="px-6 py-3 glass hover:bg-white/10 text-white rounded-xl font-medium transition-all"
-                          >
-                            Подробнее
-                          </Link>
-                        )}
-                      </div>
-                    </div>
-                  </article>
-                </FadeInOnScroll>
-              ))}
-            </div>
+                          {/* Meta */}
+                          <div className="flex flex-wrap gap-4 text-sm text-neutral-400 mb-6">
+                            <span className="flex items-center gap-2">
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              {service.duration}
+                            </span>
+                            <span className="flex items-center gap-2">
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                              </svg>
+                              {service.groupSize}
+                            </span>
+                          </div>
 
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-2 mt-16">
-                <button
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className="px-4 py-2 glass rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-colors"
+                          {/* Includes */}
+                          {service.includes && service.includes.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mb-6">
+                              {service.includes.slice(0, 3).map((item) => (
+                                <span
+                                  key={item}
+                                  className="px-3 py-1 rounded-full bg-zone-900/50 text-zone-300 text-sm"
+                                >
+                                  {item}
+                                </span>
+                              ))}
+                              {service.includes.length > 3 && (
+                                <span className="px-3 py-1 rounded-full bg-zone-900/50 text-zone-400 text-sm">
+                                  +{service.includes.length - 3}
+                                </span>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Actions */}
+                          <div className="flex flex-wrap gap-3">
+                            <button
+                              onClick={() => setSelectedService(service.id)}
+                              className="px-6 py-3 bg-zone-500 hover:bg-zone-600 text-white rounded-xl font-medium transition-all"
+                            >
+                              Записаться
+                            </button>
+                            {service.externalLink ? (
+                              <a
+                                href={service.externalLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 px-6 py-3 glass hover:bg-white/10 text-white rounded-xl font-medium transition-all"
+                              >
+                                Подробнее
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                              </a>
+                            ) : (
+                              <Link
+                                href={`/${locale}/services/${service.slug}`}
+                                className="px-6 py-3 glass hover:bg-white/10 text-white rounded-xl font-medium transition-all"
+                              >
+                                Подробнее
+                              </Link>
+                            )}
+                          </div>
+                        </div>
+                      </article>
+                    </FadeInOnScroll>
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex justify-center items-center gap-2 mt-16">
+                    <button
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="px-4 py-2 glass rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-colors"
+                    >
+
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-10 h-10 rounded-lg font-medium transition-colors ${
+                          page === currentPage
+                            ? 'bg-zone-500 text-white'
+                            : 'glass hover:bg-white/10 text-neutral-300'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                      className="px-4 py-2 glass rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-colors"
+                    >
+
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="text-center py-20">
+                <span className="text-6xl mb-4 block">🎨</span>
+                <h3 className="text-xl text-white mb-2">Услуги скоро появятся</h3>
+                <p className="text-neutral-400 mb-6">Мы готовим для вас интересные мастер-классы и курсы</p>
+                <a
+                  href={`https://wa.me/996555123456?text=${encodeURIComponent('Здравствуйте! Хочу узнать о ваших услугах')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-500 text-white rounded-xl font-medium transition-all"
                 >
-                  ←
-                </button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`w-10 h-10 rounded-lg font-medium transition-colors ${
-                      page === currentPage
-                        ? 'bg-zone-500 text-white'
-                        : 'glass hover:bg-white/10 text-neutral-300'
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
-                <button
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  className="px-4 py-2 glass rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-colors"
-                >
-                  →
-                </button>
+                  Связаться в WhatsApp
+                </a>
               </div>
             )}
           </div>
@@ -367,7 +264,6 @@ export default function ServicesPage() {
               className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/90 backdrop-blur-sm"
               onClick={() => {
                 setSelectedService(null);
-                setContactMethod(null);
               }}
             >
               <motion.div
@@ -380,11 +276,10 @@ export default function ServicesPage() {
                 <button
                   onClick={() => {
                     setSelectedService(null);
-                    setContactMethod(null);
                   }}
                   className="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-700 hover:bg-neutral-200 transition-colors"
                 >
-                  ×
+                  x
                 </button>
 
                 <h3 className="text-xl font-display font-medium card-title mb-2">
