@@ -1,6 +1,24 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Plus, X } from 'lucide-react';
+
+interface GalleryCategory {
+  value: string;
+  label: string;
+}
+
+interface AdvantageItem {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+interface WhatYouGetItem {
+  icon: string;
+  title: string;
+  description: string;
+}
 
 interface Settings {
   siteName: string;
@@ -15,19 +33,54 @@ interface Settings {
     telegram: string;
   };
   cinemaPrice: number;
+  galleryCategories?: GalleryCategory[];
+  advantages?: AdvantageItem[];
+  whatYouGet?: WhatYouGetItem[];
 }
+
+const DEFAULT_GALLERY_CATEGORIES: GalleryCategory[] = [
+  { value: 'works', label: 'Работы' },
+  { value: 'masterclasses', label: 'Мастер-классы' },
+  { value: 'events', label: 'Мероприятия' },
+  { value: 'interior', label: 'Интерьер' },
+  { value: 'hotel', label: 'Отель' },
+];
+
+const ICON_OPTIONS = [
+  { value: 'palette', label: '🎨 Палитра' },
+  { value: 'graduation', label: '🎓 Образование' },
+  { value: 'home', label: '🏠 Дом' },
+  { value: 'gift', label: '🎁 Подарок' },
+  { value: 'clock', label: '⏰ Время' },
+  { value: 'users', label: '👥 Люди' },
+  { value: 'sparkles', label: '✨ Искры' },
+  { value: 'heart', label: '❤️ Сердце' },
+  { value: 'camera', label: '📷 Камера' },
+  { value: 'package', label: '📦 Пакет' },
+  { value: 'award', label: '🏆 Награда' },
+  { value: 'smile', label: '😊 Улыбка' },
+  { value: 'coffee', label: '☕ Кофе' },
+  { value: 'star', label: '⭐ Звезда' },
+];
 
 export default function SettingsAdmin() {
   const [settings, setSettings] = useState<Settings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [activeTab, setActiveTab] = useState<'general' | 'gallery' | 'content'>('general');
 
   const loadSettings = async () => {
     try {
       const res = await fetch('/api/admin/data/settings');
       const data = await res.json();
-      setSettings(data);
+      // Initialize with defaults if not set
+      setSettings({
+        ...data,
+        galleryCategories: data.galleryCategories || DEFAULT_GALLERY_CATEGORIES,
+        advantages: data.advantages || [],
+        whatYouGet: data.whatYouGet || [],
+      });
     } catch (error) {
       console.error('Error loading:', error);
     } finally {
@@ -38,6 +91,84 @@ export default function SettingsAdmin() {
   useEffect(() => {
     loadSettings();
   }, []);
+
+  // Gallery categories helpers
+  const addCategory = () => {
+    if (!settings) return;
+    setSettings({
+      ...settings,
+      galleryCategories: [
+        ...(settings.galleryCategories || []),
+        { value: `category_${Date.now()}`, label: 'Новая категория' },
+      ],
+    });
+  };
+
+  const removeCategory = (index: number) => {
+    if (!settings?.galleryCategories) return;
+    const updated = [...settings.galleryCategories];
+    updated.splice(index, 1);
+    setSettings({ ...settings, galleryCategories: updated });
+  };
+
+  const updateCategory = (index: number, field: 'value' | 'label', value: string) => {
+    if (!settings?.galleryCategories) return;
+    const updated = [...settings.galleryCategories];
+    updated[index] = { ...updated[index], [field]: value };
+    setSettings({ ...settings, galleryCategories: updated });
+  };
+
+  // Advantages helpers
+  const addAdvantage = () => {
+    if (!settings) return;
+    setSettings({
+      ...settings,
+      advantages: [
+        ...(settings.advantages || []),
+        { icon: 'star', title: '', description: '' },
+      ],
+    });
+  };
+
+  const removeAdvantage = (index: number) => {
+    if (!settings?.advantages) return;
+    const updated = [...settings.advantages];
+    updated.splice(index, 1);
+    setSettings({ ...settings, advantages: updated });
+  };
+
+  const updateAdvantage = (index: number, field: keyof AdvantageItem, value: string) => {
+    if (!settings?.advantages) return;
+    const updated = [...settings.advantages];
+    updated[index] = { ...updated[index], [field]: value };
+    setSettings({ ...settings, advantages: updated });
+  };
+
+  // What You Get helpers
+  const addWhatYouGet = () => {
+    if (!settings) return;
+    setSettings({
+      ...settings,
+      whatYouGet: [
+        ...(settings.whatYouGet || []),
+        { icon: 'star', title: '', description: '' },
+      ],
+    });
+  };
+
+  const removeWhatYouGet = (index: number) => {
+    if (!settings?.whatYouGet) return;
+    const updated = [...settings.whatYouGet];
+    updated.splice(index, 1);
+    setSettings({ ...settings, whatYouGet: updated });
+  };
+
+  const updateWhatYouGet = (index: number, field: keyof WhatYouGetItem, value: string) => {
+    if (!settings?.whatYouGet) return;
+    const updated = [...settings.whatYouGet];
+    updated[index] = { ...updated[index], [field]: value };
+    setSettings({ ...settings, whatYouGet: updated });
+  };
 
   const handleSave = async () => {
     if (!settings) return;
@@ -79,6 +210,35 @@ export default function SettingsAdmin() {
         </button>
       </div>
 
+      {/* Tabs */}
+      <div className="flex gap-2 mb-8">
+        <button
+          onClick={() => setActiveTab('general')}
+          className={`px-4 py-2 rounded-lg transition-colors ${
+            activeTab === 'general' ? 'bg-green-600 text-white' : 'bg-neutral-700 text-neutral-300 hover:bg-neutral-600'
+          }`}
+        >
+          Общие
+        </button>
+        <button
+          onClick={() => setActiveTab('gallery')}
+          className={`px-4 py-2 rounded-lg transition-colors ${
+            activeTab === 'gallery' ? 'bg-green-600 text-white' : 'bg-neutral-700 text-neutral-300 hover:bg-neutral-600'
+          }`}
+        >
+          Категории галереи
+        </button>
+        <button
+          onClick={() => setActiveTab('content')}
+          className={`px-4 py-2 rounded-lg transition-colors ${
+            activeTab === 'content' ? 'bg-green-600 text-white' : 'bg-neutral-700 text-neutral-300 hover:bg-neutral-600'
+          }`}
+        >
+          Контент страниц
+        </button>
+      </div>
+
+      {activeTab === 'general' && (
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Contact Info */}
         <div className="bg-neutral-800 rounded-xl p-6">
@@ -240,6 +400,180 @@ export default function SettingsAdmin() {
           </div>
         </div>
       </div>
+      )}
+
+      {/* Gallery Categories Tab */}
+      {activeTab === 'gallery' && (
+        <div className="bg-neutral-800 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+              <span>🖼️</span> Категории галереи
+            </h2>
+            <button
+              onClick={addCategory}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" /> Добавить
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {settings.galleryCategories?.map((cat, index) => (
+              <div key={index} className="flex gap-3 items-center">
+                <input
+                  type="text"
+                  value={cat.value}
+                  onChange={(e) => updateCategory(index, 'value', e.target.value)}
+                  className="flex-1 px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                  placeholder="Ключ (eng)"
+                />
+                <input
+                  type="text"
+                  value={cat.label}
+                  onChange={(e) => updateCategory(index, 'label', e.target.value)}
+                  className="flex-1 px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                  placeholder="Название"
+                />
+                <button
+                  onClick={() => removeCategory(index)}
+                  className="p-3 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-4 text-neutral-400 text-sm">
+            💡 Ключ используется для фильтрации в галерее. Используйте латинские буквы без пробелов.
+          </p>
+        </div>
+      )}
+
+      {/* Content Tab */}
+      {activeTab === 'content' && (
+        <div className="space-y-8">
+          {/* Advantages */}
+          <div className="bg-neutral-800 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <span>⭐</span> Преимущества (секция "Почему мы")
+              </h2>
+              <button
+                onClick={addAdvantage}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" /> Добавить
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {settings.advantages?.map((item, index) => (
+                <div key={index} className="p-4 bg-neutral-700/50 rounded-lg">
+                  <div className="flex gap-3 items-start">
+                    <select
+                      value={item.icon}
+                      onChange={(e) => updateAdvantage(index, 'icon', e.target.value)}
+                      className="px-3 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                    >
+                      {ICON_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                    <div className="flex-1 space-y-2">
+                      <input
+                        type="text"
+                        value={item.title}
+                        onChange={(e) => updateAdvantage(index, 'title', e.target.value)}
+                        className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                        placeholder="Заголовок"
+                      />
+                      <input
+                        type="text"
+                        value={item.description}
+                        onChange={(e) => updateAdvantage(index, 'description', e.target.value)}
+                        className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                        placeholder="Описание"
+                      />
+                    </div>
+                    <button
+                      onClick={() => removeAdvantage(index)}
+                      className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {(!settings.advantages || settings.advantages.length === 0) && (
+                <p className="text-neutral-400 text-center py-8">
+                  Нет преимуществ. Нажмите "Добавить" чтобы создать первое.
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* What You Get */}
+          <div className="bg-neutral-800 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <span>🎁</span> Что вы получите
+              </h2>
+              <button
+                onClick={addWhatYouGet}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" /> Добавить
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {settings.whatYouGet?.map((item, index) => (
+                <div key={index} className="p-4 bg-neutral-700/50 rounded-lg">
+                  <div className="flex gap-3 items-start">
+                    <select
+                      value={item.icon}
+                      onChange={(e) => updateWhatYouGet(index, 'icon', e.target.value)}
+                      className="px-3 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                    >
+                      {ICON_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                    <div className="flex-1 space-y-2">
+                      <input
+                        type="text"
+                        value={item.title}
+                        onChange={(e) => updateWhatYouGet(index, 'title', e.target.value)}
+                        className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                        placeholder="Заголовок"
+                      />
+                      <input
+                        type="text"
+                        value={item.description}
+                        onChange={(e) => updateWhatYouGet(index, 'description', e.target.value)}
+                        className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                        placeholder="Описание"
+                      />
+                    </div>
+                    <button
+                      onClick={() => removeWhatYouGet(index)}
+                      className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {(!settings.whatYouGet || settings.whatYouGet.length === 0) && (
+                <p className="text-neutral-400 text-center py-8">
+                  Нет элементов. Нажмите "Добавить" чтобы создать первый.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Info */}
       <div className="mt-8 p-4 bg-neutral-800/50 rounded-lg border border-neutral-700">

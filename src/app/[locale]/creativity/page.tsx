@@ -17,7 +17,26 @@ import { FadeInOnScroll, CountUp } from '@/components/animations/OptimizedAnimat
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from '@/components/animations/ScrollAnimations';
 import { SThreadAnimation, SThreadDivider } from '@/components/animations/SThreadAnimation';
 import { ReviewsSlider } from '@/components/sections/ReviewsSlider';
-import { useMasterclasses, useCourses, useEvents, useFAQ, useMasters, useGallery } from '@/hooks/useSanityData';
+import { useMasterclasses, useCourses, useEvents, useFAQ, useMasters, useGallery, useSettings } from '@/hooks/useSanityData';
+import { LucideIcon, Star } from 'lucide-react';
+
+// Icon mapping for dynamic content from settings
+const ICON_MAP: Record<string, LucideIcon> = {
+  palette: Palette,
+  graduation: GraduationCap,
+  home: Home,
+  gift: Gift,
+  clock: Clock,
+  users: Users,
+  sparkles: Sparkles,
+  heart: Heart,
+  camera: Camera,
+  package: Package,
+  award: Award,
+  smile: Smile,
+  coffee: Coffee,
+  star: Star,
+};
 
 // Custom easing curve for smooth animations
 const smoothEase = [0.25, 0.1, 0.25, 1] as const;
@@ -189,6 +208,7 @@ export default function CreativityPage() {
   const { data: faqItems } = useFAQ('creativity');
   const { data: mastersData } = useMasters();
   const { data: galleryData } = useGallery();
+  const { data: settings } = useSettings();
 
   // Use API data with fallback
   const masters = mastersData.length > 0
@@ -197,6 +217,24 @@ export default function CreativityPage() {
   const galleryItems = galleryData.length > 0
     ? galleryData.slice(0, 6)
     : GALLERY_FALLBACK;
+
+  // Use advantages from settings if available
+  const advantages = settings.advantages && settings.advantages.length > 0
+    ? settings.advantages.map(a => ({
+        Icon: ICON_MAP[a.icon] || Star,
+        title: a.title,
+        description: a.description,
+      }))
+    : ADVANTAGES;
+
+  // Use what you get from settings if available
+  const whatYouGet = settings.whatYouGet && settings.whatYouGet.length > 0
+    ? settings.whatYouGet.map(w => ({
+        Icon: ICON_MAP[w.icon] || Star,
+        title: w.title,
+        description: w.description,
+      }))
+    : WHAT_YOU_GET;
 
   useEffect(() => {
     setZone('creativity');
@@ -458,7 +496,7 @@ export default function CreativityPage() {
               variants={staggerContainer}
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
-              {ADVANTAGES.map((adv) => (
+              {advantages.map((adv) => (
                 <motion.div
                   key={adv.title}
                   variants={cardVariants}
@@ -514,7 +552,7 @@ export default function CreativityPage() {
               variants={staggerContainer}
               className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
             >
-              {WHAT_YOU_GET.map((item) => (
+              {whatYouGet.map((item) => (
                 <motion.div
                   key={item.title}
                   variants={cardVariants}

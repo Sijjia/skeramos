@@ -13,7 +13,12 @@ interface GalleryItem {
   active: boolean;
 }
 
-const CATEGORIES = [
+interface GalleryCategory {
+  value: string;
+  label: string;
+}
+
+const DEFAULT_categories: GalleryCategory[] = [
   { value: 'works', label: 'Работы' },
   { value: 'masterclasses', label: 'Мастер-классы' },
   { value: 'events', label: 'Мероприятия' },
@@ -33,17 +38,30 @@ const EMPTY_ITEM: Omit<GalleryItem, 'id'> = {
 
 export default function GalleryAdmin() {
   const [items, setItems] = useState<GalleryItem[]>([]);
+  const [categories, setCategories] = useState<GalleryCategory[]>(DEFAULT_categories);
   const [loading, setLoading] = useState(true);
   const [editingItem, setEditingItem] = useState<GalleryItem | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState('all');
 
-  const loadItems = async () => {
+  const loadData = async () => {
     try {
-      const res = await fetch('/api/admin/data/gallery');
-      const data = await res.json();
-      setItems(data);
+      // Load gallery items and settings in parallel
+      const [galleryRes, settingsRes] = await Promise.all([
+        fetch('/api/admin/data/gallery'),
+        fetch('/api/admin/data/settings'),
+      ]);
+
+      const galleryData = await galleryRes.json();
+      const settingsData = await settingsRes.json();
+
+      setItems(Array.isArray(galleryData) ? galleryData : []);
+
+      // Use categories from settings if available
+      if (settingsData.galleryCategories && settingsData.galleryCategories.length > 0) {
+        setCategories(settingsData.galleryCategories);
+      }
     } catch (error) {
       console.error('Error loading:', error);
     } finally {
@@ -52,8 +70,18 @@ export default function GalleryAdmin() {
   };
 
   useEffect(() => {
-    loadItems();
+    loadData();
   }, []);
+
+  const loadItems = async () => {
+    try {
+      const res = await fetch('/api/admin/data/gallery');
+      const data = await res.json();
+      setItems(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Error loading:', error);
+    }
+  };
 
   const handleNew = () => {
     setEditingItem({ id: '', ...EMPTY_ITEM });
@@ -134,7 +162,7 @@ export default function GalleryAdmin() {
         >
           Все ({items.length})
         </button>
-        {CATEGORIES.map((cat) => {
+        {categories.map((cat) => {
           const count = items.filter(i => i.category === cat.value).length;
           return (
             <button
@@ -178,7 +206,7 @@ export default function GalleryAdmin() {
                 </button>
               </div>
               <div className="absolute top-2 left-2 px-2 py-1 bg-black/70 rounded text-xs text-white">
-                {CATEGORIES.find(c => c.value === item.category)?.label}
+                {categories.find(c => c.value === item.category)?.label}
               </div>
             </div>
             <div className="p-3">
@@ -259,7 +287,7 @@ export default function GalleryAdmin() {
                     }
                     className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
                   >
-                    {CATEGORIES.map((cat) => (
+                    {categories.map((cat) => (
                       <option key={cat.value} value={cat.value}>{cat.label}</option>
                     ))}
                   </select>

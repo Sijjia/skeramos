@@ -298,3 +298,27 @@ export interface HistoryItemUI {
 export function useHistory() {
   return useDataFetch<HistoryItemUI[]>('history', EMPTY_ARRAY);
 }
+
+export interface SettingsUI {
+  siteName?: string;
+  phone?: string;
+  whatsapp?: string;
+  email?: string;
+  address?: string;
+  workingHours?: string;
+  social?: {
+    instagram?: string;
+    facebook?: string;
+    telegram?: string;
+  };
+  cinemaPrice?: number;
+  galleryCategories?: { value: string; label: string }[];
+  advantages?: { icon: string; title: string; description: string }[];
+  whatYouGet?: { icon: string; title: string; description: string }[];
+}
+
+const EMPTY_SETTINGS: SettingsUI = {};
+
+export function useSettings() {
+  return useDataFetch<SettingsUI>('settings', EMPTY_SETTINGS);
+}
