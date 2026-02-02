@@ -65,7 +65,11 @@ export interface MasterUI {
   role: string;
   bio: string;
   image: string;
+  experience?: string;
   specialties: string[];
+  achievements: string[];
+  whatsapp?: string;
+  active?: boolean;
 }
 
 export interface GalleryItemUI {
@@ -247,4 +251,19 @@ export function useFAQ(zone: 'creativity' | 'hotel') {
   // FAQ - статические данные
   const faqData = zone === 'creativity' ? FAQ_CREATIVITY : FAQ_HOTEL;
   return { data: faqData, loading: false, error: null };
+}
+
+export interface ReviewUI {
+  id: string;
+  author: string;
+  text: string;
+  rating: number;
+  zone: 'creativity' | 'hotel';
+  source: 'google' | '2gis' | 'instagram' | 'direct';
+  date?: string;
+  active?: boolean;
+}
+
+export function useReviews() {
+  return useDataFetch<ReviewUI[]>('reviews', EMPTY_ARRAY);
 }

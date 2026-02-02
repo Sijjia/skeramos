@@ -22,7 +22,9 @@ export function useAuth() {
 const MENU_ITEMS = [
   { href: '/admin', label: 'Главная', icon: '🏠' },
   { href: '/admin/masterclasses', label: 'Мастер-классы', icon: '🎨' },
+  { href: '/admin/masters', label: 'Мастера', icon: '👨‍🎨' },
   { href: '/admin/rooms', label: 'Номера', icon: '🛏️' },
+  { href: '/admin/packages', label: 'Пакеты', icon: '📦' },
   { href: '/admin/gallery', label: 'Галерея', icon: '🖼️' },
   { href: '/admin/reviews', label: 'Отзывы', icon: '⭐' },
   { href: '/admin/settings', label: 'Настройки', icon: '⚙️' },

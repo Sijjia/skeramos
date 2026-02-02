@@ -3,75 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useZone } from '@/contexts/ZoneContext';
-
-interface Review {
-  id: string;
-  author: string;
-  avatar?: string;
-  text: string;
-  rating: number;
-  zone: 'creativity' | 'hotel';
-  source: 'google' | '2gis' | 'instagram' | 'direct';
-  date?: string;
-}
-
-// Mock data - будет из Sanity
-const REVIEWS: Review[] = [
-  {
-    id: '1',
-    author: 'Алина К.',
-    text: 'Потрясающий опыт! Пришла на мастер-класс по керамике и влюбилась в это дело. Мастера очень терпеливые и профессиональные. Уже записалась на курс!',
-    rating: 5,
-    zone: 'creativity',
-    source: 'google',
-    date: 'Декабрь 2024',
-  },
-  {
-    id: '2',
-    author: 'Дамир Б.',
-    text: 'Отмечали юбилей компании. Тимбилдинг на гончарном круге — это что-то невероятное! Все были в восторге, особенно коллеги, которые думали, что это "не для них".',
-    rating: 5,
-    zone: 'creativity',
-    source: '2gis',
-    date: 'Ноябрь 2024',
-  },
-  {
-    id: '3',
-    author: 'Мария и Сергей',
-    text: 'Провели здесь романтические выходные. Номер уютный, кинозал — просто мечта! А утром ещё и на мастер-класс сходили. Обязательно вернёмся!',
-    rating: 5,
-    zone: 'hotel',
-    source: 'google',
-    date: 'Октябрь 2024',
-  },
-  {
-    id: '4',
-    author: 'Нурсултан А.',
-    text: 'Подарил жене сертификат на романтический вечер с кинозалом. Она была в восторге! Атмосфера невероятная, персонал очень внимательный.',
-    rating: 5,
-    zone: 'hotel',
-    source: 'instagram',
-    date: 'Сентябрь 2024',
-  },
-  {
-    id: '5',
-    author: 'Айгерим Т.',
-    text: 'Хожу сюда уже третий месяц на курс. Прогресс очевиден — от кривых чашек до настоящих произведений искусства! Спасибо Айгуль за терпение.',
-    rating: 5,
-    zone: 'creativity',
-    source: 'direct',
-    date: 'Август 2024',
-  },
-  {
-    id: '6',
-    author: 'Эмиль К.',
-    text: 'Снимали здесь приватный кинозал на день рождения друга. Топ локация! Можно принести свою еду, выбрать любой фильм. Рекомендую!',
-    rating: 5,
-    zone: 'hotel',
-    source: '2gis',
-    date: 'Август 2024',
-  },
-];
+import { useReviews, type ReviewUI } from '@/hooks/useSanityData';
 
 const SOURCE_ICONS: Record<string, string> = {
   google: '🔍',
@@ -99,13 +31,14 @@ export function ReviewsSlider({
   interval = 5000,
 }: ReviewsSliderProps) {
   const { zone } = useZone();
+  const { data: reviews, loading } = useReviews();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Фильтруем отзывы по текущей зоне
-  const filteredReviews = REVIEWS.filter(
-    review => review.zone === zone || zone === 'creativity'
+  // Фильтруем отзывы по текущей зоне и активности
+  const filteredReviews = reviews.filter(
+    review => (review.zone === zone || zone === 'creativity') && review.active !== false
   );
 
   const currentReview = filteredReviews[currentIndex];
@@ -127,16 +60,16 @@ export function ReviewsSlider({
 
   // Autoplay
   useEffect(() => {
-    if (!autoPlay || isPaused) return;
+    if (!autoPlay || isPaused || filteredReviews.length <= 1) return;
 
     const timer = setInterval(goToNext, interval);
     return () => clearInterval(timer);
-  }, [autoPlay, isPaused, interval, goToNext]);
+  }, [autoPlay, isPaused, interval, goToNext, filteredReviews.length]);
 
-  // Reset index when zone changes
+  // Reset index when zone changes or reviews load
   useEffect(() => {
     setCurrentIndex(0);
-  }, [zone]);
+  }, [zone, reviews.length]);
 
   const slideVariants = {
     enter: (direction: number) => ({
@@ -152,6 +85,32 @@ export function ReviewsSlider({
       opacity: 0,
     }),
   };
+
+  if (loading) {
+    return (
+      <div className={`${className}`}>
+        <div className="glass-card p-8 md:p-12 animate-pulse">
+          <div className="h-6 bg-white/10 rounded w-32 mb-6"></div>
+          <div className="h-24 bg-white/10 rounded mb-8"></div>
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-white/10"></div>
+            <div className="h-4 bg-white/10 rounded w-24"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (filteredReviews.length === 0) {
+    return (
+      <div className={`${className}`}>
+        <div className="glass-card p-8 md:p-12 text-center">
+          <span className="text-4xl mb-4 block">💬</span>
+          <p className="text-neutral-400">Отзывы скоро появятся</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!currentReview) return null;
 
@@ -226,50 +185,52 @@ export function ReviewsSlider({
       </div>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between mt-6">
-        {/* Arrows */}
-        <div className="flex gap-2">
-          <button
-            onClick={goToPrev}
-            className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm border border-neutral-200 flex items-center justify-center text-neutral-700 hover:bg-white transition-colors"
-            aria-label="Предыдущий отзыв"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            onClick={goToNext}
-            className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm border border-neutral-200 flex items-center justify-center text-neutral-700 hover:bg-white transition-colors"
-            aria-label="Следующий отзыв"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Dots */}
-        <div className="flex gap-2">
-          {filteredReviews.map((_, index) => (
+      {filteredReviews.length > 1 && (
+        <div className="flex items-center justify-between mt-6">
+          {/* Arrows */}
+          <div className="flex gap-2">
             <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === currentIndex
-                  ? 'w-6 bg-zone-500'
-                  : 'bg-white/50 hover:bg-white/70'
-              }`}
-              aria-label={`Перейти к отзыву ${index + 1}`}
-            />
-          ))}
-        </div>
+              onClick={goToPrev}
+              className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm border border-neutral-200 flex items-center justify-center text-neutral-700 hover:bg-white transition-colors"
+              aria-label="Предыдущий отзыв"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={goToNext}
+              className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm border border-neutral-200 flex items-center justify-center text-neutral-700 hover:bg-white transition-colors"
+              aria-label="Следующий отзыв"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
 
-        {/* Counter */}
-        <div className="text-white/70 text-sm">
-          {currentIndex + 1} / {filteredReviews.length}
+          {/* Dots */}
+          <div className="flex gap-2">
+            {filteredReviews.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === currentIndex
+                    ? 'w-6 bg-zone-500'
+                    : 'bg-white/50 hover:bg-white/70'
+                }`}
+                aria-label={`Перейти к отзыву ${index + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Counter */}
+          <div className="text-white/70 text-sm">
+            {currentIndex + 1} / {filteredReviews.length}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
