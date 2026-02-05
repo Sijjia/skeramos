@@ -183,14 +183,14 @@ export default function PackagesPage() {
         </section>
 
         {/* Custom Package */}
-        <section className="py-16 md:py-24 bg-zone-950/50 etno-tunduk">
+        <section className="py-16 md:py-24 bg-zone-500/10 etno-tunduk">
           <div className="container mx-auto px-4">
             <FadeInOnScroll className="max-w-2xl mx-auto text-center">
               <span className="text-4xl mb-4 block">✨</span>
-              <h2 className="text-3xl md:text-4xl font-display font-medium text-white mb-6">
+              <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mb-6">
                 Нужен индивидуальный пакет?
               </h2>
-              <p className="text-neutral-300 mb-8">
+              <p className="text-neutral-600 mb-8">
                 Мы создадим уникальное предложение под ваши пожелания и бюджет.
                 Свадьбы, юбилеи, корпоративы — любой формат.
               </p>
@@ -205,7 +205,7 @@ export default function PackagesPage() {
                 </a>
                 <a
                   href="tel:+996555123456"
-                  className="px-8 py-4 glass hover:bg-white/10 text-white rounded-2xl font-medium transition-colors"
+                  className="px-8 py-4 glass hover:bg-neutral-100 text-neutral-700 rounded-2xl font-medium transition-colors"
                 >
                   Позвонить
                 </a>

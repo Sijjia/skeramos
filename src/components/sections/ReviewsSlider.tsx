@@ -175,8 +175,8 @@ export function ReviewsSlider({
             {/* Zone indicator */}
             <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-medium ${
               currentReview.zone === 'hotel'
-                ? 'bg-hotel-500/20 text-hotel-300'
-                : 'bg-zone-500/20 text-zone-300'
+                ? 'bg-hotel-500/20 text-hotel-600'
+                : 'bg-zone-500/20 text-zone-600'
             }`}>
               {currentReview.zone === 'hotel' ? 'Отель' : 'Мастерская'}
             </div>
@@ -218,7 +218,7 @@ export function ReviewsSlider({
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
                   index === currentIndex
                     ? 'w-6 bg-zone-500'
-                    : 'bg-white/50 hover:bg-white/70'
+                    : 'bg-neutral-300 hover:bg-neutral-400'
                 }`}
                 aria-label={`Перейти к отзыву ${index + 1}`}
               />
@@ -226,7 +226,7 @@ export function ReviewsSlider({
           </div>
 
           {/* Counter */}
-          <div className="text-white/70 text-sm">
+          <div className="text-neutral-500 text-sm">
             {currentIndex + 1} / {filteredReviews.length}
           </div>
         </div>

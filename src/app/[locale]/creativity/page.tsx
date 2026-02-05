@@ -472,7 +472,7 @@ export default function CreativityPage() {
         <div className="etno-divider" />
 
         {/* Advantages Section */}
-        <section className="py-24 bg-zone-950/50 etno-shyrdak dark-section">
+        <section className="py-24 bg-zone-500/10 etno-shyrdak">
           <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
@@ -484,7 +484,7 @@ export default function CreativityPage() {
               <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
                 Почему мы
               </motion.span>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium section-title mt-4">
+              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
                 Наши преимущества
               </motion.h2>
             </motion.div>
@@ -663,7 +663,7 @@ export default function CreativityPage() {
         </section>
 
         {/* Gallery Section */}
-        <section id="gallery" className="py-24 bg-zone-950/50 etno-tunduk dark-section">
+        <section id="gallery" className="py-24 bg-zone-500/10 etno-tunduk">
           <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
@@ -675,10 +675,10 @@ export default function CreativityPage() {
               <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
                 Портфолио
               </motion.span>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium section-title mt-4">
+              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
                 Галерея работ
               </motion.h2>
-              <motion.p variants={fadeInUp} className="section-muted mt-4 max-w-2xl mx-auto">
+              <motion.p variants={fadeInUp} className="text-neutral-500 mt-4 max-w-2xl mx-auto">
                 Работы наших учеников и мастеров
               </motion.p>
             </motion.div>
@@ -736,7 +736,7 @@ export default function CreativityPage() {
             >
               <a
                 href="/gallery"
-                className="inline-flex items-center gap-2 px-6 py-3 glass text-white hover:text-zone-400 rounded-xl font-medium transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 glass text-neutral-700 hover:text-zone-500 rounded-xl font-medium transition-colors"
               >
                 Смотреть всю галерею
                 <span>→</span>
@@ -849,7 +849,7 @@ export default function CreativityPage() {
         <div className="etno-divider" />
 
         {/* Reviews Section */}
-        <section id="reviews" className="py-24 bg-zone-950/50 etno-kochkor dark-section">
+        <section id="reviews" className="py-24 bg-zone-500/10 etno-kochkor">
           <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
@@ -861,7 +861,7 @@ export default function CreativityPage() {
               <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
                 Отзывы
               </motion.span>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium section-title mt-4">
+              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
                 Что говорят наши гости
               </motion.h2>
             </motion.div>
@@ -909,7 +909,7 @@ export default function CreativityPage() {
         </section>
 
         {/* History Section */}
-        <section className="py-24 bg-zone-950/50 etno-shyrdak">
+        <section className="py-24 bg-zone-500/10 etno-shyrdak">
           <div className="container mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -920,16 +920,16 @@ export default function CreativityPage() {
               <span className="text-zone-400 text-sm font-medium tracking-wider uppercase">
                 С 2019 года
               </span>
-              <h2 className="text-3xl md:text-4xl font-display font-medium text-white mt-4 mb-6">
+              <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mt-4 mb-6">
                 Наша история
               </h2>
-              <p className="text-neutral-300 mb-8">
+              <p className="text-neutral-600 mb-8">
                 От одного гончарного круга до творческого дома — узнайте, как мы росли
                 и развивались вместе с нашими учениками.
               </p>
               <a
                 href="/history"
-                className="inline-flex items-center gap-2 px-8 py-4 glass hover:bg-white/10 text-white rounded-2xl font-medium transition-all"
+                className="inline-flex items-center gap-2 px-8 py-4 glass hover:bg-neutral-100 text-neutral-700 rounded-2xl font-medium transition-all"
               >
                 Узнать историю Skeramos
                 <span>→</span>

@@ -56,7 +56,7 @@ export default function MasterDetailPage() {
           <div className="container mx-auto px-4 py-16">
             <div className="text-center">
               <span className="text-6xl mb-4 block">👤</span>
-              <h1 className="text-2xl text-white mb-4">Мастер не найден</h1>
+              <h1 className="text-2xl text-neutral-800 mb-4">Мастер не найден</h1>
               <Link
                 href={`/${locale}/masters`}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-zone-500 hover:bg-zone-600 text-white rounded-xl transition-colors"
@@ -81,7 +81,7 @@ export default function MasterDetailPage() {
         <div className="container mx-auto px-4 py-6">
           <Link
             href={`/${locale}/masters`}
-            className="inline-flex items-center gap-2 text-neutral-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 text-neutral-500 hover:text-neutral-800 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Все мастера
@@ -120,12 +120,12 @@ export default function MasterDetailPage() {
                   <span className="text-zone-400 text-sm font-medium tracking-wider uppercase">
                     {master.role}
                   </span>
-                  <h1 className="text-4xl md:text-5xl font-display font-medium text-white mt-2 mb-4">
+                  <h1 className="text-4xl md:text-5xl font-display font-medium text-neutral-800 mt-2 mb-4">
                     {master.name}
                   </h1>
 
                   {master.experience && (
-                    <div className="flex items-center gap-2 text-neutral-300 mb-6">
+                    <div className="flex items-center gap-2 text-neutral-600 mb-6">
                       <Clock className="w-5 h-5 text-zone-500" />
                       <span>{master.experience}</span>
                     </div>
@@ -134,7 +134,7 @@ export default function MasterDetailPage() {
                   {/* Bio */}
                   {master.bio && (
                     <div className="prose prose-invert prose-neutral max-w-none mb-8">
-                      <p className="text-neutral-300 text-lg leading-relaxed whitespace-pre-line">
+                      <p className="text-neutral-600 text-lg leading-relaxed whitespace-pre-line">
                         {master.bio}
                       </p>
                     </div>
@@ -145,13 +145,13 @@ export default function MasterDetailPage() {
                     <div className="mb-8">
                       <div className="flex items-center gap-2 mb-3">
                         <Palette className="w-5 h-5 text-zone-500" />
-                        <h3 className="text-lg font-medium text-white">Специализация</h3>
+                        <h3 className="text-lg font-medium text-neutral-800">Специализация</h3>
                       </div>
                       <div className="flex flex-wrap gap-2">
                         {master.specialties.map((spec, idx) => (
                           <span
                             key={idx}
-                            className="px-4 py-2 bg-zone-500/20 text-zone-300 rounded-lg"
+                            className="px-4 py-2 bg-zone-500/10 text-zone-600 rounded-lg"
                           >
                             {spec}
                           </span>
@@ -185,7 +185,7 @@ export default function MasterDetailPage() {
               <FadeInOnScroll>
                 <div className="flex items-center gap-3 mb-12">
                   <Award className="w-8 h-8 text-zone-500" />
-                  <h2 className="text-3xl font-display font-medium text-white">
+                  <h2 className="text-3xl font-display font-medium text-neutral-800">
                     Достижения
                   </h2>
                 </div>
@@ -229,7 +229,7 @@ export default function MasterDetailPage() {
                               {year && (
                                 <span className="hidden md:block text-zone-400 font-bold text-lg mb-2">{year}</span>
                               )}
-                              <p className="text-neutral-300">{text}</p>
+                              <p className="text-neutral-600">{text}</p>
                             </div>
                           </div>
 
@@ -252,10 +252,10 @@ export default function MasterDetailPage() {
         <section className="py-16 md:py-24 etno-tunduk">
           <div className="container mx-auto px-4">
             <FadeInOnScroll className="max-w-2xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-display font-medium text-white mb-6">
+              <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mb-6">
                 Хотите учиться у {master.name}?
               </h2>
-              <p className="text-neutral-300 mb-8">
+              <p className="text-neutral-600 mb-8">
                 Запишитесь на мастер-класс и создайте своё изделие под руководством мастера
               </p>
               <div className="flex flex-wrap justify-center gap-4">
@@ -278,7 +278,7 @@ export default function MasterDetailPage() {
                 )}
                 <Link
                   href={`/${locale}/masters`}
-                  className="px-8 py-4 glass hover:bg-white/10 text-white rounded-2xl font-medium transition-all"
+                  className="px-8 py-4 glass hover:bg-neutral-100 text-neutral-700 rounded-2xl font-medium transition-all"
                 >
                   Все мастера
                 </Link>

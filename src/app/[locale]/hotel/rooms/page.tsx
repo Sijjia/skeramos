@@ -302,7 +302,7 @@ export default function RoomsPage() {
         </section>
 
         {/* Amenities Section */}
-        <section className="py-16 md:py-24 bg-zone-950/50 etno-shyrdak relative overflow-hidden">
+        <section className="py-16 md:py-24 bg-zone-500/10 etno-shyrdak relative overflow-hidden">
           {/* Decorative background element */}
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full border border-zone-500" />
@@ -312,10 +312,10 @@ export default function RoomsPage() {
 
           <div className="container mx-auto px-4 relative">
             <FadeIn className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-display font-medium text-white mb-4">
+              <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mb-4">
                 Во всех номерах
               </h2>
-              <p className="text-neutral-400">Базовые удобства для вашего комфорта</p>
+              <p className="text-neutral-500">Базовые удобства для вашего комфорта</p>
             </FadeIn>
 
             <StaggerContainer staggerDelay={0.05} className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 max-w-4xl mx-auto">
@@ -339,7 +339,7 @@ export default function RoomsPage() {
                     whileHover={{ scale: 1.05, y: -5 }}
                   >
                     <span className="text-3xl mb-3 block">{item.icon}</span>
-                    <span className="text-sm text-neutral-300 font-medium">{item.label}</span>
+                    <span className="text-sm text-neutral-600 font-medium">{item.label}</span>
                   </motion.div>
                 </StaggerItem>
               ))}

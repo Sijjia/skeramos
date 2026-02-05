@@ -302,7 +302,7 @@ export default function HotelPage() {
         <SThreadDivider />
 
         {/* Features Section */}
-        <section className="py-24 bg-zone-950/50 etno-shyrdak dark-section">
+        <section className="py-24 bg-zone-500/10 etno-shyrdak">
           <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
@@ -314,7 +314,7 @@ export default function HotelPage() {
               <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
                 Почему мы
               </motion.span>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium section-title mt-4">
+              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
                 Преимущества отеля
               </motion.h2>
             </motion.div>
@@ -555,7 +555,7 @@ export default function HotelPage() {
         <div className="etno-divider" />
 
         {/* Reviews Section */}
-        <section className="py-24 bg-zone-950/50 etno-kochkor dark-section">
+        <section className="py-24 bg-zone-500/10 etno-kochkor">
           <div className="container mx-auto px-4">
             <motion.div
               initial="hidden"
@@ -567,7 +567,7 @@ export default function HotelPage() {
               <motion.span variants={fadeInUp} className="text-zone-400 text-sm font-medium tracking-wider uppercase">
                 Отзывы
               </motion.span>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium section-title mt-4">
+              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
                 Что говорят гости
               </motion.h2>
             </motion.div>
