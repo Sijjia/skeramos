@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
-import Image from 'next/image';
 
 interface ImageUploadProps {
   value: string;
@@ -14,6 +13,8 @@ export function ImageUpload({ value, onChange, label = 'Изображение',
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [showUrlInput, setShowUrlInput] = useState(false);
+  const [urlInput, setUrlInput] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleUpload = useCallback(async (file: File) => {
@@ -21,6 +22,11 @@ export function ImageUpload({ value, onChange, label = 'Изображение',
     setUploading(true);
 
     try {
+      // Проверяем размер на клиенте
+      if (file.size > 4 * 1024 * 1024) {
+        throw new Error(`Файл слишком большой (${(file.size / 1024 / 1024).toFixed(1)} МБ). Максимум: 4 МБ`);
+      }
+
       const formData = new FormData();
       formData.append('file', file);
 
@@ -32,7 +38,7 @@ export function ImageUpload({ value, onChange, label = 'Изображение',
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Ошибка загрузки');
+        throw new Error(result.error || `Ошибка загрузки (${response.status})`);
       }
 
       onChange(result.url);
@@ -68,8 +74,19 @@ export function ImageUpload({ value, onChange, label = 'Изображение',
 
   const handleRemove = () => {
     onChange('');
+    setError(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
+    }
+  };
+
+  const handleUrlSubmit = () => {
+    const url = urlInput.trim();
+    if (url) {
+      onChange(url);
+      setUrlInput('');
+      setShowUrlInput(false);
+      setError(null);
     }
   };
 
@@ -81,12 +98,15 @@ export function ImageUpload({ value, onChange, label = 'Изображение',
       {value && (
         <div className="relative mb-3 group">
           <div className="relative h-40 rounded-lg overflow-hidden bg-neutral-700">
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={value}
               alt="Preview"
-              fill
-              className="object-cover"
-              unoptimized
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none';
+                setError('Не удалось загрузить превью');
+              }}
             />
           </div>
           <button
@@ -96,6 +116,9 @@ export function ImageUpload({ value, onChange, label = 'Изображение',
           >
             ✕
           </button>
+          <div className="absolute bottom-2 left-2 right-2 text-xs text-neutral-400 truncate bg-black/50 px-2 py-1 rounded">
+            {value}
+          </div>
         </div>
       )}
 
@@ -136,9 +159,47 @@ export function ImageUpload({ value, onChange, label = 'Изображение',
               {value ? 'Заменить фото' : 'Нажмите или перетащите фото'}
             </span>
             <span className="text-neutral-500 text-xs">
-              JPEG, PNG, WebP до 10 МБ
+              JPEG, PNG, WebP до 4 МБ
             </span>
           </div>
+        )}
+      </div>
+
+      {/* URL input fallback */}
+      <div className="mt-2">
+        {showUrlInput ? (
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleUrlSubmit())}
+              placeholder="https://example.com/image.jpg"
+              className="flex-1 px-3 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white text-sm focus:outline-none focus:border-amber-500"
+            />
+            <button
+              type="button"
+              onClick={handleUrlSubmit}
+              className="px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm"
+            >
+              OK
+            </button>
+            <button
+              type="button"
+              onClick={() => { setShowUrlInput(false); setUrlInput(''); }}
+              className="px-3 py-2 bg-neutral-600 hover:bg-neutral-500 text-white rounded-lg text-sm"
+            >
+              ✕
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setShowUrlInput(true)}
+            className="text-neutral-500 hover:text-neutral-400 text-xs transition-colors"
+          >
+            или вставить URL
+          </button>
         )}
       </div>
 

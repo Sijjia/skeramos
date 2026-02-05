@@ -3,6 +3,9 @@ import { cookies } from 'next/headers';
 import crypto from 'crypto';
 import { put } from '@vercel/blob';
 
+// Увеличиваем лимит тела запроса до 10 МБ
+export const runtime = 'nodejs';
+
 const SESSION_SECRET = process.env.SESSION_SECRET || 'default-secret';
 const COOKIE_NAME = 'admin_session';
 
@@ -32,7 +35,7 @@ async function isAuthenticated(): Promise<boolean> {
 
 // Допустимые типы изображений
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
-const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_SIZE = 4 * 1024 * 1024; // 4MB (Vercel serverless limit)
 
 export async function POST(request: NextRequest) {
   if (!(await isAuthenticated())) {
@@ -41,7 +44,7 @@ export async function POST(request: NextRequest) {
 
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     return NextResponse.json(
-      { error: 'BLOB_READ_WRITE_TOKEN не настроен' },
+      { error: 'BLOB_READ_WRITE_TOKEN не настроен. Добавьте Vercel Blob Storage в проект.' },
       { status: 500 }
     );
   }
@@ -63,7 +66,7 @@ export async function POST(request: NextRequest) {
 
     if (file.size > MAX_SIZE) {
       return NextResponse.json(
-        { error: 'Максимальный размер файла: 10 МБ' },
+        { error: `Файл слишком большой (${(file.size / 1024 / 1024).toFixed(1)} МБ). Максимум: 4 МБ` },
         { status: 400 }
       );
     }
@@ -74,8 +77,12 @@ export async function POST(request: NextRequest) {
     const randomId = crypto.randomBytes(4).toString('hex');
     const filename = `uploads/${timestamp}-${randomId}.${ext}`;
 
+    // Конвертируем File в Buffer для надёжной передачи в Vercel Blob
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
     // Загружаем в Vercel Blob
-    const blob = await put(filename, file, {
+    const blob = await put(filename, buffer, {
       access: 'public',
       contentType: file.type,
     });

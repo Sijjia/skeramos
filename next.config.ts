@@ -20,11 +20,12 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '*.public.blob.vercel-storage.com',
+        hostname: '**.public.blob.vercel-storage.com',
+        pathname: '/**',
       },
     ],
-    // Allow unoptimized local placeholder images during development
-    unoptimized: process.env.NODE_ENV === 'development',
+    // Allow any image source (admin manages images from various sources)
+    unoptimized: true,
   },
 };
 
