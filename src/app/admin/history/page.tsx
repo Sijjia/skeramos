@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { ImageUpload } from '@/components/admin/ImageUpload';
 
 interface HistoryItem {
   id: string;
@@ -262,18 +263,11 @@ export default function HistoryAdmin() {
                 />
               </div>
 
-              <div>
-                <label className="block text-neutral-300 mb-2">Изображение (URL)</label>
-                <input
-                  type="text"
-                  value={editingItem.image}
-                  onChange={(e) =>
-                    setEditingItem({ ...editingItem, image: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-amber-500"
-                  placeholder="https://..."
-                />
-              </div>
+              <ImageUpload
+                value={editingItem.image}
+                onChange={(url) => setEditingItem({ ...editingItem, image: url })}
+                label="Изображение"
+              />
 
               <div>
                 <label className="block text-neutral-300 mb-2">Тип события</label>

@@ -185,11 +185,11 @@ function RoomCard({ room, index }: { room: typeof ROOMS[0]; index: number }) {
             <span className="text-neutral-500 text-lg">сом/ночь</span>
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-display font-medium text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mb-4">
             {room.title}
           </h2>
 
-          <p className="text-neutral-300 text-lg mb-6 leading-relaxed">
+          <p className="text-neutral-600 text-lg mb-6 leading-relaxed">
             {room.longDescription}
           </p>
 
@@ -200,7 +200,7 @@ function RoomCard({ room, index }: { room: typeof ROOMS[0]; index: number }) {
                 👥
               </div>
               <div>
-                <div className="text-white font-medium">до {room.capacity}</div>
+                <div className="text-neutral-800 font-medium">до {room.capacity}</div>
                 <div className="text-sm text-neutral-500">гостей</div>
               </div>
             </div>
@@ -209,7 +209,7 @@ function RoomCard({ room, index }: { room: typeof ROOMS[0]; index: number }) {
                 📐
               </div>
               <div>
-                <div className="text-white font-medium">{room.size} м²</div>
+                <div className="text-neutral-800 font-medium">{room.size} м²</div>
                 <div className="text-sm text-neutral-500">площадь</div>
               </div>
             </div>
@@ -219,7 +219,7 @@ function RoomCard({ room, index }: { room: typeof ROOMS[0]; index: number }) {
           <StaggerContainer staggerDelay={0.05} className="flex flex-wrap gap-2 mb-8">
             {room.amenities.map((amenity, idx) => (
               <StaggerItem key={idx}>
-                <span className="px-4 py-2 rounded-xl glass text-sm text-neutral-300 hover:bg-white/10 transition-colors cursor-default">
+                <span className="px-4 py-2 rounded-xl glass text-sm text-neutral-600 hover:bg-neutral-100 transition-colors cursor-default">
                   {amenity.icon} {amenity.label}
                 </span>
               </StaggerItem>
@@ -275,13 +275,13 @@ export default function RoomsPage() {
                 </svg>
                 Назад к отелю
               </Link>
-              <h1 className="text-4xl md:text-6xl font-display font-medium text-white mb-6">
+              <h1 className="text-4xl md:text-6xl font-display font-medium text-neutral-800 mb-6">
                 Наши{' '}
-                <span className="bg-gradient-to-r from-zone-300 to-gold-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-zone-400 to-gold-500 bg-clip-text text-transparent">
                   номера
                 </span>
               </h1>
-              <p className="text-lg text-neutral-300">
+              <p className="text-lg text-neutral-500">
                 Выберите идеальный номер для вашего отдыха. От уютного стандарта до роскошного люкса.
               </p>
             </FadeInOnScroll>
@@ -351,10 +351,10 @@ export default function RoomsPage() {
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4">
             <FadeInOnScroll className="max-w-2xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-display font-medium text-white mb-6">
+              <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mb-6">
                 Не нашли подходящий вариант?
               </h2>
-              <p className="text-neutral-300 mb-8">
+              <p className="text-neutral-600 mb-8">
                 Свяжитесь с нами, и мы поможем подобрать идеальный номер под ваши пожелания
               </p>
               <div className="flex flex-wrap justify-center gap-4">
@@ -366,7 +366,7 @@ export default function RoomsPage() {
                 </a>
                 <Link
                   href={`/${locale}/hotel/packages`}
-                  className="px-6 py-3 glass hover:bg-white/10 text-white rounded-xl font-medium transition-colors"
+                  className="px-6 py-3 glass hover:bg-neutral-100 text-neutral-700 rounded-xl font-medium transition-colors"
                 >
                   Смотреть пакеты
                 </Link>

@@ -126,18 +126,18 @@ export default function HistoryPage() {
                 <span className="inline-block px-4 py-2 rounded-full glass text-sm text-zone-300 font-medium mb-4">
                   С 2019 года
                 </span>
-                <h1 className="text-4xl md:text-5xl font-display font-medium text-white mb-4">
+                <h1 className="text-4xl md:text-5xl font-display font-medium text-neutral-800 mb-4">
                   Наша{' '}
-                  <span className="bg-gradient-to-r from-zone-300 to-gold-500 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-zone-400 to-gold-500 bg-clip-text text-transparent">
                     история
                   </span>
                 </h1>
-                <p className="text-neutral-300 mb-8">
+                <p className="text-neutral-500 mb-8">
                   От одного гончарного круга до творческого дома
                 </p>
                 <div className="text-center py-16">
                   <span className="text-6xl mb-4 block">📜</span>
-                  <p className="text-neutral-400">
+                  <p className="text-neutral-500">
                     История скоро появится
                   </p>
                 </div>
@@ -164,13 +164,13 @@ export default function HistoryPage() {
               <span className="inline-block px-4 py-2 rounded-full glass text-sm text-zone-300 font-medium mb-4">
                 С 2019 года
               </span>
-              <h1 className="text-4xl md:text-5xl font-display font-medium text-white mb-4">
+              <h1 className="text-4xl md:text-5xl font-display font-medium text-neutral-800 mb-4">
                 Наша{' '}
-                <span className="bg-gradient-to-r from-zone-300 to-gold-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-zone-400 to-gold-500 bg-clip-text text-transparent">
                   история
                 </span>
               </h1>
-              <p className="text-neutral-300">
+              <p className="text-neutral-500">
                 От одного гончарного круга до творческого дома
               </p>
             </FadeInOnScroll>
@@ -190,8 +190,8 @@ export default function HistoryPage() {
                     className={`
                       relative px-4 py-2 rounded-full font-medium text-sm transition-all whitespace-nowrap
                       ${index === currentIndex
-                        ? 'bg-zone-500 text-white shadow-lg shadow-zone-500/30'
-                        : 'glass text-neutral-300 hover:text-white hover:bg-white/10'
+                        ? 'bg-zone-500 text-on-color shadow-lg shadow-zone-500/30'
+                        : 'glass text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100'
                       }
                     `}
                   >
@@ -215,7 +215,7 @@ export default function HistoryPage() {
               <button
                 onClick={goPrev}
                 disabled={currentIndex === 0}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-16 z-20 w-12 h-12 rounded-full glass flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-all"
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-16 z-20 w-12 h-12 rounded-full glass flex items-center justify-center text-neutral-700 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-neutral-100 transition-all"
                 aria-label="Previous"
               >
                 <ChevronLeft className="w-6 h-6" />
@@ -224,7 +224,7 @@ export default function HistoryPage() {
               <button
                 onClick={goNext}
                 disabled={currentIndex === historyItems.length - 1}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-16 z-20 w-12 h-12 rounded-full glass flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-all"
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-16 z-20 w-12 h-12 rounded-full glass flex items-center justify-center text-neutral-700 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-neutral-100 transition-all"
                 aria-label="Next"
               >
                 <ChevronRight className="w-6 h-6" />
@@ -269,17 +269,17 @@ export default function HistoryPage() {
                       {/* Year/Month - Desktop */}
                       <div className="hidden md:flex items-center gap-3 mb-4">
                         <div className={`w-3 h-3 rounded-full ${MILESTONE_COLORS[currentItem.milestone]}`} />
-                        <span className="text-zone-400 font-display text-lg font-bold">
+                        <span className="text-zone-500 font-display text-lg font-bold">
                           {currentItem.year}
                           {currentItem.month && <span className="font-normal text-neutral-500 ml-2">/ {currentItem.month}</span>}
                         </span>
                       </div>
 
-                      <h2 className="text-2xl md:text-3xl font-display font-medium text-white mb-4">
+                      <h2 className="text-2xl md:text-3xl font-display font-medium text-neutral-800 mb-4">
                         {currentItem.title}
                       </h2>
 
-                      <p className="text-neutral-300 leading-relaxed mb-6">
+                      <p className="text-neutral-600 leading-relaxed mb-6">
                         {currentItem.description}
                       </p>
 
@@ -288,7 +288,7 @@ export default function HistoryPage() {
                         <span className="text-sm text-neutral-500">
                           {currentIndex + 1} / {historyItems.length}
                         </span>
-                        <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+                        <div className="flex-1 h-1 bg-neutral-200 rounded-full overflow-hidden">
                           <motion.div
                             className="h-full bg-zone-500"
                             initial={{ width: 0 }}
@@ -312,7 +312,7 @@ export default function HistoryPage() {
                       w-2 h-2 rounded-full transition-all
                       ${index === currentIndex
                         ? 'w-8 bg-zone-500'
-                        : 'bg-white/20 hover:bg-white/40'
+                        : 'bg-neutral-300 hover:bg-neutral-400'
                       }
                     `}
                     aria-label={`Go to slide ${index + 1}`}
@@ -328,14 +328,14 @@ export default function HistoryPage() {
           <div className="container mx-auto px-4">
             <FadeInOnScroll className="max-w-2xl mx-auto text-center">
               <span className="text-5xl mb-6 block">2025+</span>
-              <h2 className="text-3xl md:text-4xl font-display font-medium text-white mb-6">
+              <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mb-6">
                 Что дальше?
               </h2>
-              <p className="text-neutral-300 mb-8">
+              <p className="text-neutral-600 mb-8">
                 Мы продолжаем расти и мечтать. В планах — собственная линейка керамики,
                 международные мастер-классы и создание сообщества керамистов Кыргызстана.
               </p>
-              <p className="text-zone-400 text-lg">
+              <p className="text-zone-500 text-lg">
                 Присоединяйтесь к нашей истории — станьте её частью!
               </p>
             </FadeInOnScroll>

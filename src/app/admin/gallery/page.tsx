@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { ImageUpload } from '@/components/admin/ImageUpload';
 
 interface GalleryItem {
   id: string;
@@ -234,25 +235,11 @@ export default function GalleryAdmin() {
             </h2>
 
             <div className="space-y-4">
-              <div>
-                <label className="block text-neutral-300 mb-2">Ссылка на изображение *</label>
-                <input
-                  type="url"
-                  value={editingItem.image}
-                  onChange={(e) =>
-                    setEditingItem({ ...editingItem, image: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
-                  placeholder="https://images.unsplash.com/..."
-                />
-                {editingItem.image && (
-                  <img
-                    src={editingItem.image}
-                    alt="Preview"
-                    className="mt-2 h-40 w-full rounded-lg object-cover"
-                  />
-                )}
-              </div>
+              <ImageUpload
+                value={editingItem.image}
+                onChange={(url) => setEditingItem({ ...editingItem, image: url })}
+                label="Изображение *"
+              />
 
               <div>
                 <label className="block text-neutral-300 mb-2">Название *</label>

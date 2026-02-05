@@ -90,13 +90,13 @@ export default function ServicesPage() {
               <span className="inline-block px-4 py-2 rounded-full glass text-sm text-zone-300 font-medium mb-6">
                 Мастер-классы и мероприятия
               </span>
-              <h1 className="text-4xl md:text-6xl font-display font-medium text-white mb-6">
+              <h1 className="text-4xl md:text-6xl font-display font-medium text-neutral-800 mb-6">
                 Все{' '}
-                <span className="bg-gradient-to-r from-zone-300 to-gold-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-zone-400 to-gold-500 bg-clip-text text-transparent">
                   услуги
                 </span>
               </h1>
-              <p className="text-lg text-neutral-300">
+              <p className="text-lg text-neutral-500">
                 Выберите формат, который подходит именно вам — от первого знакомства с керамикой
                 до профессиональных курсов и корпоративных мероприятий.
               </p>
@@ -141,7 +141,7 @@ export default function ServicesPage() {
 
                             {/* Price badge */}
                             <div className="absolute top-4 right-4 px-4 py-2 rounded-full glass">
-                              <span className="text-white font-medium">
+                              <span className="text-neutral-700 font-medium">
                                 {service.priceNote && `${service.priceNote} `}
                                 {service.price.toLocaleString()} сом
                               </span>
@@ -171,15 +171,15 @@ export default function ServicesPage() {
                               </>
                             )}
                           </div>
-                          <h2 className="text-2xl md:text-3xl font-display font-medium text-white mb-4">
+                          <h2 className="text-2xl md:text-3xl font-display font-medium text-neutral-800 mb-4">
                             {service.title}
                           </h2>
-                          <p className="text-neutral-300 mb-6">
+                          <p className="text-neutral-600 mb-6">
                             {service.shortDescription}
                           </p>
 
                           {/* Meta */}
-                          <div className="flex flex-wrap gap-4 text-sm text-neutral-400 mb-6">
+                          <div className="flex flex-wrap gap-4 text-sm text-neutral-500 mb-6">
                             <span className="flex items-center gap-2">
                               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -200,13 +200,13 @@ export default function ServicesPage() {
                               {service.includes.slice(0, 3).map((item) => (
                                 <span
                                   key={item}
-                                  className="px-3 py-1 rounded-full bg-zone-900/50 text-zone-300 text-sm"
+                                  className="px-3 py-1 rounded-full bg-zone-500/10 text-zone-600 text-sm"
                                 >
                                   {item}
                                 </span>
                               ))}
                               {service.includes.length > 3 && (
-                                <span className="px-3 py-1 rounded-full bg-zone-900/50 text-zone-400 text-sm">
+                                <span className="px-3 py-1 rounded-full bg-zone-500/10 text-zone-500 text-sm">
                                   +{service.includes.length - 3}
                                 </span>
                               )}
@@ -226,7 +226,7 @@ export default function ServicesPage() {
                                 href={service.externalLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-6 py-3 glass hover:bg-white/10 text-white rounded-xl font-medium transition-all"
+                                className="inline-flex items-center gap-2 px-6 py-3 glass hover:bg-neutral-100 text-neutral-700 rounded-xl font-medium transition-all"
                               >
                                 Подробнее
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -236,7 +236,7 @@ export default function ServicesPage() {
                             ) : (
                               <Link
                                 href={`/${locale}/services/${service.slug}`}
-                                className="px-6 py-3 glass hover:bg-white/10 text-white rounded-xl font-medium transition-all"
+                                className="px-6 py-3 glass hover:bg-neutral-100 text-neutral-700 rounded-xl font-medium transition-all"
                               >
                                 Подробнее
                               </Link>
@@ -264,8 +264,8 @@ export default function ServicesPage() {
                         onClick={() => setCurrentPage(page)}
                         className={`w-10 h-10 rounded-lg font-medium transition-colors ${
                           page === currentPage
-                            ? 'bg-zone-500 text-white'
-                            : 'glass hover:bg-white/10 text-neutral-300'
+                            ? 'bg-zone-500 text-on-color'
+                            : 'glass hover:bg-neutral-100 text-neutral-600'
                         }`}
                       >
                         {page}
@@ -284,8 +284,8 @@ export default function ServicesPage() {
             ) : (
               <div className="text-center py-20">
                 <span className="text-6xl mb-4 block">🎨</span>
-                <h3 className="text-xl text-white mb-2">Услуги скоро появятся</h3>
-                <p className="text-neutral-400 mb-6">Мы готовим для вас интересные мастер-классы и курсы</p>
+                <h3 className="text-xl text-neutral-800 mb-2">Услуги скоро появятся</h3>
+                <p className="text-neutral-500 mb-6">Мы готовим для вас интересные мастер-классы и курсы</p>
                 <a
                   href={`https://wa.me/996555123456?text=${encodeURIComponent('Здравствуйте! Хочу узнать о ваших услугах')}`}
                   target="_blank"

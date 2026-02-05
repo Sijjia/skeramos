@@ -49,13 +49,13 @@ export default function PackagesPage() {
                 </svg>
                 Назад к отелю
               </Link>
-              <h1 className="text-4xl md:text-6xl font-display font-medium text-white mb-6">
+              <h1 className="text-4xl md:text-6xl font-display font-medium text-neutral-800 mb-6">
                 Специальные{' '}
-                <span className="bg-gradient-to-r from-zone-300 to-gold-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-zone-400 to-gold-500 bg-clip-text text-transparent">
                   пакеты
                 </span>
               </h1>
-              <p className="text-lg text-neutral-300 mb-8">
+              <p className="text-lg text-neutral-500 mb-8">
                 Готовые решения для особых случаев. Экономия до 20% по сравнению с отдельным бронированием.
               </p>
 
@@ -64,7 +64,7 @@ export default function PackagesPage() {
                 {['Все', 'Романтика', 'Праздники', 'С мастер-классом'].map((filter) => (
                   <button
                     key={filter}
-                    className="px-4 py-2 glass rounded-full text-sm text-neutral-300 hover:text-white hover:bg-white/10 transition-colors"
+                    className="px-4 py-2 glass rounded-full text-sm text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100 transition-colors"
                   >
                     {filter}
                   </button>
@@ -101,7 +101,7 @@ export default function PackagesPage() {
                     }`}>
                       {/* Featured badge */}
                       {pkg.featured && (
-                        <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-zone-500/90 text-white text-sm font-medium">
+                        <div className="absolute top-4 left-4 z-10 px-3 py-1 rounded-full bg-zone-500/90 text-on-color text-sm font-medium">
                           Популярный
                         </div>
                       )}
@@ -155,7 +155,7 @@ export default function PackagesPage() {
                           href={getWhatsAppLink(pkg.title)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="block w-full py-3 bg-zone-500 hover:bg-zone-600 text-white text-center rounded-xl font-medium transition-colors"
+                          className="block w-full py-3 bg-zone-500 hover:bg-zone-600 text-on-color text-center rounded-xl font-medium transition-colors"
                         >
                           Забронировать
                         </a>
@@ -167,8 +167,8 @@ export default function PackagesPage() {
             ) : (
               <div className="text-center py-20">
                 <span className="text-6xl mb-4 block">📦</span>
-                <h3 className="text-xl text-white mb-2">Пакеты скоро появятся</h3>
-                <p className="text-neutral-400 mb-6">Мы готовим для вас выгодные предложения</p>
+                <h3 className="text-xl text-neutral-800 mb-2">Пакеты скоро появятся</h3>
+                <p className="text-neutral-500 mb-6">Мы готовим для вас выгодные предложения</p>
                 <a
                   href="https://wa.me/996555123456?text=Здравствуйте! Хочу узнать о пакетах"
                   target="_blank"
@@ -218,7 +218,7 @@ export default function PackagesPage() {
         <section className="py-16 md:py-24">
           <div className="container mx-auto px-4">
             <FadeInOnScroll className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-display font-medium text-white mb-4">
+              <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mb-4">
                 Почему выгодно брать пакет
               </h2>
             </FadeInOnScroll>

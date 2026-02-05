@@ -792,7 +792,7 @@ export default function CreativityPage() {
                       className="object-cover"
                     />
                     <motion.div
-                      className="absolute top-4 right-4 px-3 py-1 rounded-full bg-zone-500/90 text-white text-sm font-medium"
+                      className="absolute top-4 right-4 px-3 py-1 rounded-full bg-zone-500/90 text-on-color text-sm font-medium"
                       whileHover={{ scale: 1.1 }}
                     >
                       {mc.price.toLocaleString()} сом
@@ -816,7 +816,7 @@ export default function CreativityPage() {
                       href={getWhatsAppLink(mc.title)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block w-full py-3 bg-zone-500 text-white text-center rounded-xl font-medium"
+                      className="block w-full py-3 bg-zone-500 text-on-color text-center rounded-xl font-medium"
                       whileHover={{ scale: 1.02, backgroundColor: 'var(--zone-400)' }}
                       whileTap={{ scale: 0.98 }}
                     >

@@ -311,6 +311,12 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--neutral-500) !important;
 }
 
+/* Force white text - for buttons/badges with colored backgrounds inside glass-cards */
+.text-on-color,
+.glass-card .text-on-color {
+  color: white !important;
+}
+
 /* Gradient backgrounds (hero sections) - always white text */
 .gradient-mesh,
 .gradient-radial {

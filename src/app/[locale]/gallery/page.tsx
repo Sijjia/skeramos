@@ -117,12 +117,12 @@ export default function GalleryPage() {
               <span className="inline-block px-4 py-2 rounded-full glass text-sm text-zone-300 font-medium mb-6">
                 Наше творчество
               </span>
-              <h1 className="text-4xl md:text-6xl font-display font-medium text-white mb-6">
-                <span className="bg-gradient-to-r from-zone-300 to-gold-500 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-6xl font-display font-medium text-neutral-800 mb-6">
+                <span className="bg-gradient-to-r from-zone-400 to-gold-500 bg-clip-text text-transparent">
                   Галерея
                 </span>
               </h1>
-              <p className="text-lg text-neutral-300">
+              <p className="text-lg text-neutral-500">
                 Изделия наших мастеров, моменты с мастер-классов и атмосфера нашего пространства
               </p>
             </FadeInOnScroll>
@@ -141,8 +141,8 @@ export default function GalleryPage() {
                 className={`
                   px-4 py-2 md:px-6 md:py-3 rounded-xl text-sm font-medium transition-all duration-300
                   ${activeCategory === 'all'
-                    ? 'bg-zone-500 text-white shadow-lg shadow-zone-500/30'
-                    : 'glass text-neutral-300 hover:text-white hover:bg-white/10'
+                    ? 'bg-zone-500 text-on-color shadow-lg shadow-zone-500/30'
+                    : 'glass text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100'
                   }
                 `}
               >
@@ -157,8 +157,8 @@ export default function GalleryPage() {
                   className={`
                     px-4 py-2 md:px-6 md:py-3 rounded-xl text-sm font-medium transition-all duration-300
                     ${activeCategory === cat.value
-                      ? 'bg-zone-500 text-white shadow-lg shadow-zone-500/30'
-                      : 'glass text-neutral-300 hover:text-white hover:bg-white/10'
+                      ? 'bg-zone-500 text-on-color shadow-lg shadow-zone-500/30'
+                      : 'glass text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100'
                     }
                   `}
                 >
@@ -232,8 +232,8 @@ export default function GalleryPage() {
             ) : (
               <div className="text-center py-20">
                 <span className="text-6xl mb-4 block">🎨</span>
-                <h3 className="text-xl text-white mb-2">Галерея пока пуста</h3>
-                <p className="text-neutral-400">Скоро здесь появятся работы наших мастеров</p>
+                <h3 className="text-xl text-neutral-800 mb-2">Галерея пока пуста</h3>
+                <p className="text-neutral-500">Скоро здесь появятся работы наших мастеров</p>
               </div>
             )}
           </div>
@@ -243,10 +243,10 @@ export default function GalleryPage() {
         <section className="py-16 md:py-24 etno-tunduk">
           <div className="container mx-auto px-4">
             <FadeInOnScroll className="max-w-2xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-display font-medium text-white mb-6">
+              <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mb-6">
                 Хотите создать своё изделие?
               </h2>
-              <p className="text-neutral-300 mb-8">
+              <p className="text-neutral-600 mb-8">
                 Запишитесь на мастер-класс и ваша работа тоже может оказаться в нашей галерее!
               </p>
               <a

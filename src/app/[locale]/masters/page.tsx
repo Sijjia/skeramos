@@ -44,13 +44,13 @@ export default function MastersPage() {
               <span className="inline-block px-4 py-2 rounded-full glass text-sm text-zone-300 font-medium mb-6">
                 Команда Skeramos
               </span>
-              <h1 className="text-4xl md:text-6xl font-display font-medium text-white mb-6">
+              <h1 className="text-4xl md:text-6xl font-display font-medium text-neutral-800 mb-6">
                 Наши{' '}
-                <span className="bg-gradient-to-r from-zone-300 to-gold-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-zone-400 to-gold-500 bg-clip-text text-transparent">
                   мастера
                 </span>
               </h1>
-              <p className="text-lg text-neutral-300">
+              <p className="text-lg text-neutral-500">
                 Профессионалы, которые делятся своим мастерством и любовью к керамике.
                 Каждый из них — мастер своего дела с уникальным стилем и подходом.
               </p>
@@ -158,8 +158,8 @@ export default function MastersPage() {
                         )}
 
                         {/* View more link */}
-                        <div className="pt-4 border-t border-white/10">
-                          <span className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-zone-500/20 hover:bg-zone-500/30 text-zone-300 rounded-lg text-sm font-medium transition-colors">
+                        <div className="pt-4 border-t border-neutral-200">
+                          <span className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-zone-500/10 hover:bg-zone-500/20 text-zone-600 rounded-lg text-sm font-medium transition-colors">
                             Подробнее о мастере →
                           </span>
                         </div>
@@ -172,8 +172,8 @@ export default function MastersPage() {
             ) : (
               <div className="text-center py-20">
                 <span className="text-6xl mb-4 block">👨‍🎨</span>
-                <h3 className="text-xl text-white mb-2">Информация о мастерах скоро появится</h3>
-                <p className="text-neutral-400">Мы готовим для вас интересные истории наших мастеров</p>
+                <h3 className="text-xl text-neutral-800 mb-2">Информация о мастерах скоро появится</h3>
+                <p className="text-neutral-500">Мы готовим для вас интересные истории наших мастеров</p>
               </div>
             )}
           </div>
@@ -183,10 +183,10 @@ export default function MastersPage() {
         <section className="py-16 md:py-24 etno-tunduk">
           <div className="container mx-auto px-4">
             <FadeInOnScroll className="max-w-2xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-display font-medium text-white mb-6">
+              <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mb-6">
                 Хотите учиться у наших мастеров?
               </h2>
-              <p className="text-neutral-300 mb-8">
+              <p className="text-neutral-600 mb-8">
                 Запишитесь на мастер-класс и создайте своё первое изделие под руководством профессионалов
               </p>
               <div className="flex flex-wrap justify-center gap-4">
@@ -200,7 +200,7 @@ export default function MastersPage() {
                   href="https://wa.me/996555123456?text=Здравствуйте! Хочу записаться на мастер-класс"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-8 py-4 glass hover:bg-white/10 text-white rounded-2xl font-medium transition-all"
+                  className="px-8 py-4 glass hover:bg-neutral-100 text-neutral-700 rounded-2xl font-medium transition-all"
                 >
                   Написать в WhatsApp
                 </a>

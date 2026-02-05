@@ -398,7 +398,7 @@ export default function HotelPage() {
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-zone-500/90 text-white text-sm font-medium">
+                    <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-zone-500/90 text-on-color text-sm font-medium">
                       {room.price.toLocaleString()} сом/ночь
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
@@ -428,7 +428,7 @@ export default function HotelPage() {
                       href={getWhatsAppLink(room.title)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block w-full py-3 bg-zone-500 hover:bg-zone-600 text-white text-center rounded-xl font-medium transition-colors"
+                      className="block w-full py-3 bg-zone-500 hover:bg-zone-600 text-on-color text-center rounded-xl font-medium transition-colors"
                     >
                       {tCommon('bookNow')}
                     </a>
@@ -499,7 +499,7 @@ export default function HotelPage() {
                   }`}
                 >
                   {pkg.featured && (
-                    <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-zone-400 text-white text-xs font-medium z-10">
+                    <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-zone-400 text-on-color text-xs font-medium z-10">
                       Популярный
                     </div>
                   )}
@@ -539,7 +539,7 @@ export default function HotelPage() {
                         href={getWhatsAppLink(pkg.title)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-4 py-2 bg-zone-500 hover:bg-zone-600 text-white rounded-xl text-sm font-medium transition-colors"
+                        className="px-4 py-2 bg-zone-500 hover:bg-zone-600 text-on-color rounded-xl text-sm font-medium transition-colors"
                       >
                         {tCommon('bookNow')}
                       </a>
