@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ImageUpload } from '@/components/admin/ImageUpload';
+import { useToast, ToastContainer } from '@/components/admin/Toast';
 
 interface Achievement {
   year: number;
@@ -43,6 +44,7 @@ export default function MastersAdmin() {
   const [specialtyInput, setSpecialtyInput] = useState('');
   const [achievementYear, setAchievementYear] = useState(new Date().getFullYear());
   const [achievementText, setAchievementText] = useState('');
+  const toast = useToast();
 
   const loadItems = async () => {
     try {
@@ -85,12 +87,14 @@ export default function MastersAdmin() {
       if (res.ok) {
         await loadItems();
         setEditingItem(null);
+        toast.success('Сохранено!');
       } else {
         const err = await res.json();
-        alert('Ошибка: ' + err.error);
+        toast.error('Ошибка: ' + err.error);
       }
     } catch (error) {
       console.error('Error saving:', error);
+      toast.error('Ошибка сохранения');
     } finally {
       setSaving(false);
     }
@@ -106,9 +110,11 @@ export default function MastersAdmin() {
 
       if (res.ok) {
         await loadItems();
+        toast.success('Удалено');
       }
     } catch (error) {
       console.error('Error deleting:', error);
+      toast.error('Ошибка удаления');
     }
   };
 
@@ -158,6 +164,7 @@ export default function MastersAdmin() {
 
   return (
     <div>
+      <ToastContainer toasts={toast.toasts} />
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-white">Мастера</h1>
         <button

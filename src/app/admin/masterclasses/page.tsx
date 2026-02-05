@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ImageUpload } from '@/components/admin/ImageUpload';
+import { useToast, ToastContainer } from '@/components/admin/Toast';
 
 interface Masterclass {
   id: string;
@@ -35,6 +36,7 @@ export default function MasterclassesAdmin() {
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
   const [tagInput, setTagInput] = useState('');
+  const toast = useToast();
 
   const loadItems = async () => {
     try {
@@ -82,9 +84,11 @@ export default function MasterclassesAdmin() {
       if (res.ok) {
         await loadItems();
         setEditingItem(null);
+        toast.success('Сохранено!');
       }
     } catch (error) {
       console.error('Error saving:', error);
+      toast.error('Ошибка сохранения');
     } finally {
       setSaving(false);
     }
@@ -100,9 +104,11 @@ export default function MasterclassesAdmin() {
 
       if (res.ok) {
         await loadItems();
+        toast.success('Удалено');
       }
     } catch (error) {
       console.error('Error deleting:', error);
+      toast.error('Ошибка удаления');
     }
   };
 
@@ -142,6 +148,7 @@ export default function MasterclassesAdmin() {
 
   return (
     <div>
+      <ToastContainer toasts={toast.toasts} />
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-white">Мастер-классы</h1>
         <button

@@ -3,6 +3,9 @@ import { cookies } from 'next/headers';
 import crypto from 'crypto';
 import { put, list, del } from '@vercel/blob';
 
+// Отключаем кэширование Route Handler — всегда свежие данные
+export const dynamic = 'force-dynamic';
+
 const SESSION_SECRET = process.env.SESSION_SECRET || 'default-secret';
 const COOKIE_NAME = 'admin_session';
 
@@ -60,8 +63,8 @@ async function readData(collection: string): Promise<unknown> {
       return collection === 'settings' ? {} : [];
     }
 
-    // Читаем данные из blob
-    const response = await fetch(blobs[0].url);
+    // Читаем данные из blob (без кэширования!)
+    const response = await fetch(blobs[0].url, { cache: 'no-store' });
     if (!response.ok) {
       return collection === 'settings' ? {} : [];
     }
@@ -117,7 +120,11 @@ export async function GET(
 
   // Публичные данные доступны без авторизации
   const data = await readData(collection);
-  return NextResponse.json(data);
+  return NextResponse.json(data, {
+    headers: {
+      'Cache-Control': 'no-store, no-cache, must-revalidate',
+    },
+  });
 }
 
 // POST - добавить новый элемент

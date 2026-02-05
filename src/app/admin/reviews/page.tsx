@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useToast, ToastContainer } from '@/components/admin/Toast';
 
 interface Review {
   id: string;
@@ -36,6 +37,7 @@ export default function ReviewsAdmin() {
   const [editingItem, setEditingItem] = useState<Review | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
+  const toast = useToast();
 
   const loadItems = async () => {
     try {
@@ -78,9 +80,11 @@ export default function ReviewsAdmin() {
       if (res.ok) {
         await loadItems();
         setEditingItem(null);
+        toast.success('Сохранено!');
       }
     } catch (error) {
       console.error('Error saving:', error);
+      toast.error('Ошибка сохранения');
     } finally {
       setSaving(false);
     }
@@ -96,9 +100,11 @@ export default function ReviewsAdmin() {
 
       if (res.ok) {
         await loadItems();
+        toast.success('Удалено');
       }
     } catch (error) {
       console.error('Error deleting:', error);
+      toast.error('Ошибка удаления');
     }
   };
 
@@ -121,6 +127,7 @@ export default function ReviewsAdmin() {
 
   return (
     <div>
+      <ToastContainer toasts={toast.toasts} />
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-white">Отзывы</h1>
         <button

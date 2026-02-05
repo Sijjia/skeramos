@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ImageUpload } from '@/components/admin/ImageUpload';
+import { useToast, ToastContainer } from '@/components/admin/Toast';
 
 interface GalleryItem {
   id: string;
@@ -45,6 +46,7 @@ export default function GalleryAdmin() {
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState('all');
+  const toast = useToast();
 
   const loadData = async () => {
     try {
@@ -109,9 +111,11 @@ export default function GalleryAdmin() {
       if (res.ok) {
         await loadItems();
         setEditingItem(null);
+        toast.success('Сохранено!');
       }
     } catch (error) {
       console.error('Error saving:', error);
+      toast.error('Ошибка сохранения');
     } finally {
       setSaving(false);
     }
@@ -127,9 +131,11 @@ export default function GalleryAdmin() {
 
       if (res.ok) {
         await loadItems();
+        toast.success('Удалено');
       }
     } catch (error) {
       console.error('Error deleting:', error);
+      toast.error('Ошибка удаления');
     }
   };
 
@@ -143,6 +149,7 @@ export default function GalleryAdmin() {
 
   return (
     <div>
+      <ToastContainer toasts={toast.toasts} />
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-white">Галерея</h1>
         <button

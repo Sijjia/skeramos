@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ImageUpload } from '@/components/admin/ImageUpload';
+import { useToast, ToastContainer } from '@/components/admin/Toast';
 
 interface HistoryItem {
   id: string;
@@ -44,6 +45,7 @@ export default function HistoryAdmin() {
   const [editingItem, setEditingItem] = useState<HistoryItem | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
+  const toast = useToast();
 
   const loadItems = async () => {
     try {
@@ -90,12 +92,14 @@ export default function HistoryAdmin() {
       if (res.ok) {
         await loadItems();
         setEditingItem(null);
+        toast.success('Сохранено!');
       } else {
         const err = await res.json();
-        alert('Ошибка: ' + err.error);
+        toast.error('Ошибка: ' + err.error);
       }
     } catch (error) {
       console.error('Error saving:', error);
+      toast.error('Ошибка сохранения');
     } finally {
       setSaving(false);
     }
@@ -111,9 +115,11 @@ export default function HistoryAdmin() {
 
       if (res.ok) {
         await loadItems();
+        toast.success('Удалено');
       }
     } catch (error) {
       console.error('Error deleting:', error);
+      toast.error('Ошибка удаления');
     }
   };
 
@@ -123,6 +129,7 @@ export default function HistoryAdmin() {
 
   return (
     <div>
+      <ToastContainer toasts={toast.toasts} />
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-white">История компании</h1>

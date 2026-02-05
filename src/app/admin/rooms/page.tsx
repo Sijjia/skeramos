@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ImageUpload } from '@/components/admin/ImageUpload';
+import { useToast, ToastContainer } from '@/components/admin/Toast';
 
 interface Room {
   id: string;
@@ -35,6 +36,7 @@ export default function RoomsAdmin() {
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
   const [amenitiesInput, setAmenitiesInput] = useState('');
+  const toast = useToast();
 
   const loadItems = async () => {
     try {
@@ -84,9 +86,11 @@ export default function RoomsAdmin() {
       if (res.ok) {
         await loadItems();
         setEditingItem(null);
+        toast.success('Сохранено!');
       }
     } catch (error) {
       console.error('Error saving:', error);
+      toast.error('Ошибка сохранения');
     } finally {
       setSaving(false);
     }
@@ -102,9 +106,11 @@ export default function RoomsAdmin() {
 
       if (res.ok) {
         await loadItems();
+        toast.success('Удалено');
       }
     } catch (error) {
       console.error('Error deleting:', error);
+      toast.error('Ошибка удаления');
     }
   };
 
@@ -114,6 +120,7 @@ export default function RoomsAdmin() {
 
   return (
     <div>
+      <ToastContainer toasts={toast.toasts} />
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-white">Номера отеля</h1>
         <button
