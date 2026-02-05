@@ -141,7 +141,7 @@ export default function ContactsPage() {
                 {/* Social links */}
                 <div className="glass-card p-6">
                   <h3 className="font-semibold card-title mb-4">{tFooter('social')}</h3>
-                  <div className="flex gap-3">
+                  <div className="flex flex-wrap gap-3">
                     <a
                       href="https://instagram.com/skeramos"
                       target="_blank"
@@ -168,6 +168,33 @@ export default function ContactsPage() {
                       aria-label="Telegram"
                     >
                       <Icon name="telegram" size="md" />
+                    </a>
+                    <a
+                      href="https://facebook.com/skeramos"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 bg-[#1877F2] rounded-full flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-blue-500/30 transition-all"
+                      aria-label="Facebook"
+                    >
+                      <Icon name="facebook" size="md" />
+                    </a>
+                    <a
+                      href="https://youtube.com/@skeramos"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 bg-[#FF0000] rounded-full flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-red-500/30 transition-all"
+                      aria-label="YouTube"
+                    >
+                      <Icon name="youtube" size="md" />
+                    </a>
+                    <a
+                      href="https://vk.com/skeramos"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-12 h-12 bg-[#0077FF] rounded-full flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-blue-500/30 transition-all"
+                      aria-label="VK"
+                    >
+                      <Icon name="vk" size="md" />
                     </a>
                   </div>
                 </div>
