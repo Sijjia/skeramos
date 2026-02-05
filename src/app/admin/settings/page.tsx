@@ -35,8 +35,11 @@ interface Settings {
   workingHours: string;
   social: {
     instagram: string;
-    facebook: string;
+    whatsapp: string;
     telegram: string;
+    facebook: string;
+    youtube: string;
+    vk: string;
   };
   cinemaPrice: number;
   galleryCategories?: GalleryCategory[];
@@ -97,8 +100,11 @@ export default function SettingsAdmin() {
         workingHours: data.workingHours || '',
         social: {
           instagram: data.social?.instagram || '',
-          facebook: data.social?.facebook || '',
+          whatsapp: data.social?.whatsapp || '',
           telegram: data.social?.telegram || '',
+          facebook: data.social?.facebook || '',
+          youtube: data.social?.youtube || '',
+          vk: data.social?.vk || '',
         },
         cinemaPrice: data.cinemaPrice || 0,
         galleryCategories: data.galleryCategories || DEFAULT_GALLERY_CATEGORIES,
@@ -118,8 +124,11 @@ export default function SettingsAdmin() {
         workingHours: '',
         social: {
           instagram: '',
-          facebook: '',
+          whatsapp: '',
           telegram: '',
+          facebook: '',
+          youtube: '',
+          vk: '',
         },
         cinemaPrice: 0,
         galleryCategories: DEFAULT_GALLERY_CATEGORIES,
@@ -418,18 +427,18 @@ export default function SettingsAdmin() {
             </div>
 
             <div>
-              <label className="block text-neutral-300 mb-2">Facebook</label>
+              <label className="block text-neutral-300 mb-2">WhatsApp (ссылка)</label>
               <input
                 type="url"
-                value={settings.social?.facebook || ''}
+                value={settings.social?.whatsapp || ''}
                 onChange={(e) =>
                   setSettings({
                     ...settings,
-                    social: { ...settings.social, facebook: e.target.value },
+                    social: { ...settings.social, whatsapp: e.target.value },
                   })
                 }
                 className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
-                placeholder="https://facebook.com/skeramos"
+                placeholder="https://wa.me/996555123456"
               />
             </div>
 
@@ -446,6 +455,54 @@ export default function SettingsAdmin() {
                 }
                 className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
                 placeholder="https://t.me/skeramos"
+              />
+            </div>
+
+            <div>
+              <label className="block text-neutral-300 mb-2">Facebook</label>
+              <input
+                type="url"
+                value={settings.social?.facebook || ''}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    social: { ...settings.social, facebook: e.target.value },
+                  })
+                }
+                className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                placeholder="https://facebook.com/skeramos"
+              />
+            </div>
+
+            <div>
+              <label className="block text-neutral-300 mb-2">YouTube</label>
+              <input
+                type="url"
+                value={settings.social?.youtube || ''}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    social: { ...settings.social, youtube: e.target.value },
+                  })
+                }
+                className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                placeholder="https://youtube.com/@skeramos"
+              />
+            </div>
+
+            <div>
+              <label className="block text-neutral-300 mb-2">VK</label>
+              <input
+                type="url"
+                value={settings.social?.vk || ''}
+                onChange={(e) =>
+                  setSettings({
+                    ...settings,
+                    social: { ...settings.social, vk: e.target.value },
+                  })
+                }
+                className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                placeholder="https://vk.com/skeramos"
               />
             </div>
           </div>

@@ -123,14 +123,14 @@ export default function ContactsPage() {
                       href={`https://wa.me/${PHONE}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-3 px-6 py-4 bg-green-600 hover:bg-green-500 text-white rounded-xl font-medium transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-green-500/20"
+                      className="flex items-center justify-center gap-3 px-6 py-4 bg-green-600 hover:bg-green-500 text-on-color rounded-xl font-medium transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-green-500/20"
                     >
                       <Icon name="whatsapp" size="md" />
                       WhatsApp
                     </a>
                     <a
                       href={`tel:+${PHONE}`}
-                      className="flex items-center justify-center gap-3 px-6 py-4 bg-zone-500 hover:bg-zone-400 text-white rounded-xl font-medium transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-zone-500/20"
+                      className="flex items-center justify-center gap-3 px-6 py-4 bg-zone-500 hover:bg-zone-400 text-on-color rounded-xl font-medium transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-zone-500/20"
                     >
                       <Icon name="phone" size="md" />
                       Позвонить
@@ -146,7 +146,7 @@ export default function ContactsPage() {
                       href="https://instagram.com/skeramos"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-pink-500/30 transition-all"
+                      className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-on-color hover:scale-110 hover:shadow-lg hover:shadow-pink-500/30 transition-all"
                       aria-label="Instagram"
                     >
                       <Icon name="instagram" size="md" />
@@ -155,7 +155,7 @@ export default function ContactsPage() {
                       href={`https://wa.me/${PHONE}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-green-500/30 transition-all"
+                      className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-on-color hover:scale-110 hover:shadow-lg hover:shadow-green-500/30 transition-all"
                       aria-label="WhatsApp"
                     >
                       <Icon name="whatsapp" size="md" />
@@ -164,7 +164,7 @@ export default function ContactsPage() {
                       href="https://t.me/skeramos"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-12 h-12 bg-sky-500 rounded-full flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-sky-500/30 transition-all"
+                      className="w-12 h-12 bg-sky-500 rounded-full flex items-center justify-center text-on-color hover:scale-110 hover:shadow-lg hover:shadow-sky-500/30 transition-all"
                       aria-label="Telegram"
                     >
                       <Icon name="telegram" size="md" />
@@ -173,7 +173,7 @@ export default function ContactsPage() {
                       href="https://facebook.com/skeramos"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-12 h-12 bg-[#1877F2] rounded-full flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-blue-500/30 transition-all"
+                      className="w-12 h-12 bg-[#1877F2] rounded-full flex items-center justify-center text-on-color hover:scale-110 hover:shadow-lg hover:shadow-blue-500/30 transition-all"
                       aria-label="Facebook"
                     >
                       <Icon name="facebook" size="md" />
@@ -182,7 +182,7 @@ export default function ContactsPage() {
                       href="https://youtube.com/@skeramos"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-12 h-12 bg-[#FF0000] rounded-full flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-red-500/30 transition-all"
+                      className="w-12 h-12 bg-[#FF0000] rounded-full flex items-center justify-center text-on-color hover:scale-110 hover:shadow-lg hover:shadow-red-500/30 transition-all"
                       aria-label="YouTube"
                     >
                       <Icon name="youtube" size="md" />
@@ -191,7 +191,7 @@ export default function ContactsPage() {
                       href="https://vk.com/skeramos"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-12 h-12 bg-[#0077FF] rounded-full flex items-center justify-center text-white hover:scale-110 hover:shadow-lg hover:shadow-blue-500/30 transition-all"
+                      className="w-12 h-12 bg-[#0077FF] rounded-full flex items-center justify-center text-on-color hover:scale-110 hover:shadow-lg hover:shadow-blue-500/30 transition-all"
                       aria-label="VK"
                     >
                       <Icon name="vk" size="md" />
