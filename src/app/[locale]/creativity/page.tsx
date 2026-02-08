@@ -14,7 +14,7 @@ import {
 import { Footer } from '@/components/layout/Footer';
 import { OnboardingHint, StickyCTA, FAQAccordion } from '@/components/features';
 import { ContactModal } from '@/components/features/ContactModal';
-import { FloatingOrbs, EtnoPatternOverlay, SectionDivider, GlowingAccent } from '@/components/animations/EtnoDecorations';
+import { FloatingOrbs, EtnoPatternOverlay, SectionDivider, GlowingAccent, ScrollFrameAnimation } from '@/components/animations';
 import { FadeInOnScroll, CountUp } from '@/components/animations/OptimizedAnimations';
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from '@/components/animations/ScrollAnimations';
 import { SThreadAnimation, SThreadDivider } from '@/components/animations/SThreadAnimation';
@@ -256,6 +256,15 @@ export default function CreativityPage() {
           style={{ opacity: heroOpacity }}
           className="relative min-h-screen flex items-center justify-center gradient-mesh noise-overlay"
         >
+          {/* Scroll-driven pottery animation background */}
+          <ScrollFrameAnimation
+            framePath="/frames/pottery"
+            frameCount={36}
+            opacity={0.12}
+            scrollRange={[0, 0.3]}
+            className="z-0"
+          />
+
           {/* Background decorations - CSS only for performance */}
           <GlowingAccent position="top-left" zone="creativity" size={500} />
           <GlowingAccent position="bottom-right" zone="creativity" size={400} />

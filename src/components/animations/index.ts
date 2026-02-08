@@ -37,3 +37,6 @@ export {
   ParallaxBackground as ParallaxBg,
   KenBurnsHero,
 } from './ParallaxHero';
+
+// Scroll-driven frame animation (for video-like backgrounds)
+export { ScrollFrameAnimation } from './ScrollFrameAnimation';
