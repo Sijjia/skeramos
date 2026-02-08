@@ -247,7 +247,7 @@ export default function CreativityPage() {
       {/* Scroll-driven pottery animation - fixed background for entire page */}
       <ScrollFrameAnimation
         framePath="/frames/pottery"
-        frameCount={70}
+        frameCount={140}
         filePrefix="ezgif-frame-"
         extension="jpg"
         opacity={0.1}
