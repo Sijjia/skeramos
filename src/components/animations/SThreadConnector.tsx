@@ -55,15 +55,15 @@ export function SThreadConnector({
 
     if (leftTextRef.current) {
       const rect = leftTextRef.current.getBoundingClientRect();
-      // Attach directly to the last letter of left text
-      leftX = rect.right - 5;
+      // Attach to the right edge of left text, vertically centered
+      leftX = rect.right;
       leftY = rect.top + rect.height / 2;
     }
 
     if (rightTextRef.current) {
       const rect = rightTextRef.current.getBoundingClientRect();
-      // Attach directly to the first letter of right text
-      rightX = rect.left + 5;
+      // Attach to the left edge of right text, vertically centered
+      rightX = rect.left;
       rightY = rect.top + rect.height / 2;
     }
 
@@ -136,15 +136,15 @@ export function SThreadConnector({
     };
   }, [hoveredZone, swayPhase]);
 
-  const sLogoSize = 35;
+  const sLogoSize = 30;
 
-  // S-shape path for thread-like S logo
+  // Proper S letter path - like a real S shape
+  const x = positions.dividerX;
+  const y = positions.dividerY;
   const sPath = `
-    M ${positions.dividerX} ${positions.dividerY - sLogoSize}
-    Q ${positions.dividerX + sLogoSize * 0.8} ${positions.dividerY - sLogoSize * 0.5},
-      ${positions.dividerX} ${positions.dividerY}
-    Q ${positions.dividerX - sLogoSize * 0.8} ${positions.dividerY + sLogoSize * 0.5},
-      ${positions.dividerX} ${positions.dividerY + sLogoSize}
+    M ${x + sLogoSize * 0.5} ${y - sLogoSize}
+    C ${x - sLogoSize * 0.6} ${y - sLogoSize}, ${x - sLogoSize * 0.6} ${y - sLogoSize * 0.1}, ${x} ${y}
+    C ${x + sLogoSize * 0.6} ${y + sLogoSize * 0.1}, ${x + sLogoSize * 0.6} ${y + sLogoSize}, ${x - sLogoSize * 0.5} ${y + sLogoSize}
   `;
 
   const sLogoOpacity = useTransform(smoothProgress, [0, 0.2], [1, 0]);
