@@ -8,12 +8,12 @@ import { useZone } from '@/contexts/ZoneContext';
 import { Bed, Palette, Car, Wifi, Shield } from 'lucide-react';
 
 import { Footer } from '@/components/layout/Footer';
-import { OnboardingHint, StickyCTA, FAQAccordion, RoomCard, PackageCard } from '@/components/features';
+import { OnboardingHint, StickyCTA, FAQAccordion, PackageCard } from '@/components/features';
 import { FloatingOrbs, EtnoPatternOverlay, GlowingAccent } from '@/components/animations/EtnoDecorations';
 import { CountUp } from '@/components/animations/OptimizedAnimations';
 import { SThreadAnimation, SThreadDivider } from '@/components/animations/SThreadAnimation';
 import { ReviewsSlider } from '@/components/sections/ReviewsSlider';
-import { useRooms, usePackages, useFAQ, useSettings } from '@/hooks/useSanityData';
+import { usePackages, useFAQ, useSettings } from '@/hooks/useSanityData';
 
 // Custom easing curve for smooth animations
 const smoothEase = [0.25, 0.1, 0.25, 1] as const;
@@ -101,15 +101,6 @@ const DEFAULT_HOTEL_FEATURES = [
   },
 ];
 
-// Amenities
-const AMENITIES = [
-  { icon: '📶', label: 'Бесплатный Wi-Fi' },
-  { icon: '❄️', label: 'Кондиционер' },
-  { icon: '📺', label: 'Smart TV' },
-  { icon: '🚿', label: 'Душ / Ванна' },
-  { icon: '☕', label: 'Чай и кофе' },
-  { icon: '🧴', label: 'Косметика' },
-];
 
 // Fallback packages when API is empty
 const PACKAGES_FALLBACK = [
@@ -149,7 +140,6 @@ export default function HotelPage() {
   const { scrollYProgress } = useScroll();
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
-  const { data: rooms } = useRooms();
   const { data: packagesData } = usePackages();
   const { data: faqItems } = useFAQ('hotel');
   const { data: settings } = useSettings();
@@ -246,17 +236,19 @@ export default function HotelPage() {
               {/* CTA Buttons */}
               <motion.div variants={fadeInUp} className="flex flex-wrap justify-center gap-4">
                 <a
-                  href="#rooms"
+                  href="#packages"
                   className="group relative px-8 py-4 bg-zone-500 text-white rounded-2xl font-medium transition-all duration-300 hover:bg-zone-400 hover:scale-105 hover:shadow-xl hover:shadow-zone-500/30"
                 >
-                  <span className="relative z-10">Смотреть номера</span>
+                  <span className="relative z-10">Специальные пакеты</span>
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-zone-400 to-zone-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </a>
                 <a
-                  href="#packages"
+                  href={getWhatsAppLink('Бронирование отеля')}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="px-8 py-4 glass text-white rounded-2xl font-medium transition-all duration-300 hover:bg-white/15 hover:scale-105 hover:border-white/30"
                 >
-                  Специальные пакеты
+                  Забронировать
                 </a>
               </motion.div>
 
@@ -266,9 +258,9 @@ export default function HotelPage() {
                 className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto"
               >
                 {[
-                  { value: 3, suffix: '', label: 'уютных номера' },
                   { value: 24, suffix: '/7', label: 'заселение' },
                   { value: 500, suffix: '+', label: 'довольных гостей' },
+                  { value: 5, suffix: '★', label: 'рейтинг' },
                 ].map((stat) => (
                   <div key={stat.label} className="text-center">
                     <div className="text-3xl md:text-4xl font-display font-bold text-zone-400">
@@ -351,113 +343,6 @@ export default function HotelPage() {
                   </motion.div>
                 );
               })}
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Rooms Section */}
-        <section id="rooms" className="py-24 md:py-32 light-section">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-100px' }}
-              variants={staggerContainer}
-              className="text-center mb-16"
-            >
-              <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
-                Размещение
-              </motion.span>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
-                {t('rooms')}
-              </motion.h2>
-              <motion.p variants={fadeInUp} className="text-neutral-500 mt-4 max-w-2xl mx-auto">
-                {t('roomsSubtitle')}
-              </motion.p>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-50px' }}
-              variants={staggerContainer}
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
-            >
-              {rooms.map((room) => (
-                <motion.div
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  key={room.id}
-                  variants={fadeInUp}
-                  className="glass-card overflow-hidden group hover-lift"
-                >
-                  {/* Image Gallery */}
-                  <div className="relative aspect-[4/3]">
-                    <Image
-                      src={room.images[0] || 'https://placehold.co/800x600/330a16/f4a7ba?text=Номер'}
-                      alt={room.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-zone-500/90 text-on-color text-sm font-medium">
-                      {room.price.toLocaleString()} сом/ночь
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-                  </div>
-
-                  <div className="p-6">
-                    <h3 className="text-xl font-display font-medium card-title mb-2">
-                      {room.title}
-                    </h3>
-                    <p className="card-muted text-sm mb-4 line-clamp-2">
-                      {room.description}
-                    </p>
-
-                    {/* Amenities */}
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {room.amenities.slice(0, 4).map((amenity, idx) => (
-                        <span
-                          key={idx}
-                          className="px-3 py-1 rounded-full bg-zone-500/10 text-zone-600 text-xs"
-                        >
-                          {amenity.label}
-                        </span>
-                      ))}
-                    </div>
-
-                    <a
-                      href={getWhatsAppLink(room.title)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block w-full py-3 bg-zone-500 hover:bg-zone-600 text-on-color text-center rounded-xl font-medium transition-colors"
-                    >
-                      {tCommon('bookNow')}
-                    </a>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* All amenities */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="mt-16 max-w-3xl mx-auto"
-            >
-              <h3 className="text-center text-lg font-display text-neutral-800 mb-6">
-                Во всех номерах
-              </h3>
-              <div className="flex flex-wrap justify-center gap-4">
-                {AMENITIES.map((item) => (
-                  <div
-                    key={item.label}
-                    className="flex items-center gap-2 px-4 py-2 glass rounded-full"
-                  >
-                    <span>{item.icon}</span>
-                    <span className="text-sm text-neutral-600">{item.label}</span>
-                  </div>
-                ))}
-              </div>
             </motion.div>
           </div>
         </section>

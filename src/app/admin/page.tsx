@@ -5,22 +5,22 @@ import Link from 'next/link';
 
 interface Stats {
   masterclasses: number;
-  rooms: number;
   reviews: number;
   gallery: number;
+  packages: number;
 }
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats>({
     masterclasses: 0,
-    rooms: 0,
     reviews: 0,
     gallery: 0,
+    packages: 0,
   });
 
   useEffect(() => {
     async function loadStats() {
-      const collections = ['masterclasses', 'rooms', 'reviews', 'gallery'];
+      const collections = ['masterclasses', 'reviews', 'gallery', 'packages'];
       const results: Partial<Stats> = {};
 
       for (const col of collections) {
@@ -48,10 +48,10 @@ export default function AdminDashboard() {
       color: 'bg-green-600',
     },
     {
-      title: 'Номера',
-      count: stats.rooms,
-      icon: '🛏️',
-      href: '/admin/rooms',
+      title: 'Пакеты',
+      count: stats.packages,
+      icon: '📦',
+      href: '/admin/packages',
       color: 'bg-rose-600',
     },
     {

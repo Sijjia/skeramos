@@ -40,16 +40,6 @@ export interface EventUI {
   eventType?: string;
 }
 
-export interface RoomUI {
-  id: string;
-  title: string;
-  description: string;
-  images: string[];
-  amenities: { icon: 'bed' | 'tv' | 'heating' | 'wifi' | 'shower' | 'kitchen'; label: string }[];
-  price: number;
-  slug?: string;
-}
-
 export interface PackageUI {
   id: string;
   title: string;
@@ -232,10 +222,6 @@ export function useCourses() {
 export function useEvents() {
   // Мероприятия пока не в админке, используем пустой массив
   return { data: [] as EventUI[], loading: false, error: null };
-}
-
-export function useRooms() {
-  return useDataFetch<RoomUI[]>('rooms', EMPTY_ARRAY);
 }
 
 export function usePackages() {

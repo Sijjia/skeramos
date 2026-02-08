@@ -24,7 +24,6 @@ const MENU_ITEMS = [
   { href: '/admin/masterclasses', label: 'Мастер-классы', icon: '🎨' },
   { href: '/admin/masters', label: 'Мастера', icon: '👨‍🎨' },
   { href: '/admin/afisha', label: 'Афиша', icon: '📅' },
-  { href: '/admin/rooms', label: 'Номера', icon: '🛏️' },
   { href: '/admin/packages', label: 'Пакеты', icon: '📦' },
   { href: '/admin/gallery', label: 'Галерея', icon: '🖼️' },
   { href: '/admin/reviews', label: 'Отзывы', icon: '⭐' },
