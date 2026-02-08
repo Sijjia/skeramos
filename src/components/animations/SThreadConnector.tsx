@@ -13,7 +13,15 @@ interface SThreadConnectorProps {
 }
 
 // Default positions for SSR - will be updated on mount
-const DEFAULT_POSITIONS = { dividerX: 500, dividerY: 400, leftX: 350, leftY: 400, rightX: 650, rightY: 400 };
+const DEFAULT_POSITIONS = {
+  dividerX: 500,
+  dividerY: 400,
+  leftX: 350,
+  leftY: 400,
+  rightX: 650,
+  rightY: 400,
+  isVertical: false
+};
 
 export function SThreadConnector({
   hoveredZone,
@@ -40,13 +48,32 @@ export function SThreadConnector({
     const screenHeight = window.innerHeight;
     const screenWidth = window.innerWidth;
 
-    // Get divider position from left section's right edge (the split line)
-    let dividerX = screenWidth / 2;
-    if (leftSectionRef.current) {
-      const rect = leftSectionRef.current.getBoundingClientRect();
-      dividerX = rect.right;
+    // Detect if layout is vertical (mobile) or horizontal (desktop)
+    // Mobile breakpoint is 768px (md: in Tailwind)
+    const isVertical = screenWidth < 768;
+
+    let dividerX: number;
+    let dividerY: number;
+
+    if (isVertical) {
+      // Vertical layout: divider is horizontal line between top and bottom sections
+      dividerX = screenWidth / 2;
+      if (leftSectionRef.current) {
+        const rect = leftSectionRef.current.getBoundingClientRect();
+        dividerY = rect.bottom; // Bottom edge of top section
+      } else {
+        dividerY = screenHeight / 2;
+      }
+    } else {
+      // Horizontal layout: divider is vertical line between left and right sections
+      if (leftSectionRef.current) {
+        const rect = leftSectionRef.current.getBoundingClientRect();
+        dividerX = rect.right;
+      } else {
+        dividerX = screenWidth / 2;
+      }
+      dividerY = screenHeight / 2;
     }
-    const dividerY = screenHeight / 2;
 
     let leftX = dividerX - 150;
     let leftY = dividerY;
@@ -55,19 +82,31 @@ export function SThreadConnector({
 
     if (leftTextRef.current) {
       const rect = leftTextRef.current.getBoundingClientRect();
-      // Attach to the right edge of left text, vertically centered
-      leftX = rect.right;
-      leftY = rect.top + rect.height / 2;
+      if (isVertical) {
+        // Attach to bottom center of top text
+        leftX = rect.left + rect.width / 2;
+        leftY = rect.bottom;
+      } else {
+        // Attach to the right edge of left text, vertically centered
+        leftX = rect.right;
+        leftY = rect.top + rect.height / 2;
+      }
     }
 
     if (rightTextRef.current) {
       const rect = rightTextRef.current.getBoundingClientRect();
-      // Attach to the left edge of right text, vertically centered
-      rightX = rect.left;
-      rightY = rect.top + rect.height / 2;
+      if (isVertical) {
+        // Attach to top center of bottom text
+        rightX = rect.left + rect.width / 2;
+        rightY = rect.top;
+      } else {
+        // Attach to the left edge of right text, vertically centered
+        rightX = rect.left;
+        rightY = rect.top + rect.height / 2;
+      }
     }
 
-    setPositions({ dividerX, dividerY, leftX, leftY, rightX, rightY });
+    setPositions({ dividerX, dividerY, leftX, leftY, rightX, rightY, isVertical });
   }, [leftTextRef, rightTextRef, leftSectionRef]);
 
   // Mark as mounted and set initial positions
@@ -138,14 +177,22 @@ export function SThreadConnector({
 
   const sLogoSize = 30;
 
-  // Proper S letter path - like a real S shape
+  // Proper S letter path - adapts to layout orientation
   const x = positions.dividerX;
   const y = positions.dividerY;
-  const sPath = `
-    M ${x + sLogoSize * 0.5} ${y - sLogoSize}
-    C ${x - sLogoSize * 0.6} ${y - sLogoSize}, ${x - sLogoSize * 0.6} ${y - sLogoSize * 0.1}, ${x} ${y}
-    C ${x + sLogoSize * 0.6} ${y + sLogoSize * 0.1}, ${x + sLogoSize * 0.6} ${y + sLogoSize}, ${x - sLogoSize * 0.5} ${y + sLogoSize}
-  `;
+
+  // For vertical layout, rotate S by 90 degrees
+  const sPath = positions.isVertical
+    ? `
+      M ${x - sLogoSize} ${y + sLogoSize * 0.5}
+      C ${x - sLogoSize} ${y - sLogoSize * 0.6}, ${x - sLogoSize * 0.1} ${y - sLogoSize * 0.6}, ${x} ${y}
+      C ${x + sLogoSize * 0.1} ${y + sLogoSize * 0.6}, ${x + sLogoSize} ${y + sLogoSize * 0.6}, ${x + sLogoSize} ${y - sLogoSize * 0.5}
+    `
+    : `
+      M ${x + sLogoSize * 0.5} ${y - sLogoSize}
+      C ${x - sLogoSize * 0.6} ${y - sLogoSize}, ${x - sLogoSize * 0.6} ${y - sLogoSize * 0.1}, ${x} ${y}
+      C ${x + sLogoSize * 0.6} ${y + sLogoSize * 0.1}, ${x + sLogoSize * 0.6} ${y + sLogoSize}, ${x - sLogoSize * 0.5} ${y + sLogoSize}
+    `;
 
   const sLogoOpacity = useTransform(smoothProgress, [0, 0.2], [1, 0]);
   const centerKnotOpacity = useTransform(smoothProgress, [0, 0.3], [0, 1]);
@@ -217,7 +264,7 @@ export function SThreadConnector({
           />
         </motion.g>
 
-        {/* Left thread */}
+        {/* Left/Top thread */}
         <ThreadRope
           startX={positions.dividerX}
           startY={positions.dividerY}
@@ -226,9 +273,10 @@ export function SThreadConnector({
           progress={smoothProgress}
           swayPhase={swayPhase}
           isActive={!!hoveredZone}
+          isVertical={positions.isVertical}
         />
 
-        {/* Right thread */}
+        {/* Right/Bottom thread */}
         <ThreadRope
           startX={positions.dividerX}
           startY={positions.dividerY}
@@ -238,6 +286,7 @@ export function SThreadConnector({
           swayPhase={swayPhase}
           isActive={!!hoveredZone}
           swayOffset={Math.PI * 0.3}
+          isVertical={positions.isVertical}
         />
 
         {/* Center knot */}
@@ -287,6 +336,7 @@ function ThreadRope({
   swayPhase,
   isActive,
   swayOffset = 0,
+  isVertical = false,
 }: {
   startX: number;
   startY: number;
@@ -296,6 +346,7 @@ function ThreadRope({
   swayPhase: MotionValue<number>;
   isActive: boolean;
   swayOffset?: number;
+  isVertical?: boolean;
 }) {
   // Generate multiple fiber paths for realistic thread look
   const generateFiberPath = (prog: number, t: number, fiberIndex: number, totalFibers: number) => {
@@ -305,8 +356,10 @@ function ThreadRope({
     const curEndX = startX + (endX - startX) * prog;
     const curEndY = startY + (endY - startY) * prog;
 
-    // Distance for sag calculation
-    const dist = Math.abs(curEndX - startX);
+    // Distance for sag calculation - use appropriate axis based on orientation
+    const dist = isVertical
+      ? Math.abs(curEndY - startY)
+      : Math.abs(curEndX - startX);
 
     // Natural rope sag (catenary approximation)
     const baseSag = Math.min(dist * 0.15, 40);
@@ -329,9 +382,19 @@ function ThreadRope({
     for (let i = 0; i <= segments; i++) {
       const tParam = i / segments;
 
-      // Base position along quadratic bezier
-      const ctrlX = (startX + curEndX) / 2;
-      const ctrlY = Math.max(startY, curEndY) + totalSag;
+      // Base position along quadratic bezier - control point perpendicular to line direction
+      let ctrlX: number;
+      let ctrlY: number;
+
+      if (isVertical) {
+        // Vertical: sag goes to the right
+        ctrlX = Math.max(startX, curEndX) + totalSag;
+        ctrlY = (startY + curEndY) / 2;
+      } else {
+        // Horizontal: sag goes down
+        ctrlX = (startX + curEndX) / 2;
+        ctrlY = Math.max(startY, curEndY) + totalSag;
+      }
 
       // Quadratic bezier formula
       const baseX = (1 - tParam) * (1 - tParam) * startX + 2 * (1 - tParam) * tParam * ctrlX + tParam * tParam * curEndX;
@@ -340,9 +403,9 @@ function ThreadRope({
       // Add twist offset perpendicular to the curve
       const twistAmount = Math.sin(tParam * twistFrequency * Math.PI + fiberPhase + t * 2) * 1.5;
 
-      // Calculate perpendicular direction (simplified)
-      const perpX = 0;
-      const perpY = twistAmount;
+      // Calculate perpendicular direction based on orientation
+      const perpX = isVertical ? twistAmount : 0;
+      const perpY = isVertical ? 0 : twistAmount;
 
       points.push({
         x: baseX + perpX,
@@ -372,14 +435,25 @@ function ThreadRope({
 
       const curEndX = startX + (endX - startX) * prog;
       const curEndY = startY + (endY - startY) * prog;
-      const dist = Math.abs(curEndX - startX);
+      const dist = isVertical
+        ? Math.abs(curEndY - startY)
+        : Math.abs(curEndX - startX);
       const baseSag = Math.min(dist * 0.15, 40);
       const sway = isActive && prog > 0.9
         ? Math.sin(t * 1.5 + swayOffset) * 6 + Math.sin(t * 2.3 + swayOffset) * 3
         : 0;
       const totalSag = baseSag * prog + sway;
-      const ctrlX = (startX + curEndX) / 2;
-      const ctrlY = Math.max(startY, curEndY) + totalSag;
+
+      let ctrlX: number;
+      let ctrlY: number;
+
+      if (isVertical) {
+        ctrlX = Math.max(startX, curEndX) + totalSag;
+        ctrlY = (startY + curEndY) / 2;
+      } else {
+        ctrlX = (startX + curEndX) / 2;
+        ctrlY = Math.max(startY, curEndY) + totalSag;
+      }
 
       return `M ${startX} ${startY} Q ${ctrlX} ${ctrlY} ${curEndX} ${curEndY}`;
     }

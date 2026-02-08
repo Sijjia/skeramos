@@ -14,8 +14,10 @@ interface ScrollFrameAnimationProps {
 }
 
 /**
- * Optimized scroll-driven frame animation
- * Preloads ALL frames before showing, then switches instantly
+ * Optimized scroll-driven frame animation using Canvas
+ * - Uses canvas for direct pixel manipulation (no React re-renders)
+ * - Disabled on mobile for performance
+ * - Preloads all frames before displaying
  */
 export function ScrollFrameAnimation({
   framePath,
@@ -27,10 +29,11 @@ export function ScrollFrameAnimation({
   scrollRange = [0, 1],
 }: ScrollFrameAnimationProps) {
   const [isFullyLoaded, setIsFullyLoaded] = useState(false);
-  const [loadProgress, setLoadProgress] = useState(0);
-  const [currentFrame, setCurrentFrame] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const lastFrameRef = useRef(-1);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll();
 
@@ -40,14 +43,99 @@ export function ScrollFrameAnimation({
     [0, frameCount - 1]
   );
 
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // Generate frame URL
   const getFrameUrl = useCallback((index: number) => {
     const frameNumber = String(index + 1).padStart(3, '0');
     return `${framePath}/${filePrefix}${frameNumber}.${extension}`;
   }, [framePath, filePrefix, extension]);
 
-  // Preload ALL images before showing
+  // Draw frame to canvas - direct manipulation, no React state
+  const drawFrame = useCallback((index: number) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    const img = imagesRef.current[index];
+
+    if (!canvas || !ctx || !img) return;
+
+    // Only draw if frame changed
+    if (index === lastFrameRef.current) return;
+    lastFrameRef.current = index;
+
+    // Draw image to cover canvas (like object-cover)
+    const canvasRatio = canvas.width / canvas.height;
+    const imgRatio = img.width / img.height;
+
+    let drawWidth: number;
+    let drawHeight: number;
+    let offsetX: number;
+    let offsetY: number;
+
+    if (imgRatio > canvasRatio) {
+      // Image is wider - fit height, crop width
+      drawHeight = canvas.height;
+      drawWidth = img.width * (canvas.height / img.height);
+      offsetX = (canvas.width - drawWidth) / 2;
+      offsetY = 0;
+    } else {
+      // Image is taller - fit width, crop height
+      drawWidth = canvas.width;
+      drawHeight = img.height * (canvas.width / img.width);
+      offsetX = 0;
+      offsetY = (canvas.height - drawHeight) / 2;
+    }
+
+    ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+  }, []);
+
+  // Set up canvas size
   useEffect(() => {
+    if (isMobile || !isFullyLoaded) return;
+
+    const updateCanvasSize = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      // Use device pixel ratio for sharp rendering
+      const dpr = window.devicePixelRatio || 1;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.scale(dpr, dpr);
+      }
+
+      // Redraw current frame after resize
+      if (lastFrameRef.current >= 0) {
+        lastFrameRef.current = -1; // Force redraw
+        drawFrame(lastFrameRef.current + 1);
+      }
+    };
+
+    updateCanvasSize();
+    window.addEventListener('resize', updateCanvasSize);
+    return () => window.removeEventListener('resize', updateCanvasSize);
+  }, [isMobile, isFullyLoaded, drawFrame]);
+
+  // Preload images (skip on mobile)
+  useEffect(() => {
+    if (isMobile) return;
+
     let loadedCount = 0;
     const images: HTMLImageElement[] = [];
     let cancelled = false;
@@ -61,9 +149,7 @@ export function ScrollFrameAnimation({
           if (!cancelled) {
             images[index] = img;
             loadedCount++;
-            setLoadProgress(Math.round((loadedCount / frameCount) * 100));
 
-            // All loaded
             if (loadedCount === frameCount) {
               imagesRef.current = images;
               setIsFullyLoaded(true);
@@ -79,16 +165,13 @@ export function ScrollFrameAnimation({
       });
     };
 
-    // Load all images in parallel batches for speed
+    // Load all images in parallel for faster loading
     const loadAllImages = async () => {
-      const batchSize = 20;
-      for (let i = 0; i < frameCount; i += batchSize) {
-        const batch = [];
-        for (let j = i; j < Math.min(i + batchSize, frameCount); j++) {
-          batch.push(loadImage(j));
-        }
-        await Promise.all(batch);
+      const promises = [];
+      for (let i = 0; i < frameCount; i++) {
+        promises.push(loadImage(i));
       }
+      await Promise.all(promises);
     };
 
     loadAllImages();
@@ -96,42 +179,37 @@ export function ScrollFrameAnimation({
     return () => {
       cancelled = true;
     };
-  }, [frameCount, getFrameUrl]);
+  }, [frameCount, getFrameUrl, isMobile]);
 
-  // Update frame on scroll - instant switching from preloaded images
+  // Update frame on scroll - direct canvas update, no state
   useMotionValueEvent(frameIndex, 'change', (latest) => {
-    if (!isFullyLoaded) return;
-
+    if (!isFullyLoaded || isMobile) return;
     const index = Math.max(0, Math.min(Math.round(latest), frameCount - 1));
-
-    if (index !== lastFrameRef.current && imagesRef.current[index]) {
-      lastFrameRef.current = index;
-      setCurrentFrame(index);
-    }
+    drawFrame(index);
   });
 
-  // Don't show until fully loaded
-  if (!isFullyLoaded) {
+  // Draw initial frame when loaded
+  useEffect(() => {
+    if (isFullyLoaded && !isMobile) {
+      drawFrame(0);
+    }
+  }, [isFullyLoaded, isMobile, drawFrame]);
+
+  // Don't render on mobile or until loaded
+  if (isMobile || !isFullyLoaded) {
     return null;
   }
 
   return (
     <div
+      ref={containerRef}
       className={`fixed inset-0 pointer-events-none overflow-hidden ${className}`}
-      style={{
-        opacity,
-        transition: 'opacity 0.3s ease-out',
-      }}
+      style={{ opacity }}
       aria-hidden="true"
     >
-      {/* Single img element - src changes instantly from preloaded cache */}
-      <img
-        src={imagesRef.current[currentFrame]?.src || getFrameUrl(0)}
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{
-          willChange: 'auto',
-        }}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full"
       />
     </div>
   );
