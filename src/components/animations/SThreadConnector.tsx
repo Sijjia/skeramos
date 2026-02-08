@@ -35,13 +35,17 @@ export function SThreadConnector({
   // Simple sway value
   const swayPhase = useMotionValue(0);
 
-  // Update positions - optimized, only on resize and hover change
+  // Update positions - tracks the moving split divider
   const updatePositions = useCallback(() => {
     const screenHeight = window.innerHeight;
     const screenWidth = window.innerWidth;
 
-    // Always use screen center for the divider - it's the split point
-    const dividerX = screenWidth / 2;
+    // Get divider position from left section's right edge (the split line)
+    let dividerX = screenWidth / 2;
+    if (leftSectionRef.current) {
+      const rect = leftSectionRef.current.getBoundingClientRect();
+      dividerX = rect.right;
+    }
     const dividerY = screenHeight / 2;
 
     let leftX = dividerX - 150;
@@ -62,7 +66,7 @@ export function SThreadConnector({
     }
 
     setPositions({ dividerX, dividerY, leftX, leftY, rightX, rightY });
-  }, [leftTextRef, rightTextRef]);
+  }, [leftTextRef, rightTextRef, leftSectionRef]);
 
   // Mark as mounted and set initial positions
   useEffect(() => {
@@ -79,15 +83,25 @@ export function SThreadConnector({
     };
   }, [updatePositions]);
 
-  // Update positions when hover changes (with small delay for animation)
+  // Continuously update positions during hover animation
   useEffect(() => {
-    const timer = setTimeout(updatePositions, 100);
-    const timer2 = setTimeout(updatePositions, 300);
-    const timer3 = setTimeout(updatePositions, 500);
+    let animationId: number;
+    let frameCount = 0;
+    const maxFrames = 60; // ~1 second of tracking at 60fps
+
+    const trackPosition = () => {
+      updatePositions();
+      frameCount++;
+      if (frameCount < maxFrames) {
+        animationId = requestAnimationFrame(trackPosition);
+      }
+    };
+
+    // Start tracking when hover state changes
+    animationId = requestAnimationFrame(trackPosition);
+
     return () => {
-      clearTimeout(timer);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
+      if (animationId) cancelAnimationFrame(animationId);
     };
   }, [hoveredZone, updatePositions]);
 
