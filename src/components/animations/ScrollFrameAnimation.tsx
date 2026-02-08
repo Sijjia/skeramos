@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 
 interface ScrollFrameAnimationProps {
@@ -15,7 +15,7 @@ interface ScrollFrameAnimationProps {
 
 /**
  * Optimized scroll-driven frame animation
- * Uses single img element with preloaded images for maximum performance
+ * Preloads ALL frames before showing, then switches instantly
  */
 export function ScrollFrameAnimation({
   framePath,
@@ -26,10 +26,10 @@ export function ScrollFrameAnimation({
   opacity = 0.15,
   scrollRange = [0, 1],
 }: ScrollFrameAnimationProps) {
-  const imgRef = useRef<HTMLImageElement>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [currentSrc, setCurrentSrc] = useState('');
-  const imagesRef = useRef<Map<number, HTMLImageElement>>(new Map());
+  const [isFullyLoaded, setIsFullyLoaded] = useState(false);
+  const [loadProgress, setLoadProgress] = useState(0);
+  const [currentFrame, setCurrentFrame] = useState(0);
+  const imagesRef = useRef<HTMLImageElement[]>([]);
   const lastFrameRef = useRef(-1);
 
   const { scrollYProgress } = useScroll();
@@ -41,63 +41,96 @@ export function ScrollFrameAnimation({
   );
 
   // Generate frame URL
-  const getFrameUrl = (index: number) => {
+  const getFrameUrl = useCallback((index: number) => {
     const frameNumber = String(index + 1).padStart(3, '0');
     return `${framePath}/${filePrefix}${frameNumber}.${extension}`;
-  };
+  }, [framePath, filePrefix, extension]);
 
-  // Preload all images into memory
+  // Preload ALL images before showing
   useEffect(() => {
     let loadedCount = 0;
-    const images = imagesRef.current;
+    const images: HTMLImageElement[] = [];
+    let cancelled = false;
 
-    for (let i = 0; i < frameCount; i++) {
-      const img = new Image();
-      img.src = getFrameUrl(i);
+    const loadImage = (index: number): Promise<void> => {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.src = getFrameUrl(index);
 
-      img.onload = () => {
-        images.set(i, img);
-        loadedCount++;
+        img.onload = () => {
+          if (!cancelled) {
+            images[index] = img;
+            loadedCount++;
+            setLoadProgress(Math.round((loadedCount / frameCount) * 100));
 
-        // Show after first 10 frames loaded
-        if (loadedCount === 10) {
-          setCurrentSrc(getFrameUrl(0));
-          setIsLoaded(true);
+            // All loaded
+            if (loadedCount === frameCount) {
+              imagesRef.current = images;
+              setIsFullyLoaded(true);
+            }
+          }
+          resolve();
+        };
+
+        img.onerror = () => {
+          loadedCount++;
+          resolve();
+        };
+      });
+    };
+
+    // Load all images in parallel batches for speed
+    const loadAllImages = async () => {
+      const batchSize = 20;
+      for (let i = 0; i < frameCount; i += batchSize) {
+        const batch = [];
+        for (let j = i; j < Math.min(i + batchSize, frameCount); j++) {
+          batch.push(loadImage(j));
         }
-      };
-    }
+        await Promise.all(batch);
+      }
+    };
+
+    loadAllImages();
 
     return () => {
-      images.clear();
+      cancelled = true;
     };
-  }, [frameCount, framePath, filePrefix, extension]);
+  }, [frameCount, getFrameUrl]);
 
-  // Update frame on scroll
+  // Update frame on scroll - instant switching from preloaded images
   useMotionValueEvent(frameIndex, 'change', (latest) => {
+    if (!isFullyLoaded) return;
+
     const index = Math.max(0, Math.min(Math.round(latest), frameCount - 1));
 
-    if (index !== lastFrameRef.current) {
+    if (index !== lastFrameRef.current && imagesRef.current[index]) {
       lastFrameRef.current = index;
-      const url = getFrameUrl(index);
-      setCurrentSrc(url);
+      setCurrentFrame(index);
     }
   });
 
-  if (!isLoaded) return null;
+  // Don't show until fully loaded
+  if (!isFullyLoaded) {
+    return null;
+  }
 
   return (
     <div
       className={`fixed inset-0 pointer-events-none overflow-hidden ${className}`}
-      style={{ opacity }}
+      style={{
+        opacity,
+        transition: 'opacity 0.3s ease-out',
+      }}
       aria-hidden="true"
     >
+      {/* Single img element - src changes instantly from preloaded cache */}
       <img
-        ref={imgRef}
-        src={currentSrc}
+        src={imagesRef.current[currentFrame]?.src || getFrameUrl(0)}
         alt=""
         className="absolute inset-0 w-full h-full object-cover"
         style={{
-          willChange: 'contents',
+          willChange: 'auto',
         }}
       />
     </div>
