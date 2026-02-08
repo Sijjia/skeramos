@@ -40,12 +40,8 @@ export function SThreadConnector({
     const screenHeight = window.innerHeight;
     const screenWidth = window.innerWidth;
 
-    let dividerX = screenWidth / 2;
-    if (leftSectionRef.current) {
-      const rect = leftSectionRef.current.getBoundingClientRect();
-      dividerX = rect.right;
-    }
-
+    // Always use screen center for the divider - it's the split point
+    const dividerX = screenWidth / 2;
     const dividerY = screenHeight / 2;
 
     let leftX = dividerX - 150;
@@ -66,7 +62,7 @@ export function SThreadConnector({
     }
 
     setPositions({ dividerX, dividerY, leftX, leftY, rightX, rightY });
-  }, [leftTextRef, rightTextRef, leftSectionRef]);
+  }, [leftTextRef, rightTextRef]);
 
   // Mark as mounted and set initial positions
   useEffect(() => {
