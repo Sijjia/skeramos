@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import { useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 
 interface ScrollFrameAnimationProps {
   /** Folder path containing frame images (e.g., '/frames/pottery') */
@@ -18,13 +18,11 @@ interface ScrollFrameAnimationProps {
   opacity?: number;
   /** Scroll range to animate through [start, end] as viewport fractions */
   scrollRange?: [number, number];
-  /** Smoothing factor for animation (higher = smoother but slower response) */
-  smoothness?: number;
 }
 
 /**
- * Scroll-driven frame animation component
- * Displays frames based on scroll position for smooth video-like effect
+ * Optimized scroll-driven frame animation
+ * Uses preloaded images with CSS visibility switching for maximum performance
  */
 export function ScrollFrameAnimation({
   framePath,
@@ -33,142 +31,82 @@ export function ScrollFrameAnimation({
   extension = 'webp',
   className = '',
   opacity = 0.15,
-  scrollRange = [0, 0.5],
-  smoothness = 50,
+  scrollRange = [0, 1],
 }: ScrollFrameAnimationProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [images, setImages] = useState<HTMLImageElement[]>([]);
+  const [currentFrame, setCurrentFrame] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
-  const currentFrameRef = useRef(0);
+  const loadedCountRef = useRef(0);
+  const lastFrameRef = useRef(0);
 
   const { scrollYProgress } = useScroll();
 
   // Transform scroll to frame index
-  const rawFrameIndex = useTransform(
+  const frameIndex = useTransform(
     scrollYProgress,
     scrollRange,
     [0, frameCount - 1]
   );
 
-  // Add spring smoothing for buttery smooth animation
-  const frameIndex = useSpring(rawFrameIndex, {
-    stiffness: smoothness,
-    damping: 20,
-    mass: 0.5,
-  });
-
-  // Preload all frames
-  useEffect(() => {
-    const loadedImages: HTMLImageElement[] = [];
-    let loadedCount = 0;
-
-    const preloadImages = () => {
-      for (let i = 1; i <= frameCount; i++) {
-        const img = new Image();
-        // Frame naming: prefix + 001, 002, etc.
-        const frameNumber = String(i).padStart(3, '0');
-        img.src = `${framePath}/${filePrefix}${frameNumber}.${extension}`;
-
-        img.onload = () => {
-          loadedCount++;
-          loadedImages[i - 1] = img;
-
-          // Mark as loaded when first 10 frames are ready (for faster initial render)
-          if (loadedCount >= Math.min(10, frameCount)) {
-            setIsLoaded(true);
-          }
-
-          if (loadedCount === frameCount) {
-            setImages(loadedImages);
-          }
-        };
-
-        img.onerror = () => {
-          console.warn(`Failed to load frame: ${img.src}`);
-          loadedCount++;
-        };
-      }
-    };
-
-    preloadImages();
+  // Generate frame URLs
+  const frameUrls = useMemo(() => {
+    return Array.from({ length: frameCount }, (_, i) => {
+      const frameNumber = String(i + 1).padStart(3, '0');
+      return `${framePath}/${filePrefix}${frameNumber}.${extension}`;
+    });
   }, [framePath, frameCount, filePrefix, extension]);
 
-  // Draw frame on canvas
-  const drawFrame = useCallback((index: number) => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
-    const img = images[index];
+  // Preload images
+  useEffect(() => {
+    loadedCountRef.current = 0;
 
-    if (!canvas || !ctx || !img) return;
+    frameUrls.forEach((url) => {
+      const img = new Image();
+      img.src = url;
+      img.onload = () => {
+        loadedCountRef.current++;
+        // Show after first 5 frames loaded
+        if (loadedCountRef.current >= 5) {
+          setIsLoaded(true);
+        }
+      };
+    });
+  }, [frameUrls]);
 
-    // Set canvas size to match container
-    const rect = canvas.getBoundingClientRect();
-    if (canvas.width !== rect.width || canvas.height !== rect.height) {
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-    }
-
-    // Clear and draw
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Calculate cover sizing
-    const imgRatio = img.width / img.height;
-    const canvasRatio = canvas.width / canvas.height;
-
-    let drawWidth, drawHeight, drawX, drawY;
-
-    if (imgRatio > canvasRatio) {
-      drawHeight = canvas.height;
-      drawWidth = drawHeight * imgRatio;
-      drawX = (canvas.width - drawWidth) / 2;
-      drawY = 0;
-    } else {
-      drawWidth = canvas.width;
-      drawHeight = drawWidth / imgRatio;
-      drawX = 0;
-      drawY = (canvas.height - drawHeight) / 2;
-    }
-
-    ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
-  }, [images]);
-
-  // Update frame on scroll - smooth continuous updates
+  // Update frame on scroll - throttled
   useMotionValueEvent(frameIndex, 'change', (latest) => {
     const index = Math.max(0, Math.min(Math.round(latest), frameCount - 1));
-    if (images[index]) {
-      currentFrameRef.current = index;
-      drawFrame(index);
+    // Only update if frame actually changed
+    if (index !== lastFrameRef.current) {
+      lastFrameRef.current = index;
+      setCurrentFrame(index);
     }
   });
 
-  // Initial draw when loaded
-  useEffect(() => {
-    if (isLoaded && images[0]) {
-      drawFrame(0);
-    }
-  }, [isLoaded, images, drawFrame]);
-
-  // Handle resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (images[currentFrameRef.current]) {
-        drawFrame(currentFrameRef.current);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [images, drawFrame]);
-
   return (
-    <canvas
-      ref={canvasRef}
-      className={`fixed inset-0 w-full h-full object-cover pointer-events-none ${className}`}
+    <div
+      className={`fixed inset-0 pointer-events-none overflow-hidden ${className}`}
       style={{
         opacity: isLoaded ? opacity : 0,
-        transition: 'opacity 0.5s ease-in-out',
+        transition: 'opacity 0.5s ease-out',
       }}
       aria-hidden="true"
-    />
+    >
+      {/* Preload all frames as hidden images, show only current */}
+      {frameUrls.map((url, index) => (
+        <img
+          key={url}
+          src={url}
+          alt=""
+          loading={index < 10 ? 'eager' : 'lazy'}
+          decoding="async"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            opacity: index === currentFrame ? 1 : 0,
+            // Use visibility to completely hide non-active frames
+            visibility: Math.abs(index - currentFrame) <= 1 ? 'visible' : 'hidden',
+          }}
+        />
+      ))}
+    </div>
   );
 }

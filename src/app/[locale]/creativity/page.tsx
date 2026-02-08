@@ -250,9 +250,8 @@ export default function CreativityPage() {
         frameCount={70}
         filePrefix="ezgif-frame-"
         extension="jpg"
-        opacity={0.08}
+        opacity={0.1}
         scrollRange={[0, 1]}
-        smoothness={100}
         className="z-0"
       />
 
