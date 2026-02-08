@@ -55,13 +55,15 @@ export function SThreadConnector({
 
     if (leftTextRef.current) {
       const rect = leftTextRef.current.getBoundingClientRect();
-      leftX = rect.right + 8;
+      // Attach directly to the last letter of left text
+      leftX = rect.right - 5;
       leftY = rect.top + rect.height / 2;
     }
 
     if (rightTextRef.current) {
       const rect = rightTextRef.current.getBoundingClientRect();
-      rightX = rect.left - 8;
+      // Attach directly to the first letter of right text
+      rightX = rect.left + 5;
       rightY = rect.top + rect.height / 2;
     }
 
