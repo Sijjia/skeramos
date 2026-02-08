@@ -19,6 +19,7 @@ export function SplitScreen() {
   // Refs for the S-Thread animation
   const leftTextRef = useRef<HTMLHeadingElement>(null);
   const rightTextRef = useRef<HTMLHeadingElement>(null);
+  const leftSectionRef = useRef<HTMLButtonElement>(null);
 
   const zones = [
     {
@@ -49,6 +50,7 @@ export function SplitScreen() {
         hoveredZone={hoveredZone}
         leftTextRef={leftTextRef}
         rightTextRef={rightTextRef}
+        leftSectionRef={leftSectionRef}
       />
 
       {zones.map(({ zone, title, subtitle, slogan, bgImage }, index) => {
@@ -59,6 +61,7 @@ export function SplitScreen() {
         return (
           <motion.button
             key={zone}
+            ref={index === 0 ? leftSectionRef : undefined}
             className={`
               relative flex items-center justify-center
               overflow-hidden cursor-pointer min-h-[50dvh] md:min-h-0 md:flex-1

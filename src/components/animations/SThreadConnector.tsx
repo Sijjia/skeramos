@@ -9,195 +9,224 @@ interface SThreadConnectorProps {
   hoveredZone: Zone;
   leftTextRef: React.RefObject<HTMLElement | null>;
   rightTextRef: React.RefObject<HTMLElement | null>;
+  leftSectionRef: React.RefObject<HTMLElement | null>;
 }
 
-/**
- * S-Thread Connector Animation
- * Realistic thread that connects from center S to both section titles
- */
 export function SThreadConnector({
   hoveredZone,
   leftTextRef,
   rightTextRef,
+  leftSectionRef,
 }: SThreadConnectorProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [positions, setPositions] = useState({
-    centerX: 0,
-    centerY: 0,
+    dividerX: 0,
+    dividerY: 0,
     leftX: 0,
     leftY: 0,
     rightX: 0,
     rightY: 0,
+    screenHeight: 0,
   });
 
-  // Spring config for realistic rope physics
-  const ropeSpring = { stiffness: 120, damping: 14, mass: 1 };
-  const gentleSpring = { stiffness: 60, damping: 20, mass: 0.5 };
+  // Spring configs
+  const gentleSpring = { stiffness: 80, damping: 18, mass: 0.8 };
+  const quickSpring = { stiffness: 150, damping: 20 };
 
-  // Motion values for thread sway (physics simulation)
-  const swayOffset = useMotionValue(0);
-  const leftSway = useSpring(swayOffset, ropeSpring);
-  const rightSway = useSpring(swayOffset, ropeSpring);
-
-  // Connection progress
+  // Connection progress (0 = S logo, 1 = threads connected)
   const connectionProgress = useMotionValue(0);
   const smoothProgress = useSpring(connectionProgress, gentleSpring);
 
-  // S logo visibility
-  const sLogoScale = useSpring(1, gentleSpring);
-  const sLogoOpacity = useSpring(1, gentleSpring);
+  // Sway for physics
+  const swayValue = useMotionValue(0);
+  const smoothSway = useSpring(swayValue, { stiffness: 100, damping: 10 });
 
-  // Update positions
+  // Update positions based on actual DOM elements
   const updatePositions = useCallback(() => {
-    if (!containerRef.current) return;
+    const screenHeight = window.innerHeight;
+    const screenWidth = window.innerWidth;
 
-    const containerRect = containerRef.current.getBoundingClientRect();
-    const centerX = containerRect.width / 2;
-    const centerY = containerRect.height / 2;
+    // Get divider position (right edge of left section)
+    let dividerX = screenWidth / 2;
+    if (leftSectionRef.current) {
+      const rect = leftSectionRef.current.getBoundingClientRect();
+      dividerX = rect.right;
+    }
 
-    let leftX = centerX - 200;
-    let leftY = centerY;
-    let rightX = centerX + 200;
-    let rightY = centerY;
+    const dividerY = screenHeight / 2;
+
+    // Get text positions
+    let leftX = dividerX - 100;
+    let leftY = dividerY;
+    let rightX = dividerX + 100;
+    let rightY = dividerY;
 
     if (leftTextRef.current) {
-      const textRect = leftTextRef.current.getBoundingClientRect();
-      leftX = textRect.right - containerRect.left + 15;
-      leftY = textRect.top + textRect.height / 2 - containerRect.top;
+      const rect = leftTextRef.current.getBoundingClientRect();
+      // Connect to the right side of the left text (end of word)
+      leftX = rect.right + 10;
+      leftY = rect.top + rect.height / 2;
     }
 
     if (rightTextRef.current) {
-      const textRect = rightTextRef.current.getBoundingClientRect();
-      rightX = textRect.left - containerRect.left - 15;
-      rightY = textRect.top + textRect.height / 2 - containerRect.top;
+      const rect = rightTextRef.current.getBoundingClientRect();
+      // Connect to the left side of the right text (start of word)
+      rightX = rect.left - 10;
+      rightY = rect.top + rect.height / 2;
     }
 
-    setPositions({ centerX, centerY, leftX, leftY, rightX, rightY });
-  }, [leftTextRef, rightTextRef]);
+    setPositions({
+      dividerX,
+      dividerY,
+      leftX,
+      leftY,
+      rightX,
+      rightY,
+      screenHeight,
+    });
+  }, [leftTextRef, rightTextRef, leftSectionRef]);
 
+  // Update positions on mount, resize, and when hover changes
   useEffect(() => {
     updatePositions();
     window.addEventListener('resize', updatePositions);
-    return () => window.removeEventListener('resize', updatePositions);
-  }, [updatePositions]);
 
-  // Handle hover state changes
+    // Also update after a small delay to catch animation changes
+    const timer = setInterval(updatePositions, 50);
+    const cleanup = setTimeout(() => clearInterval(timer), 1000);
+
+    return () => {
+      window.removeEventListener('resize', updatePositions);
+      clearInterval(timer);
+      clearTimeout(cleanup);
+    };
+  }, [updatePositions, hoveredZone]);
+
+  // Handle hover state
   useEffect(() => {
     if (hoveredZone) {
-      // Start connection animation
       connectionProgress.set(1);
-      sLogoScale.set(0.5);
-      sLogoOpacity.set(0.3);
-
-      // Delay before marking as connected (for sway physics)
-      const timer = setTimeout(() => {
-        setIsConnected(true);
-      }, 600);
-
+      const timer = setTimeout(() => setIsConnected(true), 400);
       return () => clearTimeout(timer);
     } else {
-      // Disconnect
       connectionProgress.set(0);
-      sLogoScale.set(1);
-      sLogoOpacity.set(1);
       setIsConnected(false);
     }
-  }, [hoveredZone, connectionProgress, sLogoScale, sLogoOpacity]);
+  }, [hoveredZone, connectionProgress]);
 
-  // Gentle swaying animation when connected
+  // Gentle swaying when connected
   useEffect(() => {
-    if (!isConnected) return;
+    if (!isConnected) {
+      swayValue.set(0);
+      return;
+    }
 
-    let animationId: number;
     let time = 0;
+    let animationId: number;
 
     const animate = () => {
-      time += 0.02;
-      // Subtle random-like sway
-      const sway = Math.sin(time * 1.5) * 8 + Math.sin(time * 2.3) * 4;
-      swayOffset.set(sway);
+      time += 0.03;
+      const sway = Math.sin(time * 1.2) * 12 + Math.sin(time * 2.1) * 6;
+      swayValue.set(sway);
       animationId = requestAnimationFrame(animate);
     };
 
     animationId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationId);
-  }, [isConnected, swayOffset]);
+  }, [isConnected, swayValue]);
 
-  // Generate the S shape path
-  const sPath = `
-    M ${positions.centerX} ${positions.centerY - 35}
-    C ${positions.centerX + 25} ${positions.centerY - 35},
-      ${positions.centerX + 25} ${positions.centerY - 10},
-      ${positions.centerX} ${positions.centerY}
-    C ${positions.centerX - 25} ${positions.centerY + 10},
-      ${positions.centerX - 25} ${positions.centerY + 35},
-      ${positions.centerX} ${positions.centerY + 35}
-  `;
+  // S logo path (centered at divider)
+  const sLogoSize = 40;
 
   return (
     <div
-      ref={containerRef}
-      className="absolute inset-0 pointer-events-none z-30"
+      className="fixed inset-0 pointer-events-none z-30"
       style={{ overflow: 'visible' }}
     >
       <svg
-        className="w-full h-full"
+        width="100%"
+        height="100%"
+        className="absolute inset-0"
         style={{ overflow: 'visible' }}
       >
-        {/* The S Logo in center - fades when connected */}
-        <motion.path
-          d={sPath}
-          fill="none"
-          stroke="white"
-          strokeWidth="3"
-          strokeLinecap="round"
+        {/* S Logo at the divider - fades out when connecting */}
+        <motion.g
           style={{
-            scale: sLogoScale,
-            opacity: sLogoOpacity,
-            transformOrigin: `${positions.centerX}px ${positions.centerY}px`,
+            opacity: useTransform(smoothProgress, [0, 0.3], [1, 0]),
           }}
-        />
+        >
+          <motion.path
+            d={`
+              M ${positions.dividerX} ${positions.dividerY - sLogoSize}
+              C ${positions.dividerX + sLogoSize * 0.7} ${positions.dividerY - sLogoSize},
+                ${positions.dividerX + sLogoSize * 0.7} ${positions.dividerY - sLogoSize * 0.3},
+                ${positions.dividerX} ${positions.dividerY}
+              C ${positions.dividerX - sLogoSize * 0.7} ${positions.dividerY + sLogoSize * 0.3},
+                ${positions.dividerX - sLogoSize * 0.7} ${positions.dividerY + sLogoSize},
+                ${positions.dividerX} ${positions.dividerY + sLogoSize}
+            `}
+            fill="none"
+            stroke="rgba(255, 255, 255, 0.8)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+        </motion.g>
 
-        {/* Left thread - from center to left text */}
-        <ThreadWithPhysics
-          startX={positions.centerX}
-          startY={positions.centerY}
+        {/* Left thread - from divider to left text */}
+        <RopeThread
+          startX={positions.dividerX}
+          startY={positions.dividerY}
           endX={positions.leftX}
           endY={positions.leftY}
           progress={smoothProgress}
-          sway={leftSway}
+          sway={smoothSway}
           direction="left"
+          isHoveredSide={hoveredZone === 'creativity'}
         />
 
-        {/* Right thread - from center to right text */}
-        <ThreadWithPhysics
-          startX={positions.centerX}
-          startY={positions.centerY}
+        {/* Right thread - from divider to right text */}
+        <RopeThread
+          startX={positions.dividerX}
+          startY={positions.dividerY}
           endX={positions.rightX}
           endY={positions.rightY}
           progress={smoothProgress}
-          sway={rightSway}
+          sway={smoothSway}
           direction="right"
+          isHoveredSide={hoveredZone === 'hotel'}
         />
 
-        {/* Small knot at connection points when connected */}
+        {/* Connection knots */}
         <motion.circle
-          cx={useTransform(smoothProgress, [0, 1], [positions.centerX, positions.leftX])}
-          cy={useTransform(smoothProgress, [0, 1], [positions.centerY, positions.leftY])}
-          r="4"
-          fill="white"
+          r="5"
+          fill="rgba(255, 255, 255, 0.9)"
           style={{
-            opacity: useTransform(smoothProgress, [0, 0.8, 1], [0, 0, 1]),
+            cx: useTransform(smoothProgress, [0, 1], [positions.dividerX, positions.leftX]),
+            cy: useTransform(smoothProgress, [0, 1], [positions.dividerY, positions.leftY]),
+            opacity: useTransform(smoothProgress, [0, 0.7, 1], [0, 0, 1]),
+            scale: useTransform(smoothProgress, [0.7, 1], [0, 1]),
           }}
         />
         <motion.circle
-          cx={useTransform(smoothProgress, [0, 1], [positions.centerX, positions.rightX])}
-          cy={useTransform(smoothProgress, [0, 1], [positions.centerY, positions.rightY])}
-          r="4"
-          fill="white"
+          r="5"
+          fill="rgba(255, 255, 255, 0.9)"
           style={{
-            opacity: useTransform(smoothProgress, [0, 0.8, 1], [0, 0, 1]),
+            cx: useTransform(smoothProgress, [0, 1], [positions.dividerX, positions.rightX]),
+            cy: useTransform(smoothProgress, [0, 1], [positions.dividerY, positions.rightY]),
+            opacity: useTransform(smoothProgress, [0, 0.7, 1], [0, 0, 1]),
+            scale: useTransform(smoothProgress, [0.7, 1], [0, 1]),
+          }}
+        />
+
+        {/* Center knot at divider */}
+        <motion.circle
+          cx={positions.dividerX}
+          cy={positions.dividerY}
+          r="6"
+          fill="rgba(255, 255, 255, 0.9)"
+          style={{
+            opacity: useTransform(smoothProgress, [0, 0.2, 1], [0, 1, 1]),
+            scale: useTransform(smoothProgress, [0, 0.2], [0, 1]),
           }}
         />
       </svg>
@@ -206,9 +235,9 @@ export function SThreadConnector({
 }
 
 /**
- * Thread with physics-based sway
+ * Rope-like thread with realistic hanging physics
  */
-function ThreadWithPhysics({
+function RopeThread({
   startX,
   startY,
   endX,
@@ -216,6 +245,7 @@ function ThreadWithPhysics({
   progress,
   sway,
   direction,
+  isHoveredSide,
 }: {
   startX: number;
   startY: number;
@@ -224,8 +254,9 @@ function ThreadWithPhysics({
   progress: ReturnType<typeof useSpring>;
   sway: ReturnType<typeof useSpring>;
   direction: 'left' | 'right';
+  isHoveredSide: boolean;
 }) {
-  // Calculate the hanging curve with sway
+  // Create the rope path with hanging effect
   const pathD = useTransform(
     [progress, sway],
     ([p, s]) => {
@@ -234,47 +265,53 @@ function ThreadWithPhysics({
 
       if (prog < 0.05) return '';
 
-      // Current end position based on progress
+      // Interpolate current end position
       const currentEndX = startX + (endX - startX) * prog;
       const currentEndY = startY + (endY - startY) * prog;
 
-      // Calculate the hanging curve (catenary-like)
+      // Calculate rope hanging (catenary curve approximation)
       const distance = Math.abs(currentEndX - startX);
-      const hangDepth = Math.min(distance * 0.15, 40) * prog; // How much it hangs down
+      const verticalDiff = Math.abs(currentEndY - startY);
 
-      // Control points for the bezier curve
+      // Rope sag amount - more sag for longer distances
+      const sagAmount = Math.min(distance * 0.2, 50) * prog;
+
+      // Add sway to the sag
+      const totalSag = sagAmount + swayAmount * prog;
+
+      // Mid point with sag
       const midX = (startX + currentEndX) / 2;
-      const midY = Math.max(startY, currentEndY) + hangDepth + swayAmount;
+      const midY = Math.max(startY, currentEndY) + totalSag;
 
-      // Additional control points for smoother curve
-      const ctrl1X = startX + (midX - startX) * 0.5;
-      const ctrl1Y = startY + hangDepth * 0.3 + swayAmount * 0.5;
+      // Control points for smooth bezier curve (rope-like)
+      const cp1X = startX + (midX - startX) * 0.4;
+      const cp1Y = startY + totalSag * 0.3;
 
-      const ctrl2X = midX + (currentEndX - midX) * 0.5;
-      const ctrl2Y = currentEndY + hangDepth * 0.3 + swayAmount * 0.5;
+      const cp2X = midX;
+      const cp2Y = midY;
 
+      const cp3X = currentEndX - (currentEndX - midX) * 0.4;
+      const cp3Y = currentEndY + totalSag * 0.3;
+
+      // Cubic bezier for smoother rope curve
       return `
         M ${startX} ${startY}
-        Q ${ctrl1X} ${ctrl1Y + hangDepth * 0.5}, ${midX} ${midY}
-        Q ${ctrl2X} ${ctrl2Y + hangDepth * 0.5}, ${currentEndX} ${currentEndY}
+        C ${cp1X} ${cp1Y}, ${cp2X} ${cp2Y}, ${midX} ${midY}
+        C ${cp2X} ${cp2Y}, ${cp3X} ${cp3Y}, ${currentEndX} ${currentEndY}
       `;
     }
   );
 
-  const pathLength = useTransform(progress, [0, 1], [0, 1]);
-  const opacity = useTransform(progress, [0, 0.1, 1], [0, 1, 1]);
+  const opacity = useTransform(progress, [0, 0.1, 1], [0, 0.9, 0.9]);
 
   return (
     <motion.path
       d={pathD}
       fill="none"
-      stroke="rgba(255, 255, 255, 0.9)"
-      strokeWidth="2"
+      stroke="rgba(255, 255, 255, 0.85)"
+      strokeWidth={isHoveredSide ? "2.5" : "2"}
       strokeLinecap="round"
-      style={{
-        pathLength,
-        opacity,
-      }}
+      style={{ opacity }}
     />
   );
 }
