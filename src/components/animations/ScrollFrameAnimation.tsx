@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
+import { useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
 
 interface ScrollFrameAnimationProps {
   /** Folder path containing frame images (e.g., '/frames/pottery') */
@@ -16,6 +16,8 @@ interface ScrollFrameAnimationProps {
   opacity?: number;
   /** Scroll range to animate through [start, end] as viewport fractions */
   scrollRange?: [number, number];
+  /** Smoothing factor for animation (higher = smoother but slower response) */
+  smoothness?: number;
 }
 
 /**
@@ -29,6 +31,7 @@ export function ScrollFrameAnimation({
   className = '',
   opacity = 0.15,
   scrollRange = [0, 0.5],
+  smoothness = 50,
 }: ScrollFrameAnimationProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [images, setImages] = useState<HTMLImageElement[]>([]);
@@ -36,11 +39,20 @@ export function ScrollFrameAnimation({
   const currentFrameRef = useRef(0);
 
   const { scrollYProgress } = useScroll();
-  const frameIndex = useTransform(
+
+  // Transform scroll to frame index
+  const rawFrameIndex = useTransform(
     scrollYProgress,
     scrollRange,
     [0, frameCount - 1]
   );
+
+  // Add spring smoothing for buttery smooth animation
+  const frameIndex = useSpring(rawFrameIndex, {
+    stiffness: smoothness,
+    damping: 20,
+    mass: 0.5,
+  });
 
   // Preload all frames
   useEffect(() => {
@@ -117,12 +129,12 @@ export function ScrollFrameAnimation({
     ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
   }, [images]);
 
-  // Update frame on scroll
+  // Update frame on scroll - smooth continuous updates
   useMotionValueEvent(frameIndex, 'change', (latest) => {
-    const index = Math.min(Math.floor(latest), frameCount - 1);
-    if (index !== currentFrameRef.current && images[index]) {
+    const index = Math.max(0, Math.min(Math.round(latest), frameCount - 1));
+    if (images[index]) {
       currentFrameRef.current = index;
-      requestAnimationFrame(() => drawFrame(index));
+      drawFrame(index);
     }
   });
 
@@ -148,7 +160,7 @@ export function ScrollFrameAnimation({
   return (
     <canvas
       ref={canvasRef}
-      className={`absolute inset-0 w-full h-full object-cover pointer-events-none ${className}`}
+      className={`fixed inset-0 w-full h-full object-cover pointer-events-none ${className}`}
       style={{
         opacity: isLoaded ? opacity : 0,
         transition: 'opacity 0.5s ease-in-out',

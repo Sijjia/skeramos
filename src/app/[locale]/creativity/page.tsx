@@ -244,8 +244,16 @@ export default function CreativityPage() {
 
   return (
     <>
-      
-      
+      {/* Scroll-driven pottery animation - fixed background for entire page */}
+      <ScrollFrameAnimation
+        framePath="/frames/pottery"
+        frameCount={36}
+        opacity={0.1}
+        scrollRange={[0, 1]}
+        smoothness={80}
+        className="z-0"
+      />
+
       <StickyCTA />
       <FloatingOrbs zone="creativity" count={2} />
       <EtnoPatternOverlay pattern="mixed" opacity={0.02} />
@@ -256,15 +264,6 @@ export default function CreativityPage() {
           style={{ opacity: heroOpacity }}
           className="relative min-h-screen flex items-center justify-center gradient-mesh noise-overlay"
         >
-          {/* Scroll-driven pottery animation background */}
-          <ScrollFrameAnimation
-            framePath="/frames/pottery"
-            frameCount={36}
-            opacity={0.12}
-            scrollRange={[0, 0.3]}
-            className="z-0"
-          />
-
           {/* Background decorations - CSS only for performance */}
           <GlowingAccent position="top-left" zone="creativity" size={500} />
           <GlowingAccent position="bottom-right" zone="creativity" size={400} />
