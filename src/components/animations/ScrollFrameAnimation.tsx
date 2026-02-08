@@ -4,25 +4,18 @@ import { useEffect, useRef, useState, useMemo } from 'react';
 import { useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 
 interface ScrollFrameAnimationProps {
-  /** Folder path containing frame images (e.g., '/frames/pottery') */
   framePath: string;
-  /** Total number of frames */
   frameCount: number;
-  /** Frame file prefix (default: 'frame-') */
   filePrefix?: string;
-  /** Frame file extension (default: 'webp') */
   extension?: string;
-  /** Additional CSS classes */
   className?: string;
-  /** Opacity of the background (0-1) */
   opacity?: number;
-  /** Scroll range to animate through [start, end] as viewport fractions */
   scrollRange?: [number, number];
 }
 
 /**
  * Optimized scroll-driven frame animation
- * Uses preloaded images with CSS visibility switching for maximum performance
+ * Uses single img element with preloaded images for maximum performance
  */
 export function ScrollFrameAnimation({
   framePath,
@@ -33,80 +26,80 @@ export function ScrollFrameAnimation({
   opacity = 0.15,
   scrollRange = [0, 1],
 }: ScrollFrameAnimationProps) {
-  const [currentFrame, setCurrentFrame] = useState(0);
+  const imgRef = useRef<HTMLImageElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const loadedCountRef = useRef(0);
-  const lastFrameRef = useRef(0);
+  const [currentSrc, setCurrentSrc] = useState('');
+  const imagesRef = useRef<Map<number, HTMLImageElement>>(new Map());
+  const lastFrameRef = useRef(-1);
 
   const { scrollYProgress } = useScroll();
 
-  // Transform scroll to frame index
   const frameIndex = useTransform(
     scrollYProgress,
     scrollRange,
     [0, frameCount - 1]
   );
 
-  // Generate frame URLs
-  const frameUrls = useMemo(() => {
-    return Array.from({ length: frameCount }, (_, i) => {
-      const frameNumber = String(i + 1).padStart(3, '0');
-      return `${framePath}/${filePrefix}${frameNumber}.${extension}`;
-    });
-  }, [framePath, frameCount, filePrefix, extension]);
+  // Generate frame URL
+  const getFrameUrl = (index: number) => {
+    const frameNumber = String(index + 1).padStart(3, '0');
+    return `${framePath}/${filePrefix}${frameNumber}.${extension}`;
+  };
 
-  // Preload images
+  // Preload all images into memory
   useEffect(() => {
-    loadedCountRef.current = 0;
+    let loadedCount = 0;
+    const images = imagesRef.current;
 
-    frameUrls.forEach((url) => {
+    for (let i = 0; i < frameCount; i++) {
       const img = new Image();
-      img.src = url;
+      img.src = getFrameUrl(i);
+
       img.onload = () => {
-        loadedCountRef.current++;
-        // Show after first 5 frames loaded
-        if (loadedCountRef.current >= 5) {
+        images.set(i, img);
+        loadedCount++;
+
+        // Show after first 10 frames loaded
+        if (loadedCount === 10) {
+          setCurrentSrc(getFrameUrl(0));
           setIsLoaded(true);
         }
       };
-    });
-  }, [frameUrls]);
+    }
 
-  // Update frame on scroll - throttled
+    return () => {
+      images.clear();
+    };
+  }, [frameCount, framePath, filePrefix, extension]);
+
+  // Update frame on scroll
   useMotionValueEvent(frameIndex, 'change', (latest) => {
     const index = Math.max(0, Math.min(Math.round(latest), frameCount - 1));
-    // Only update if frame actually changed
+
     if (index !== lastFrameRef.current) {
       lastFrameRef.current = index;
-      setCurrentFrame(index);
+      const url = getFrameUrl(index);
+      setCurrentSrc(url);
     }
   });
+
+  if (!isLoaded) return null;
 
   return (
     <div
       className={`fixed inset-0 pointer-events-none overflow-hidden ${className}`}
-      style={{
-        opacity: isLoaded ? opacity : 0,
-        transition: 'opacity 0.5s ease-out',
-      }}
+      style={{ opacity }}
       aria-hidden="true"
     >
-      {/* Preload all frames as hidden images, show only current */}
-      {frameUrls.map((url, index) => (
-        <img
-          key={url}
-          src={url}
-          alt=""
-          loading={index < 10 ? 'eager' : 'lazy'}
-          decoding="async"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            opacity: index === currentFrame ? 1 : 0,
-            // Use visibility to completely hide non-active frames
-            visibility: Math.abs(index - currentFrame) <= 1 ? 'visible' : 'hidden',
-          }}
-        />
-      ))}
+      <img
+        ref={imgRef}
+        src={currentSrc}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{
+          willChange: 'contents',
+        }}
+      />
     </div>
   );
 }
