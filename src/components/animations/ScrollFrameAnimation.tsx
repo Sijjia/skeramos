@@ -8,6 +8,8 @@ interface ScrollFrameAnimationProps {
   framePath: string;
   /** Total number of frames */
   frameCount: number;
+  /** Frame file prefix (default: 'frame-') */
+  filePrefix?: string;
   /** Frame file extension (default: 'webp') */
   extension?: string;
   /** Additional CSS classes */
@@ -27,6 +29,7 @@ interface ScrollFrameAnimationProps {
 export function ScrollFrameAnimation({
   framePath,
   frameCount,
+  filePrefix = 'frame-',
   extension = 'webp',
   className = '',
   opacity = 0.15,
@@ -62,9 +65,9 @@ export function ScrollFrameAnimation({
     const preloadImages = () => {
       for (let i = 1; i <= frameCount; i++) {
         const img = new Image();
-        // Frame naming: frame-001.webp, frame-002.webp, etc.
+        // Frame naming: prefix + 001, 002, etc.
         const frameNumber = String(i).padStart(3, '0');
-        img.src = `${framePath}/frame-${frameNumber}.${extension}`;
+        img.src = `${framePath}/${filePrefix}${frameNumber}.${extension}`;
 
         img.onload = () => {
           loadedCount++;
@@ -88,7 +91,7 @@ export function ScrollFrameAnimation({
     };
 
     preloadImages();
-  }, [framePath, frameCount, extension]);
+  }, [framePath, frameCount, filePrefix, extension]);
 
   // Draw frame on canvas
   const drawFrame = useCallback((index: number) => {
