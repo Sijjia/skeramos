@@ -12,15 +12,8 @@ interface SThreadConnectorProps {
   leftSectionRef: React.RefObject<HTMLElement | null>;
 }
 
-// Get initial positions based on screen size
-const getInitialPositions = () => {
-  if (typeof window === 'undefined') {
-    return { dividerX: 500, dividerY: 400, leftX: 350, leftY: 400, rightX: 650, rightY: 400 };
-  }
-  const x = window.innerWidth / 2;
-  const y = window.innerHeight / 2;
-  return { dividerX: x, dividerY: y, leftX: x - 150, leftY: y, rightX: x + 150, rightY: y };
-};
+// Default positions for SSR - will be updated on mount
+const DEFAULT_POSITIONS = { dividerX: 500, dividerY: 400, leftX: 350, leftY: 400, rightX: 650, rightY: 400 };
 
 export function SThreadConnector({
   hoveredZone,
@@ -28,7 +21,7 @@ export function SThreadConnector({
   rightTextRef,
   leftSectionRef,
 }: SThreadConnectorProps) {
-  const [positions, setPositions] = useState(getInitialPositions);
+  const [positions, setPositions] = useState(DEFAULT_POSITIONS);
   const [isMounted, setIsMounted] = useState(false);
 
   // Connection progress
