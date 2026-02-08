@@ -7,3 +7,4 @@ export { RoomCard } from './RoomCard';
 export { PackageCard } from './PackageCard';
 export { StickyCTA } from './StickyCTA';
 export { ContactButtons } from './ContactButtons';
+export { ContactModal } from './ContactModal';

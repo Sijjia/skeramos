@@ -12,7 +12,8 @@ import {
 } from 'lucide-react';
 
 import { Footer } from '@/components/layout/Footer';
-import { OnboardingHint, StickyCTA, FAQAccordion, ContactButtons } from '@/components/features';
+import { OnboardingHint, StickyCTA, FAQAccordion } from '@/components/features';
+import { ContactModal } from '@/components/features/ContactModal';
 import { FloatingOrbs, EtnoPatternOverlay, SectionDivider, GlowingAccent } from '@/components/animations/EtnoDecorations';
 import { FadeInOnScroll, CountUp } from '@/components/animations/OptimizedAnimations';
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from '@/components/animations/ScrollAnimations';
@@ -692,12 +693,14 @@ export default function CreativityPage() {
               variants={staggerContainer}
               className="grid grid-cols-2 md:grid-cols-4 gap-4"
             >
-              {galleryItems.map((item) => (
+              {galleryItems.map((item, index) => (
                 <motion.div
                   key={item.id}
                   variants={cardVariants}
                   whileHover={{ scale: 1.03, zIndex: 10 }}
-                  className="relative rounded-2xl overflow-hidden group cursor-pointer"
+                  className={`relative rounded-2xl overflow-hidden group cursor-pointer ${
+                    index === 0 ? 'md:col-span-2 md:row-span-2' : ''
+                  }`}
                 >
                   <div className="aspect-square">
                     <Image
@@ -905,26 +908,18 @@ export default function CreativityPage() {
             >
               <FAQAccordion items={faqItems} allowMultiple />
 
-              {/* Contact block after FAQ */}
+              {/* Contact button after FAQ */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                className="mt-12 p-8 glass-card text-center"
+                className="text-center mt-12"
               >
-                <h3 className="text-xl font-display font-medium text-neutral-800 mb-2">
-                  Остались вопросы?
-                </h3>
-                <p className="text-neutral-500 mb-6">
-                  Свяжитесь с нами любым удобным способом
-                </p>
-                <ContactButtons
+                <ContactModal
                   phone={settings.phone?.replace(/\D/g, '') || '996555123456'}
                   whatsappMessage="Здравствуйте! У меня есть вопрос по мастер-классам."
                   telegramUsername={settings.social?.telegram || 'skeramos'}
-                  variant="horizontal"
-                  size="md"
+                  buttonText="Остались вопросы?"
                 />
               </motion.div>
             </motion.div>

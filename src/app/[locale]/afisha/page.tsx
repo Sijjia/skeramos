@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useMemo, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useZone } from '@/contexts/ZoneContext';
 import { useAfisha, EventUI } from '@/hooks/useSanityData';
@@ -9,6 +9,8 @@ import { Calendar, Clock, MapPin } from 'lucide-react';
 
 import { Footer } from '@/components/layout/Footer';
 import { FadeInOnScroll } from '@/components/animations/OptimizedAnimations';
+
+type FilterType = 'all' | 'upcoming' | 'past';
 
 // Animation variants
 const fadeInUp = {
@@ -30,7 +32,7 @@ function formatDate(dateString: string): string {
   });
 }
 
-function isUpcoming(dateString: string): boolean {
+function isUpcomingEvent(dateString: string): boolean {
   const eventDate = new Date(dateString);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -40,20 +42,21 @@ function isUpcoming(dateString: string): boolean {
 export default function AfishaPage() {
   const { setZone } = useZone();
   const { data: events, loading } = useAfisha();
+  const [activeFilter, setActiveFilter] = useState<FilterType>('all');
 
   useEffect(() => {
     setZone('creativity');
   }, [setZone]);
 
   // Разделяем и сортируем события
-  const { upcomingEvents, pastEvents } = useMemo(() => {
+  const { allEvents, upcomingEvents, pastEvents } = useMemo(() => {
     const activeEvents = events.filter(e => e.active !== false);
 
     const upcoming: EventUI[] = [];
     const past: EventUI[] = [];
 
     activeEvents.forEach(event => {
-      if (isUpcoming(event.date)) {
+      if (isUpcomingEvent(event.date)) {
         upcoming.push(event);
       } else {
         past.push(event);
@@ -66,8 +69,23 @@ export default function AfishaPage() {
     // Прошедшие: недавние сначала (по убыванию даты)
     past.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-    return { upcomingEvents: upcoming, pastEvents: past };
+    // Все: сначала грядущие, потом прошедшие
+    const all = [...upcoming, ...past];
+
+    return { allEvents: all, upcomingEvents: upcoming, pastEvents: past };
   }, [events]);
+
+  // Получаем отфильтрованные события
+  const filteredEvents = useMemo(() => {
+    switch (activeFilter) {
+      case 'upcoming':
+        return upcomingEvents;
+      case 'past':
+        return pastEvents;
+      default:
+        return allEvents;
+    }
+  }, [activeFilter, allEvents, upcomingEvents, pastEvents]);
 
   return (
     <>
@@ -75,7 +93,7 @@ export default function AfishaPage() {
         <div className="container mx-auto px-4">
           {/* Header */}
           <FadeInOnScroll>
-            <div className="text-center mb-16">
+            <div className="text-center mb-12">
               <span className="text-zone-500 text-sm font-medium tracking-wider uppercase">
                 События
               </span>
@@ -87,6 +105,64 @@ export default function AfishaPage() {
               </p>
             </div>
           </FadeInOnScroll>
+
+          {/* Filter Tabs */}
+          <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-12">
+            <button
+              onClick={() => setActiveFilter('all')}
+              className={`
+                px-4 py-2 md:px-6 md:py-3 rounded-xl text-sm font-medium transition-all duration-300
+                ${activeFilter === 'all'
+                  ? 'bg-zone-500 text-white shadow-lg shadow-zone-500/30'
+                  : 'glass text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100'
+                }
+              `}
+            >
+              <span className="mr-2">✨</span>
+              Все события
+              {allEvents.length > 0 && (
+                <span className="ml-2 px-2 py-0.5 rounded-full bg-white/20 text-xs">
+                  {allEvents.length}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => setActiveFilter('upcoming')}
+              className={`
+                px-4 py-2 md:px-6 md:py-3 rounded-xl text-sm font-medium transition-all duration-300
+                ${activeFilter === 'upcoming'
+                  ? 'bg-green-500 text-white shadow-lg shadow-green-500/30'
+                  : 'glass text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100'
+                }
+              `}
+            >
+              <span className="mr-2">🔥</span>
+              Грядущие
+              {upcomingEvents.length > 0 && (
+                <span className="ml-2 px-2 py-0.5 rounded-full bg-white/20 text-xs">
+                  {upcomingEvents.length}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => setActiveFilter('past')}
+              className={`
+                px-4 py-2 md:px-6 md:py-3 rounded-xl text-sm font-medium transition-all duration-300
+                ${activeFilter === 'past'
+                  ? 'bg-neutral-500 text-white shadow-lg shadow-neutral-500/30'
+                  : 'glass text-neutral-600 hover:text-neutral-800 hover:bg-neutral-100'
+                }
+              `}
+            >
+              <span className="mr-2">📜</span>
+              Прошедшие
+              {pastEvents.length > 0 && (
+                <span className="ml-2 px-2 py-0.5 rounded-full bg-white/20 text-xs">
+                  {pastEvents.length}
+                </span>
+              )}
+            </button>
+          </div>
 
           {/* Loading */}
           {loading ? (
@@ -102,57 +178,37 @@ export default function AfishaPage() {
                 </div>
               ))}
             </div>
-          ) : upcomingEvents.length === 0 && pastEvents.length === 0 ? (
+          ) : filteredEvents.length === 0 ? (
             /* Empty state */
             <div className="text-center py-16">
               <span className="text-6xl mb-4 block">📅</span>
-              <h3 className="text-xl font-semibold mb-2">Пока нет событий</h3>
+              <h3 className="text-xl font-semibold mb-2">
+                {activeFilter === 'upcoming' && 'Нет грядущих событий'}
+                {activeFilter === 'past' && 'Нет прошедших событий'}
+                {activeFilter === 'all' && 'Пока нет событий'}
+              </h3>
               <p className="text-neutral-500">
                 Следите за обновлениями! Скоро мы добавим новые мероприятия.
               </p>
             </div>
           ) : (
-            <div className="space-y-16">
-              {/* Upcoming Events */}
-              {upcomingEvents.length > 0 && (
-                <section>
-                  <h2 className="text-2xl md:text-3xl font-display font-medium text-neutral-800 mb-8 flex items-center gap-3">
-                    <span className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
-                    Грядущие события
-                  </h2>
-                  <motion.div
-                    initial="hidden"
-                    animate="visible"
-                    variants={staggerContainer}
-                    className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-                  >
-                    {upcomingEvents.map((event) => (
-                      <EventCard key={event.id} event={event} isUpcoming />
-                    ))}
-                  </motion.div>
-                </section>
-              )}
-
-              {/* Past Events */}
-              {pastEvents.length > 0 && (
-                <section>
-                  <h2 className="text-2xl md:text-3xl font-display font-medium text-neutral-500 mb-8 flex items-center gap-3">
-                    <span className="w-3 h-3 bg-neutral-400 rounded-full"></span>
-                    Прошедшие события
-                  </h2>
-                  <motion.div
-                    initial="hidden"
-                    animate="visible"
-                    variants={staggerContainer}
-                    className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-                  >
-                    {pastEvents.map((event) => (
-                      <EventCard key={event.id} event={event} isUpcoming={false} />
-                    ))}
-                  </motion.div>
-                </section>
-              )}
-            </div>
+            /* Events Grid */
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            >
+              <AnimatePresence mode="popLayout">
+                {filteredEvents.map((event) => (
+                  <EventCard
+                    key={event.id}
+                    event={event}
+                    isUpcoming={isUpcomingEvent(event.date)}
+                  />
+                ))}
+              </AnimatePresence>
+            </motion.div>
           )}
         </div>
       </main>
@@ -166,7 +222,12 @@ export default function AfishaPage() {
 function EventCard({ event, isUpcoming }: { event: EventUI; isUpcoming: boolean }) {
   return (
     <motion.div
+      layout
       variants={fadeInUp}
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.3 }}
       className={`glass-card overflow-hidden group ${!isUpcoming ? 'opacity-75' : ''}`}
     >
       {/* Image */}
