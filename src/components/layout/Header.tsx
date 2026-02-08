@@ -91,7 +91,7 @@ export function Header() {
             ) : (
               <>
                 <NavLink href={`/${locale}/hotel`} light={isLightHeader}>Главная</NavLink>
-                <NavLink href={`/${locale}/hotel#packages`} light={isLightHeader}>{t('packages') || 'Пакеты'}</NavLink>
+                <NavLink href={`/${locale}/hotel/packages`} light={isLightHeader}>{t('packages') || 'Пакеты'}</NavLink>
                 <NavLink href={`/${locale}/gallery`} light={isLightHeader}>{t('gallery') || 'Галерея'}</NavLink>
               </>
             )}
@@ -194,7 +194,7 @@ export function Header() {
                     Главная
                   </MobileNavLink>
                   <MobileNavLink
-                    href={`/${locale}/hotel#packages`}
+                    href={`/${locale}/hotel/packages`}
                     onClick={() => setMenuOpen(false)}
                   >
                     {t('packages') || 'Пакеты'}

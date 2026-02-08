@@ -3,7 +3,8 @@
 import { useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import { useTranslations, useLocale } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
 import { Bed, Palette, Car, Wifi, Shield } from 'lucide-react';
 
@@ -135,6 +136,7 @@ const PACKAGES_FALLBACK = [
 
 export default function HotelPage() {
   const { setZone } = useZone();
+  const locale = useLocale();
   const t = useTranslations('hotel');
   const tCommon = useTranslations('common');
   const { scrollYProgress } = useScroll();
@@ -145,7 +147,11 @@ export default function HotelPage() {
   const { data: settings } = useSettings();
 
   // Use API data with fallback
-  const packages = packagesData.length > 0 ? packagesData : PACKAGES_FALLBACK;
+  const allPackages = packagesData.length > 0 ? packagesData : PACKAGES_FALLBACK;
+  // Show only featured packages on homepage (max 3)
+  const featuredPackages = allPackages.filter(pkg => pkg.featured).slice(0, 3);
+  // If no featured packages, show first 3
+  const packages = featuredPackages.length > 0 ? featuredPackages : allPackages.slice(0, 3);
   const hotelFeatures = settings.hotelAdvantages && settings.hotelAdvantages.length > 0
     ? settings.hotelAdvantages
     : DEFAULT_HOTEL_FEATURES;
@@ -432,6 +438,24 @@ export default function HotelPage() {
                   </div>
                 </motion.div>
               ))}
+            </motion.div>
+
+            {/* Link to all packages */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mt-12"
+            >
+              <Link
+                href={`/${locale}/hotel/packages`}
+                className="inline-flex items-center gap-2 px-8 py-4 bg-zone-500/10 hover:bg-zone-500/20 text-zone-600 rounded-2xl font-medium transition-all duration-300 hover:scale-105 border border-zone-500/20"
+              >
+                <span>Все пакеты</span>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
             </motion.div>
           </div>
         </section>

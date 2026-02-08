@@ -48,6 +48,7 @@ export interface PackageUI {
   includes: string[];
   price: number;
   featured: boolean;
+  active?: boolean;
   slug?: string;
 }
 

@@ -158,7 +158,7 @@ export default function PackagesAdmin() {
                 />
                 {item.featured && (
                   <span className="absolute top-2 right-2 px-2 py-1 bg-amber-500 text-white text-xs rounded-full">
-                    Популярный
+                    На главной
                   </span>
                 )}
               </div>
@@ -303,7 +303,7 @@ export default function PackagesAdmin() {
                     className="w-5 h-5 rounded"
                   />
                   <label htmlFor="featured" className="text-neutral-300">
-                    Популярный
+                    На главной
                   </label>
                 </div>
                 <div className="flex items-center gap-2">
