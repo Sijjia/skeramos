@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Phone, MessageCircle } from 'lucide-react';
+import { X, Phone, MessageCircle, ArrowRight } from 'lucide-react';
 import { ContactButtons } from './ContactButtons';
 
 interface ContactModalProps {
@@ -25,13 +25,30 @@ export function ContactModal({
   return (
     <>
       {/* Trigger Button */}
-      <button
+      <motion.button
         onClick={() => setIsOpen(true)}
-        className={buttonClassName || "inline-flex items-center gap-2 px-6 py-3 glass text-neutral-700 hover:text-zone-500 rounded-xl font-medium transition-colors"}
+        className={buttonClassName || "group inline-flex items-center gap-3 px-8 py-4 glass text-neutral-700 rounded-2xl font-medium transition-all hover:bg-zone-500 hover:text-white hover:shadow-lg hover:shadow-zone-500/30"}
+        whileHover={{ scale: 1.03, y: -2 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
       >
-        <MessageCircle className="w-5 h-5" />
-        {buttonText}
-      </button>
+        <motion.span
+          className="flex items-center justify-center w-10 h-10 rounded-full bg-zone-500/10 group-hover:bg-white/20 transition-colors"
+          whileHover={{ rotate: [0, -10, 10, 0] }}
+          transition={{ duration: 0.5 }}
+        >
+          <MessageCircle className="w-5 h-5 text-zone-500 group-hover:text-white transition-colors" />
+        </motion.span>
+        <span>{buttonText}</span>
+        <motion.span
+          className="ml-1"
+          initial={{ x: 0 }}
+          animate={{ x: [0, 5, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <ArrowRight className="w-5 h-5" />
+        </motion.span>
+      </motion.button>
 
       {/* Modal */}
       <AnimatePresence>
