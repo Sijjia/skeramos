@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import Image from 'next/image';
 import { useZone } from '@/contexts/ZoneContext';
+import { SThreadConnector } from '@/components/animations/SThreadConnector';
 import type { Zone } from '@/types/zone';
 
 export function SplitScreen() {
@@ -15,6 +15,10 @@ export function SplitScreen() {
   const locale = useLocale();
   const t = useTranslations('landing');
   const tCommon = useTranslations('common');
+
+  // Refs for the S-Thread animation
+  const leftTextRef = useRef<HTMLHeadingElement>(null);
+  const rightTextRef = useRef<HTMLHeadingElement>(null);
 
   const zones = [
     {
@@ -40,7 +44,14 @@ export function SplitScreen() {
 
   return (
     <div className="fixed inset-0 flex flex-col md:flex-row overflow-hidden" style={{ height: '100dvh' }}>
-      {zones.map(({ zone, title, subtitle, slogan, bgImage }) => {
+      {/* S-Thread Connector Animation */}
+      <SThreadConnector
+        hoveredZone={hoveredZone}
+        leftTextRef={leftTextRef}
+        rightTextRef={rightTextRef}
+      />
+
+      {zones.map(({ zone, title, subtitle, slogan, bgImage }, index) => {
         const isHovered = hoveredZone === zone;
         const isOtherHovered = hoveredZone !== null && hoveredZone !== zone;
         const isCreativity = zone === 'creativity';
@@ -116,6 +127,7 @@ export function SplitScreen() {
               transition={{ duration: 0.3 }}
             >
               <motion.h2
+                ref={index === 0 ? leftTextRef : rightTextRef}
                 className="text-3xl md:text-5xl lg:text-6xl font-display font-semibold mb-4"
                 animate={{
                   y: isHovered ? -5 : 0,
