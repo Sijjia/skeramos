@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useZone } from '@/contexts/ZoneContext';
-import { useAfisha } from '@/hooks/useSanityData';
+import { useAfisha, EventUI } from '@/hooks/useSanityData';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 
 import { Footer } from '@/components/layout/Footer';
@@ -30,6 +30,13 @@ function formatDate(dateString: string): string {
   });
 }
 
+function isUpcoming(dateString: string): boolean {
+  const eventDate = new Date(dateString);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return eventDate >= today;
+}
+
 export default function AfishaPage() {
   const { setZone } = useZone();
   const { data: events, loading } = useAfisha();
@@ -38,8 +45,29 @@ export default function AfishaPage() {
     setZone('creativity');
   }, [setZone]);
 
-  // Фильтруем только активные события
-  const activeEvents = events.filter(e => e.active !== false);
+  // Разделяем и сортируем события
+  const { upcomingEvents, pastEvents } = useMemo(() => {
+    const activeEvents = events.filter(e => e.active !== false);
+
+    const upcoming: EventUI[] = [];
+    const past: EventUI[] = [];
+
+    activeEvents.forEach(event => {
+      if (isUpcoming(event.date)) {
+        upcoming.push(event);
+      } else {
+        past.push(event);
+      }
+    });
+
+    // Грядущие: ближайшие сначала (по возрастанию даты)
+    upcoming.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    // Прошедшие: недавние сначала (по убыванию даты)
+    past.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    return { upcomingEvents: upcoming, pastEvents: past };
+  }, [events]);
 
   return (
     <>
@@ -74,85 +102,56 @@ export default function AfishaPage() {
                 </div>
               ))}
             </div>
-          ) : activeEvents.length > 0 ? (
-            /* Events Grid */
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={staggerContainer}
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
-              {activeEvents.map((event) => (
-                <motion.div
-                  key={event.id}
-                  variants={fadeInUp}
-                  className="glass-card overflow-hidden group"
-                >
-                  {/* Image */}
-                  <div className="relative aspect-[16/10] overflow-hidden">
-                    {event.image ? (
-                      <Image
-                        src={event.image}
-                        alt={event.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-zone-500/20 flex items-center justify-center">
-                        <span className="text-4xl">📅</span>
-                      </div>
-                    )}
-                    <div className="absolute top-4 left-4">
-                      <span className={`
-                        px-3 py-1 rounded-full text-xs font-medium text-white
-                        ${event.type === 'masterclass' ? 'bg-zone-500' : ''}
-                        ${event.type === 'holiday' ? 'bg-amber-500' : ''}
-                        ${event.type === 'exhibition' ? 'bg-purple-500' : ''}
-                        ${event.type === 'other' ? 'bg-blue-500' : ''}
-                      `}>
-                        {event.type === 'masterclass' && 'Мастер-класс'}
-                        {event.type === 'holiday' && 'Праздник'}
-                        {event.type === 'exhibition' && 'Выставка'}
-                        {event.type === 'other' && 'Событие'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2 card-title">
-                      {event.title}
-                    </h3>
-                    <p className="text-neutral-500 text-sm mb-4 line-clamp-2">
-                      {event.description}
-                    </p>
-
-                    <div className="space-y-2 text-sm text-neutral-600">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-zone-500" />
-                        <span>{formatDate(event.date)}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-zone-500" />
-                        <span>{event.time}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-zone-500" />
-                        <span>{event.location}</span>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          ) : (
+          ) : upcomingEvents.length === 0 && pastEvents.length === 0 ? (
             /* Empty state */
             <div className="text-center py-16">
               <span className="text-6xl mb-4 block">📅</span>
-              <h3 className="text-xl font-semibold mb-2">Пока нет предстоящих событий</h3>
+              <h3 className="text-xl font-semibold mb-2">Пока нет событий</h3>
               <p className="text-neutral-500">
                 Следите за обновлениями! Скоро мы добавим новые мероприятия.
               </p>
+            </div>
+          ) : (
+            <div className="space-y-16">
+              {/* Upcoming Events */}
+              {upcomingEvents.length > 0 && (
+                <section>
+                  <h2 className="text-2xl md:text-3xl font-display font-medium text-neutral-800 mb-8 flex items-center gap-3">
+                    <span className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+                    Грядущие события
+                  </h2>
+                  <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={staggerContainer}
+                    className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+                  >
+                    {upcomingEvents.map((event) => (
+                      <EventCard key={event.id} event={event} isUpcoming />
+                    ))}
+                  </motion.div>
+                </section>
+              )}
+
+              {/* Past Events */}
+              {pastEvents.length > 0 && (
+                <section>
+                  <h2 className="text-2xl md:text-3xl font-display font-medium text-neutral-500 mb-8 flex items-center gap-3">
+                    <span className="w-3 h-3 bg-neutral-400 rounded-full"></span>
+                    Прошедшие события
+                  </h2>
+                  <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={staggerContainer}
+                    className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+                  >
+                    {pastEvents.map((event) => (
+                      <EventCard key={event.id} event={event} isUpcoming={false} />
+                    ))}
+                  </motion.div>
+                </section>
+              )}
             </div>
           )}
         </div>
@@ -160,5 +159,75 @@ export default function AfishaPage() {
 
       <Footer />
     </>
+  );
+}
+
+// Event Card Component
+function EventCard({ event, isUpcoming }: { event: EventUI; isUpcoming: boolean }) {
+  return (
+    <motion.div
+      variants={fadeInUp}
+      className={`glass-card overflow-hidden group ${!isUpcoming ? 'opacity-75' : ''}`}
+    >
+      {/* Image */}
+      <div className="relative aspect-[16/10] overflow-hidden">
+        {event.image ? (
+          <Image
+            src={event.image}
+            alt={event.title}
+            fill
+            className={`object-cover transition-transform duration-500 group-hover:scale-105 ${!isUpcoming ? 'grayscale-[30%]' : ''}`}
+          />
+        ) : (
+          <div className="w-full h-full bg-zone-500/20 flex items-center justify-center">
+            <span className="text-4xl">📅</span>
+          </div>
+        )}
+        <div className="absolute top-4 left-4 flex gap-2">
+          <span className={`
+            px-3 py-1 rounded-full text-xs font-medium text-white
+            ${event.type === 'masterclass' ? 'bg-zone-500' : ''}
+            ${event.type === 'holiday' ? 'bg-amber-500' : ''}
+            ${event.type === 'exhibition' ? 'bg-purple-500' : ''}
+            ${event.type === 'other' ? 'bg-blue-500' : ''}
+          `}>
+            {event.type === 'masterclass' && 'Мастер-класс'}
+            {event.type === 'holiday' && 'Праздник'}
+            {event.type === 'exhibition' && 'Выставка'}
+            {event.type === 'other' && 'Событие'}
+          </span>
+          {!isUpcoming && (
+            <span className="px-3 py-1 rounded-full text-xs font-medium text-white bg-neutral-500">
+              Завершено
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-6">
+        <h3 className="text-xl font-semibold mb-2 card-title">
+          {event.title}
+        </h3>
+        <p className="text-neutral-500 text-sm mb-4 line-clamp-2">
+          {event.description}
+        </p>
+
+        <div className="space-y-2 text-sm text-neutral-600">
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-zone-500" />
+            <span>{formatDate(event.date)}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-zone-500" />
+            <span>{event.time}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-zone-500" />
+            <span>{event.location}</span>
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 }

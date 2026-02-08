@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { useZone } from '@/contexts/ZoneContext';
 import {
   Palette, GraduationCap, Home, Gift, Clock, Users,
@@ -11,7 +12,7 @@ import {
 } from 'lucide-react';
 
 import { Footer } from '@/components/layout/Footer';
-import { OnboardingHint, StickyCTA, FAQAccordion } from '@/components/features';
+import { OnboardingHint, StickyCTA, FAQAccordion, ContactButtons } from '@/components/features';
 import { FloatingOrbs, EtnoPatternOverlay, SectionDivider, GlowingAccent } from '@/components/animations/EtnoDecorations';
 import { FadeInOnScroll, CountUp } from '@/components/animations/OptimizedAnimations';
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from '@/components/animations/ScrollAnimations';
@@ -215,8 +216,8 @@ export default function CreativityPage() {
     ? mastersData.filter(m => m.active !== false)
     : MASTERS_FALLBACK;
   const galleryItems = galleryData.length > 0
-    ? galleryData.slice(0, 6)
-    : GALLERY_FALLBACK;
+    ? galleryData.slice(0, 4)
+    : GALLERY_FALLBACK.slice(0, 4);
 
   // Use advantages from settings if available
   const advantages = settings.advantages && settings.advantages.length > 0
@@ -598,47 +599,48 @@ export default function CreativityPage() {
               className="grid md:grid-cols-3 gap-8"
             >
               {masters.slice(0, 3).map((master) => (
-                <motion.div
-                  key={master.id}
-                  variants={cardVariants}
-                  whileHover={{ y: -8 }}
-                  className="group cursor-pointer"
-                >
+                <Link key={master.id} href={`/masters/${master.id}`}>
                   <motion.div
-                    className="relative aspect-[4/5] rounded-3xl overflow-hidden mb-6"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.4 }}
+                    variants={cardVariants}
+                    whileHover={{ y: -8 }}
+                    className="group cursor-pointer"
                   >
-                    <Image
-                      src={master.image}
-                      alt={master.name}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-
-                    {/* Hover overlay */}
                     <motion.div
-                      className="absolute inset-0 bg-zone-500/20"
-                      initial={{ opacity: 0 }}
-                      whileHover={{ opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                    />
+                      className="relative aspect-[4/5] rounded-3xl overflow-hidden mb-6"
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.4 }}
+                    >
+                      <Image
+                        src={master.image}
+                        alt={master.name}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
 
-                    {/* Info on hover */}
-                    <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                      <div className="glass-card p-4">
-                        <p className="text-sm card-muted">{master.specialties?.[0] || ''}</p>
+                      {/* Hover overlay */}
+                      <motion.div
+                        className="absolute inset-0 bg-zone-500/20"
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+
+                      {/* Info on hover */}
+                      <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                        <div className="glass-card p-4">
+                          <p className="text-sm card-muted">{master.specialties?.[0] || ''}</p>
+                        </div>
                       </div>
-                    </div>
-                  </motion.div>
+                    </motion.div>
 
-                  <h3 className="text-xl font-display font-medium text-neutral-800">
-                    {master.name}
-                  </h3>
-                  <p className="text-neutral-500">{master.role}</p>
-                  <p className="text-zone-500 text-sm mt-1">{master.experience}</p>
-                </motion.div>
+                    <h3 className="text-xl font-display font-medium text-neutral-800">
+                      {master.name}
+                    </h3>
+                    <p className="text-neutral-500">{master.role}</p>
+                    <p className="text-zone-500 text-sm mt-1">{master.experience}</p>
+                  </motion.div>
+                </Link>
               ))}
             </motion.div>
 
@@ -688,16 +690,14 @@ export default function CreativityPage() {
               whileInView="visible"
               viewport={{ once: true, margin: '-50px' }}
               variants={staggerContainer}
-              className="grid grid-cols-2 md:grid-cols-3 gap-4"
+              className="grid grid-cols-2 md:grid-cols-4 gap-4"
             >
-              {galleryItems.map((item, index) => (
+              {galleryItems.map((item) => (
                 <motion.div
                   key={item.id}
                   variants={cardVariants}
                   whileHover={{ scale: 1.03, zIndex: 10 }}
-                  className={`relative rounded-2xl overflow-hidden group cursor-pointer ${
-                    index === 0 || index === 5 ? 'row-span-2' : ''
-                  }`}
+                  className="relative rounded-2xl overflow-hidden group cursor-pointer"
                 >
                   <div className="aspect-square">
                     <Image
@@ -904,6 +904,29 @@ export default function CreativityPage() {
               className="max-w-3xl mx-auto"
             >
               <FAQAccordion items={faqItems} allowMultiple />
+
+              {/* Contact block after FAQ */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                className="mt-12 p-8 glass-card text-center"
+              >
+                <h3 className="text-xl font-display font-medium text-neutral-800 mb-2">
+                  Остались вопросы?
+                </h3>
+                <p className="text-neutral-500 mb-6">
+                  Свяжитесь с нами любым удобным способом
+                </p>
+                <ContactButtons
+                  phone={settings.phone?.replace(/\D/g, '') || '996555123456'}
+                  whatsappMessage="Здравствуйте! У меня есть вопрос по мастер-классам."
+                  telegramUsername={settings.social?.telegram || 'skeramos'}
+                  variant="horizontal"
+                  size="md"
+                />
+              </motion.div>
             </motion.div>
           </div>
         </section>
