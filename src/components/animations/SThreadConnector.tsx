@@ -136,6 +136,8 @@ export function SThreadConnector({
   `;
 
   const sLogoOpacity = useTransform(smoothProgress, [0, 0.2], [1, 0]);
+  const centerKnotOpacity = useTransform(smoothProgress, [0, 0.3], [0, 1]);
+  const endKnotOpacity = useTransform(smoothProgress, [0.5, 1], [0, 1]);
 
   // Don't render until mounted to avoid hydration issues
   if (!isMounted) {
@@ -233,27 +235,27 @@ export function SThreadConnector({
           r="4"
           fill="rgba(255, 255, 255, 0.9)"
           style={{
-            opacity: useTransform(smoothProgress, [0, 0.3], [0, 1]),
+            opacity: centerKnotOpacity,
           }}
         />
 
         {/* End knots */}
         <motion.circle
+          cx={positions.leftX}
+          cy={positions.leftY}
           r="3"
           fill="rgba(255, 255, 255, 0.85)"
           style={{
-            cx: useTransform(smoothProgress, [0, 1], [positions.dividerX, positions.leftX]),
-            cy: useTransform(smoothProgress, [0, 1], [positions.dividerY, positions.leftY]),
-            opacity: useTransform(smoothProgress, [0.5, 1], [0, 1]),
+            opacity: endKnotOpacity,
           }}
         />
         <motion.circle
+          cx={positions.rightX}
+          cy={positions.rightY}
           r="3"
           fill="rgba(255, 255, 255, 0.85)"
           style={{
-            cx: useTransform(smoothProgress, [0, 1], [positions.dividerX, positions.rightX]),
-            cy: useTransform(smoothProgress, [0, 1], [positions.dividerY, positions.rightY]),
-            opacity: useTransform(smoothProgress, [0.5, 1], [0, 1]),
+            opacity: endKnotOpacity,
           }}
         />
       </svg>
