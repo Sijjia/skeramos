@@ -10,6 +10,7 @@ interface Review {
   rating: number;
   zone: 'creativity' | 'hotel';
   source: string;
+  sourceUrl?: string;
   date: string;
   active: boolean;
 }
@@ -20,6 +21,7 @@ const EMPTY_ITEM: Omit<Review, 'id'> = {
   rating: 5,
   zone: 'creativity',
   source: 'google',
+  sourceUrl: '',
   date: new Date().toISOString().split('T')[0],
   active: true,
 };
@@ -157,6 +159,16 @@ export default function ReviewsAdmin() {
                   <span className="text-xs px-2 py-0.5 rounded bg-neutral-700 text-neutral-400">
                     {SOURCES.find(s => s.value === item.source)?.label}
                   </span>
+                  {item.sourceUrl && (
+                    <a
+                      href={item.sourceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500/30"
+                    >
+                      🔗 Ссылка
+                    </a>
+                  )}
                 </div>
 
                 <div className="flex gap-1 mb-2">
@@ -297,6 +309,22 @@ export default function ReviewsAdmin() {
                     className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-amber-500"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-neutral-300 mb-2">Ссылка на отзыв</label>
+                <input
+                  type="url"
+                  value={editingItem.sourceUrl || ''}
+                  onChange={(e) =>
+                    setEditingItem({ ...editingItem, sourceUrl: e.target.value })
+                  }
+                  className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-amber-500"
+                  placeholder="https://..."
+                />
+                <p className="text-neutral-500 text-xs mt-1">
+                  Ссылка на оригинальный отзыв (Google, 2GIS, Instagram)
+                </p>
               </div>
 
               <div className="flex items-center gap-2">
