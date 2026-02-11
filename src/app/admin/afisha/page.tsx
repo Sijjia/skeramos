@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 import { useToast, ToastContainer } from '@/components/admin/Toast';
+import { LocalizedInput, LocalizedValue, createLocalizedValue } from '@/components/admin/LocalizedInput';
 
 interface Event {
   id: string;
-  title: string;
-  description: string;
+  title: LocalizedValue | string;
+  description: LocalizedValue | string;
   date: string;
   time: string;
   image: string;
@@ -18,8 +19,8 @@ interface Event {
 }
 
 const EMPTY_ITEM: Omit<Event, 'id'> = {
-  title: '',
-  description: '',
+  title: createLocalizedValue(),
+  description: createLocalizedValue(),
   date: new Date().toISOString().split('T')[0],
   time: '14:00 - 17:00',
   image: '',
@@ -34,6 +35,29 @@ const EVENT_TYPES = [
   { value: 'exhibition', label: 'Выставка', color: 'bg-purple-500' },
   { value: 'other', label: 'Другое', color: 'bg-blue-500' },
 ];
+
+function getDisplayValue(val: LocalizedValue | string): string {
+  if (typeof val === 'string') return val;
+  return val?.ru || '';
+}
+
+function normalizeForEdit(item: Event): Event {
+  return {
+    ...item,
+    title: typeof item.title === 'string' ? createLocalizedValue(item.title) : item.title || createLocalizedValue(),
+    description: typeof item.description === 'string' ? createLocalizedValue(item.description) : item.description || createLocalizedValue(),
+  };
+}
+
+function getTranslationStatus(item: Event) {
+  const title = item.title;
+  const desc = item.description;
+  if (typeof title === 'string' || typeof desc === 'string') return { hasKg: false, hasEn: false };
+  return {
+    hasKg: !!(title?.kg),
+    hasEn: !!(title?.en),
+  };
+}
 
 export default function AfishaAdmin() {
   const [items, setItems] = useState<Event[]>([]);
@@ -65,7 +89,7 @@ export default function AfishaAdmin() {
   };
 
   const handleEdit = (item: Event) => {
-    setEditingItem({ ...item });
+    setEditingItem(normalizeForEdit(item));
     setIsNew(false);
   };
 
@@ -143,62 +167,70 @@ export default function AfishaAdmin() {
 
       {/* List */}
       <div className="space-y-4">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className={`bg-neutral-800 rounded-xl overflow-hidden flex ${!item.active ? 'opacity-50' : ''}`}
-          >
-            {item.image && (
-              <div className="relative w-48 flex-shrink-0">
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            )}
-            <div className="flex-1 p-4">
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`px-2 py-0.5 rounded text-xs text-white ${
-                      EVENT_TYPES.find(t => t.value === item.type)?.color || 'bg-neutral-500'
-                    }`}>
-                      {EVENT_TYPES.find(t => t.value === item.type)?.label}
-                    </span>
-                    {!item.active && (
-                      <span className="px-2 py-0.5 rounded text-xs bg-neutral-600 text-neutral-300">
-                        Скрыто
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-                  <p className="text-neutral-400 text-sm line-clamp-1">{item.description}</p>
-                  <div className="flex gap-4 mt-2 text-sm text-neutral-500">
-                    <span>📅 {formatDate(item.date)}</span>
-                    <span>🕐 {item.time}</span>
-                    <span>📍 {item.location}</span>
-                  </div>
+        {items.map((item) => {
+          const status = getTranslationStatus(item);
+          return (
+            <div
+              key={item.id}
+              className={`bg-neutral-800 rounded-xl overflow-hidden flex ${!item.active ? 'opacity-50' : ''}`}
+            >
+              {item.image && (
+                <div className="relative w-48 flex-shrink-0">
+                  <Image
+                    src={item.image}
+                    alt={getDisplayValue(item.title)}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleEdit(item)}
-                    className="px-3 py-1 text-blue-400 hover:text-blue-300"
-                  >
-                    ✏️
-                  </button>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="px-3 py-1 text-red-400 hover:text-red-300"
-                  >
-                    🗑️
-                  </button>
+              )}
+              <div className="flex-1 p-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className={`px-2 py-0.5 rounded text-xs text-white ${
+                        EVENT_TYPES.find(t => t.value === item.type)?.color || 'bg-neutral-500'
+                      }`}>
+                        {EVENT_TYPES.find(t => t.value === item.type)?.label}
+                      </span>
+                      <div className="flex gap-1">
+                        <span className="text-xs px-1.5 py-0.5 rounded bg-green-600/30 text-green-400">🇷🇺</span>
+                        <span className={`text-xs px-1.5 py-0.5 rounded ${status.hasKg ? 'bg-green-600/30 text-green-400' : 'bg-neutral-600/30 text-neutral-500'}`}>🇰🇬</span>
+                        <span className={`text-xs px-1.5 py-0.5 rounded ${status.hasEn ? 'bg-green-600/30 text-green-400' : 'bg-neutral-600/30 text-neutral-500'}`}>🇬🇧</span>
+                      </div>
+                      {!item.active && (
+                        <span className="px-2 py-0.5 rounded text-xs bg-neutral-600 text-neutral-300">
+                          Скрыто
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="text-lg font-semibold text-white">{getDisplayValue(item.title)}</h3>
+                    <p className="text-neutral-400 text-sm line-clamp-1">{getDisplayValue(item.description)}</p>
+                    <div className="flex gap-4 mt-2 text-sm text-neutral-500">
+                      <span>📅 {formatDate(item.date)}</span>
+                      <span>🕐 {item.time}</span>
+                      <span>📍 {item.location}</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEdit(item)}
+                      className="px-3 py-1 text-blue-400 hover:text-blue-300"
+                    >
+                      ✏️
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="px-3 py-1 text-red-400 hover:text-red-300"
+                    >
+                      🗑️
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {items.length === 0 && (
           <div className="bg-neutral-800 rounded-xl p-8 text-center text-neutral-400">
@@ -216,30 +248,21 @@ export default function AfishaAdmin() {
             </h2>
 
             <div className="space-y-4">
-              <div>
-                <label className="block text-neutral-300 mb-2">Название *</label>
-                <input
-                  type="text"
-                  value={editingItem.title}
-                  onChange={(e) =>
-                    setEditingItem({ ...editingItem, title: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-amber-500"
-                  placeholder="Мастер-класс «Весенние вазы»"
-                />
-              </div>
+              <LocalizedInput
+                label="Название"
+                value={editingItem.title}
+                onChange={(value) => setEditingItem({ ...editingItem, title: value })}
+                placeholder="Мастер-класс «Весенние вазы»"
+                required
+              />
 
-              <div>
-                <label className="block text-neutral-300 mb-2">Описание</label>
-                <textarea
-                  value={editingItem.description}
-                  onChange={(e) =>
-                    setEditingItem({ ...editingItem, description: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-amber-500 h-24 resize-none"
-                  placeholder="Описание события..."
-                />
-              </div>
+              <LocalizedInput
+                label="Описание"
+                value={editingItem.description}
+                onChange={(value) => setEditingItem({ ...editingItem, description: value })}
+                type="textarea"
+                placeholder="Описание события..."
+              />
 
               <ImageUpload
                 value={editingItem.image}
@@ -320,7 +343,7 @@ export default function AfishaAdmin() {
             <div className="flex gap-4 mt-6">
               <button
                 onClick={handleSave}
-                disabled={saving || !editingItem.title || !editingItem.date}
+                disabled={saving || !getDisplayValue(editingItem.title) || !editingItem.date}
                 className="flex-1 py-3 bg-amber-600 hover:bg-amber-700 disabled:bg-neutral-600 text-white rounded-lg font-medium transition-colors"
               >
                 {saving ? 'Сохранение...' : 'Сохранить'}

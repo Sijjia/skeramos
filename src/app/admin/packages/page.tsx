@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 import { useToast, ToastContainer } from '@/components/admin/Toast';
+import { LocalizedInput, LocalizedValue, createLocalizedValue } from '@/components/admin/LocalizedInput';
 
 interface Package {
   id: string;
-  title: string;
-  description: string;
+  title: LocalizedValue | string;
+  description: LocalizedValue | string;
   image: string;
   includes: string[];
   price: number;
@@ -17,14 +18,38 @@ interface Package {
 }
 
 const EMPTY_ITEM: Omit<Package, 'id'> = {
-  title: '',
-  description: '',
+  title: createLocalizedValue(),
+  description: createLocalizedValue(),
   image: '',
   includes: [],
   price: 0,
   featured: false,
   active: true,
 };
+
+function getDisplayValue(val: LocalizedValue | string): string {
+  if (typeof val === 'string') return val;
+  return val?.ru || '';
+}
+
+function normalizeForEdit(item: Package): Package {
+  return {
+    ...item,
+    title: typeof item.title === 'string' ? createLocalizedValue(item.title) : item.title || createLocalizedValue(),
+    description: typeof item.description === 'string' ? createLocalizedValue(item.description) : item.description || createLocalizedValue(),
+    includes: item.includes || [],
+  };
+}
+
+function getTranslationStatus(item: Package) {
+  const title = item.title;
+  const desc = item.description;
+  if (typeof title === 'string' || typeof desc === 'string') return { hasKg: false, hasEn: false };
+  return {
+    hasKg: !!(title?.kg && desc?.kg),
+    hasEn: !!(title?.en && desc?.en),
+  };
+}
 
 export default function PackagesAdmin() {
   const [items, setItems] = useState<Package[]>([]);
@@ -57,7 +82,7 @@ export default function PackagesAdmin() {
   };
 
   const handleEdit = (item: Package) => {
-    setEditingItem({ ...item });
+    setEditingItem(normalizeForEdit(item));
     setIsNew(false);
   };
 
@@ -143,54 +168,62 @@ export default function PackagesAdmin() {
 
       {/* List */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className={`bg-neutral-800 rounded-xl overflow-hidden ${!item.active ? 'opacity-50' : ''}`}
-          >
-            {item.image && (
-              <div className="relative h-40">
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  className="object-cover"
-                />
-                {item.featured && (
-                  <span className="absolute top-2 right-2 px-2 py-1 bg-amber-500 text-white text-xs rounded-full">
-                    На главной
-                  </span>
-                )}
-              </div>
-            )}
-            <div className="p-4">
-              <h3 className="text-lg font-semibold text-white">{item.title}</h3>
-              <p className="text-neutral-400 text-sm line-clamp-2 mb-2">{item.description}</p>
-              <p className="text-amber-400 font-bold">{item.price.toLocaleString()} сом</p>
-
-              {item.includes && item.includes.length > 0 && (
-                <div className="mt-2 text-xs text-neutral-500">
-                  {item.includes.length} позиций включено
+        {items.map((item) => {
+          const status = getTranslationStatus(item);
+          return (
+            <div
+              key={item.id}
+              className={`bg-neutral-800 rounded-xl overflow-hidden ${!item.active ? 'opacity-50' : ''}`}
+            >
+              {item.image && (
+                <div className="relative h-40">
+                  <Image
+                    src={item.image}
+                    alt={getDisplayValue(item.title)}
+                    fill
+                    className="object-cover"
+                  />
+                  {item.featured && (
+                    <span className="absolute top-2 right-2 px-2 py-1 bg-amber-500 text-white text-xs rounded-full">
+                      На главной
+                    </span>
+                  )}
                 </div>
               )}
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-white">{getDisplayValue(item.title)}</h3>
+                <p className="text-neutral-400 text-sm line-clamp-2 mb-2">{getDisplayValue(item.description)}</p>
+                <p className="text-amber-400 font-bold">{item.price.toLocaleString()} сом</p>
 
-              <div className="flex gap-2 mt-4">
-                <button
-                  onClick={() => handleEdit(item)}
-                  className="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-colors"
-                >
-                  Редактировать
-                </button>
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="px-3 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg text-sm transition-colors"
-                >
-                  Удалить
-                </button>
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="flex gap-1">
+                    <span className="text-xs px-1.5 py-0.5 rounded bg-green-600/30 text-green-400">🇷🇺</span>
+                    <span className={`text-xs px-1.5 py-0.5 rounded ${status.hasKg ? 'bg-green-600/30 text-green-400' : 'bg-neutral-600/30 text-neutral-500'}`}>🇰🇬</span>
+                    <span className={`text-xs px-1.5 py-0.5 rounded ${status.hasEn ? 'bg-green-600/30 text-green-400' : 'bg-neutral-600/30 text-neutral-500'}`}>🇬🇧</span>
+                  </div>
+                  {item.includes && item.includes.length > 0 && (
+                    <span className="text-xs text-neutral-500">{item.includes.length} позиций</span>
+                  )}
+                </div>
+
+                <div className="flex gap-2 mt-4">
+                  <button
+                    onClick={() => handleEdit(item)}
+                    className="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-colors"
+                  >
+                    Редактировать
+                  </button>
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="px-3 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg text-sm transition-colors"
+                  >
+                    Удалить
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {items.length === 0 && (
           <div className="col-span-full bg-neutral-800 rounded-xl p-8 text-center text-neutral-400">
@@ -208,30 +241,21 @@ export default function PackagesAdmin() {
             </h2>
 
             <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
-              <div>
-                <label className="block text-neutral-300 mb-2">Название *</label>
-                <input
-                  type="text"
-                  value={editingItem.title}
-                  onChange={(e) =>
-                    setEditingItem({ ...editingItem, title: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-amber-500"
-                  placeholder="Романтический вечер"
-                />
-              </div>
+              <LocalizedInput
+                label="Название"
+                value={editingItem.title}
+                onChange={(value) => setEditingItem({ ...editingItem, title: value })}
+                placeholder="Романтический вечер"
+                required
+              />
 
-              <div>
-                <label className="block text-neutral-300 mb-2">Описание</label>
-                <textarea
-                  value={editingItem.description}
-                  onChange={(e) =>
-                    setEditingItem({ ...editingItem, description: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-amber-500 h-24 resize-none"
-                  placeholder="Опишите пакет..."
-                />
-              </div>
+              <LocalizedInput
+                label="Описание"
+                value={editingItem.description}
+                onChange={(value) => setEditingItem({ ...editingItem, description: value })}
+                type="textarea"
+                placeholder="Опишите пакет..."
+              />
 
               <ImageUpload
                 value={editingItem.image}
@@ -326,7 +350,7 @@ export default function PackagesAdmin() {
             <div className="flex gap-4 mt-6">
               <button
                 onClick={handleSave}
-                disabled={saving || !editingItem.title || !editingItem.price}
+                disabled={saving || !getDisplayValue(editingItem.title) || !editingItem.price}
                 className="flex-1 py-3 bg-amber-600 hover:bg-amber-700 disabled:bg-neutral-600 text-white rounded-lg font-medium transition-colors"
               >
                 {saving ? 'Сохранение...' : 'Сохранить'}

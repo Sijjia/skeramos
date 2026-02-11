@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 import { useToast, ToastContainer } from '@/components/admin/Toast';
+import { LocalizedInput, LocalizedValue, createLocalizedValue } from '@/components/admin/LocalizedInput';
 
 interface Achievement {
   year: number;
@@ -13,8 +14,8 @@ interface Achievement {
 interface Master {
   id: string;
   name: string;
-  role: string;
-  bio: string;
+  role: LocalizedValue | string;
+  bio: LocalizedValue | string;
   image: string;
   experience: string;
   specialties: string[];
@@ -25,8 +26,8 @@ interface Master {
 
 const EMPTY_ITEM: Omit<Master, 'id'> = {
   name: '',
-  role: '',
-  bio: '',
+  role: createLocalizedValue(),
+  bio: createLocalizedValue(),
   image: '',
   experience: '',
   specialties: [],
@@ -34,6 +35,31 @@ const EMPTY_ITEM: Omit<Master, 'id'> = {
   whatsapp: '',
   active: true,
 };
+
+function getDisplayValue(val: LocalizedValue | string): string {
+  if (typeof val === 'string') return val;
+  return val?.ru || '';
+}
+
+function normalizeForEdit(item: Master): Master {
+  return {
+    ...item,
+    role: typeof item.role === 'string' ? createLocalizedValue(item.role) : item.role || createLocalizedValue(),
+    bio: typeof item.bio === 'string' ? createLocalizedValue(item.bio) : item.bio || createLocalizedValue(),
+    specialties: item.specialties || [],
+    achievements: item.achievements || [],
+  };
+}
+
+function getTranslationStatus(item: Master) {
+  const role = item.role;
+  const bio = item.bio;
+  if (typeof role === 'string' || typeof bio === 'string') return { hasKg: false, hasEn: false };
+  return {
+    hasKg: !!(role?.kg),
+    hasEn: !!(role?.en),
+  };
+}
 
 export default function MastersAdmin() {
   const [items, setItems] = useState<Master[]>([]);
@@ -68,7 +94,7 @@ export default function MastersAdmin() {
   };
 
   const handleEdit = (item: Master) => {
-    setEditingItem({ ...item });
+    setEditingItem(normalizeForEdit(item));
     setIsNew(false);
   };
 
@@ -141,7 +167,6 @@ export default function MastersAdmin() {
       year: achievementYear,
       text: achievementText.trim(),
     };
-    // Sort achievements by year (newest first)
     const updated = [...(editingItem.achievements || []), newAchievement].sort((a, b) => b.year - a.year);
     setEditingItem({
       ...editingItem,
@@ -177,53 +202,63 @@ export default function MastersAdmin() {
 
       {/* List */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className={`bg-neutral-800 rounded-xl overflow-hidden ${!item.active ? 'opacity-50' : ''}`}
-          >
-            {item.image && (
-              <div className="relative h-48">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            )}
-            <div className="p-4">
-              <h3 className="text-lg font-semibold text-white">{item.name}</h3>
-              <p className="text-amber-400 text-sm mb-2">{item.role}</p>
-              <p className="text-neutral-400 text-sm line-clamp-2">{item.bio}</p>
-
-              {item.specialties && item.specialties.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-3">
-                  {item.specialties.slice(0, 3).map((spec, i) => (
-                    <span key={i} className="text-xs px-2 py-0.5 bg-neutral-700 text-neutral-300 rounded">
-                      {spec}
-                    </span>
-                  ))}
+        {items.map((item) => {
+          const status = getTranslationStatus(item);
+          return (
+            <div
+              key={item.id}
+              className={`bg-neutral-800 rounded-xl overflow-hidden ${!item.active ? 'opacity-50' : ''}`}
+            >
+              {item.image && (
+                <div className="relative h-48">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
               )}
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="text-lg font-semibold text-white">{item.name}</h3>
+                  <div className="flex gap-1">
+                    <span className="text-xs px-1 py-0.5 rounded bg-green-600/30 text-green-400">🇷🇺</span>
+                    <span className={`text-xs px-1 py-0.5 rounded ${status.hasKg ? 'bg-green-600/30 text-green-400' : 'bg-neutral-600/30 text-neutral-500'}`}>🇰🇬</span>
+                    <span className={`text-xs px-1 py-0.5 rounded ${status.hasEn ? 'bg-green-600/30 text-green-400' : 'bg-neutral-600/30 text-neutral-500'}`}>🇬🇧</span>
+                  </div>
+                </div>
+                <p className="text-amber-400 text-sm mb-2">{getDisplayValue(item.role)}</p>
+                <p className="text-neutral-400 text-sm line-clamp-2">{getDisplayValue(item.bio)}</p>
 
-              <div className="flex gap-2 mt-4">
-                <button
-                  onClick={() => handleEdit(item)}
-                  className="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-colors"
-                >
-                  Редактировать
-                </button>
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="px-3 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg text-sm transition-colors"
-                >
-                  Удалить
-                </button>
+                {item.specialties && item.specialties.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-3">
+                    {item.specialties.slice(0, 3).map((spec, i) => (
+                      <span key={i} className="text-xs px-2 py-0.5 bg-neutral-700 text-neutral-300 rounded">
+                        {spec}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex gap-2 mt-4">
+                  <button
+                    onClick={() => handleEdit(item)}
+                    className="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-colors"
+                  >
+                    Редактировать
+                  </button>
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="px-3 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg text-sm transition-colors"
+                  >
+                    Удалить
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {items.length === 0 && (
           <div className="col-span-full bg-neutral-800 rounded-xl p-8 text-center text-neutral-400">
@@ -255,39 +290,6 @@ export default function MastersAdmin() {
                   />
                 </div>
                 <div>
-                  <label className="block text-neutral-300 mb-2">Роль *</label>
-                  <input
-                    type="text"
-                    value={editingItem.role}
-                    onChange={(e) =>
-                      setEditingItem({ ...editingItem, role: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-amber-500"
-                    placeholder="Основатель, мастер-керамист"
-                  />
-                </div>
-              </div>
-
-              <ImageUpload
-                value={editingItem.image}
-                onChange={(url) => setEditingItem({ ...editingItem, image: url })}
-                label="Фото"
-              />
-
-              <div>
-                <label className="block text-neutral-300 mb-2">Биография</label>
-                <textarea
-                  value={editingItem.bio}
-                  onChange={(e) =>
-                    setEditingItem({ ...editingItem, bio: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-amber-500 h-24 resize-none"
-                  placeholder="Расскажите о мастере..."
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
                   <label className="block text-neutral-300 mb-2">Опыт</label>
                   <input
                     type="text"
@@ -299,18 +301,42 @@ export default function MastersAdmin() {
                     placeholder="15 лет"
                   />
                 </div>
-                <div>
-                  <label className="block text-neutral-300 mb-2">WhatsApp</label>
-                  <input
-                    type="text"
-                    value={editingItem.whatsapp || ''}
-                    onChange={(e) =>
-                      setEditingItem({ ...editingItem, whatsapp: e.target.value })
-                    }
-                    className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-amber-500"
-                    placeholder="996555123456"
-                  />
-                </div>
+              </div>
+
+              <LocalizedInput
+                label="Роль/Должность"
+                value={editingItem.role}
+                onChange={(value) => setEditingItem({ ...editingItem, role: value })}
+                placeholder="Основатель, мастер-керамист"
+                required
+              />
+
+              <ImageUpload
+                value={editingItem.image}
+                onChange={(url) => setEditingItem({ ...editingItem, image: url })}
+                label="Фото"
+              />
+
+              <LocalizedInput
+                label="Биография"
+                value={editingItem.bio}
+                onChange={(value) => setEditingItem({ ...editingItem, bio: value })}
+                type="textarea"
+                placeholder="Расскажите о мастере..."
+                rows={4}
+              />
+
+              <div>
+                <label className="block text-neutral-300 mb-2">WhatsApp</label>
+                <input
+                  type="text"
+                  value={editingItem.whatsapp || ''}
+                  onChange={(e) =>
+                    setEditingItem({ ...editingItem, whatsapp: e.target.value })
+                  }
+                  className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-amber-500"
+                  placeholder="996555123456"
+                />
               </div>
 
               {/* Specialties */}
@@ -381,7 +407,6 @@ export default function MastersAdmin() {
                     +
                   </button>
                 </div>
-                {/* Timeline view */}
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {editingItem.achievements?.map((ach, i) => (
                     <div
@@ -424,7 +449,7 @@ export default function MastersAdmin() {
             <div className="flex gap-4 mt-6">
               <button
                 onClick={handleSave}
-                disabled={saving || !editingItem.name || !editingItem.role}
+                disabled={saving || !editingItem.name || !getDisplayValue(editingItem.role)}
                 className="flex-1 py-3 bg-amber-600 hover:bg-amber-700 disabled:bg-neutral-600 text-white rounded-lg font-medium transition-colors"
               >
                 {saving ? 'Сохранение...' : 'Сохранить'}
