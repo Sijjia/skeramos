@@ -315,8 +315,8 @@ export default function CreativityPage() {
                 variants={fadeInUp}
                 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium text-white mb-6 text-balance"
               >
-                Создайте{' '}
-                <span className="bg-gradient-text">шедевр</span>
+                Лепим{' '}
+                <span className="bg-gradient-text">счастье</span>
                 <br />
                 своими руками
               </motion.h1>
@@ -326,8 +326,9 @@ export default function CreativityPage() {
                 variants={fadeInUp}
                 className="text-lg md:text-xl text-neutral-300 mb-10 max-w-2xl mx-auto"
               >
-                Мастер-классы по керамике для всех уровней. Погрузитесь в мир гончарного искусства
-                и создайте уникальные изделия под руководством опытных мастеров.
+                Мастер-классы по керамике для всех уровней.
+                <br />
+                Погрузитесь в мир гончарного искусства и создайте уникальные изделия под руководством опытных мастеров.
               </motion.p>
 
               {/* CTA Buttons */}
@@ -353,9 +354,9 @@ export default function CreativityPage() {
                 className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto"
               >
                 {[
-                  { value: 5, suffix: '+', label: 'лет опыта' },
-                  { value: 2000, suffix: '+', label: 'учеников' },
-                  { value: 50, suffix: '+', label: 'корпоративов' },
+                  { value: 3, suffix: '', label: 'года опыта' },
+                  { value: 1000, suffix: '+', label: 'учеников' },
+                  { value: 500, suffix: '+', label: 'мастер-классов' },
                 ].map((stat) => (
                   <div key={stat.label} className="text-center">
                     <div className="text-3xl md:text-4xl font-display font-bold text-zone-400">

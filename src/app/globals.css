@@ -27,15 +27,15 @@
   --gold-500: #d4a574;
   --gold-600: #b8860b;
 
-  /* Creativity zone - Terracotta */
+  /* Creativity zone - Terracotta (softened) */
   --creativity-300: #f7b1a9;
   --creativity-400: #e07a6e;
   --creativity-500: #c95a4a;
   --creativity-600: #a93b24;
-  --creativity-700: #8c3320;
-  --creativity-800: #6b281a;
-  --creativity-900: #4a1c12;
-  --creativity-950: #2d110b;
+  --creativity-700: #7a4035;
+  --creativity-800: #5a3830;
+  --creativity-900: #3d2a24;
+  --creativity-950: #2a1f1a;
 
   /* Hotel zone - Emerald */
   --hotel-300: #6ee5c6;
