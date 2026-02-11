@@ -124,7 +124,7 @@ export default function HistoryPage() {
             <div className="container mx-auto px-4">
               <FadeInOnScroll className="max-w-3xl mx-auto text-center">
                 <span className="inline-block px-4 py-2 rounded-full glass text-sm text-zone-300 font-medium mb-4">
-                  С 2019 года
+                  С 2024 года
                 </span>
                 <h1 className="text-4xl md:text-5xl font-display font-medium text-neutral-800 mb-4">
                   Наша{' '}
@@ -162,7 +162,7 @@ export default function HistoryPage() {
           <div className="container mx-auto px-4">
             <FadeInOnScroll className="max-w-3xl mx-auto text-center">
               <span className="inline-block px-4 py-2 rounded-full glass text-sm text-zone-300 font-medium mb-4">
-                С 2019 года
+                С 2024 года
               </span>
               <h1 className="text-4xl md:text-5xl font-display font-medium text-neutral-800 mb-4">
                 Наша{' '}
