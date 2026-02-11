@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useZone } from '@/contexts/ZoneContext';
 import { useServices, useMasterclasses, type ServiceUI, type MasterclassUI } from '@/hooks/useSanityData';
@@ -41,6 +41,8 @@ function masterclassToService(mc: MasterclassUI): ServiceWithTags {
 export default function ServicesPage() {
   const { setZone } = useZone();
   const locale = useLocale();
+  const t = useTranslations('services');
+  const tCommon = useTranslations('common');
   const { data: servicesData, loading: servicesLoading } = useServices();
   const { data: masterclassesData, loading: masterclassesLoading } = useMasterclasses();
   const [currentPage, setCurrentPage] = useState(1);
@@ -88,17 +90,16 @@ export default function ServicesPage() {
           <div className="container mx-auto px-4">
             <FadeInOnScroll className="max-w-3xl mx-auto text-center">
               <span className="inline-block px-4 py-2 rounded-full glass text-sm text-zone-300 font-medium mb-6">
-                Мастер-классы и мероприятия
+                {t('title')}
               </span>
               <h1 className="text-4xl md:text-6xl font-display font-medium text-neutral-800 mb-6">
-                Все{' '}
+                {t('all')}{' '}
                 <span className="bg-gradient-to-r from-zone-400 to-gold-500 bg-clip-text text-transparent">
-                  услуги
+                  {t('allServices')}
                 </span>
               </h1>
               <p className="text-lg text-neutral-500">
-                Выберите формат, который подходит именно вам — от первого знакомства с керамикой
-                до профессиональных курсов и корпоративных мероприятий.
+                {t('subtitle')}
               </p>
             </FadeInOnScroll>
           </div>
@@ -112,7 +113,7 @@ export default function ServicesPage() {
             {loading ? (
               <div className="text-center py-20">
                 <div className="inline-block w-8 h-8 border-2 border-zone-500 border-t-transparent rounded-full animate-spin mb-4" />
-                <p className="text-neutral-400">Загрузка...</p>
+                <p className="text-neutral-400">{t('loading')}</p>
               </div>
             ) : services.length > 0 ? (
               <>
@@ -143,7 +144,7 @@ export default function ServicesPage() {
                             <div className="absolute top-4 right-4 px-4 py-2 rounded-full glass">
                               <span className="text-neutral-700 font-medium">
                                 {service.priceNote && `${service.priceNote} `}
-                                {service.price.toLocaleString()} сом
+                                {service.price.toLocaleString()} {t('price')}
                               </span>
                             </div>
                           </div>
@@ -153,9 +154,9 @@ export default function ServicesPage() {
                         <div className={`${index % 2 === 1 ? 'md:order-1' : ''}`}>
                           <div className="flex flex-wrap items-center gap-2 mb-2">
                             <span className="text-zone-400 text-sm font-medium tracking-wider uppercase">
-                              {service.category === 'masterclass' && 'Мастер-класс'}
-                              {service.category === 'course' && 'Курс'}
-                              {service.category === 'event' && 'Мероприятие'}
+                              {service.category === 'masterclass' && t('masterclass')}
+                              {service.category === 'course' && t('course')}
+                              {service.category === 'event' && t('event')}
                             </span>
                             {/* Tags */}
                             {service.tags && service.tags.length > 0 && (
@@ -219,7 +220,7 @@ export default function ServicesPage() {
                               onClick={() => setSelectedService(service.id)}
                               className="px-6 py-3 bg-zone-500 hover:bg-zone-600 text-white rounded-xl font-medium transition-all"
                             >
-                              Записаться
+                              {tCommon('signUp')}
                             </button>
                             {service.externalLink ? (
                               <a
@@ -228,7 +229,7 @@ export default function ServicesPage() {
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-6 py-3 glass hover:bg-neutral-100 text-neutral-700 rounded-xl font-medium transition-all"
                               >
-                                Подробнее
+                                {tCommon('learnMore')}
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
@@ -238,7 +239,7 @@ export default function ServicesPage() {
                                 href={`/${locale}/services/${service.slug}`}
                                 className="px-6 py-3 glass hover:bg-neutral-100 text-neutral-700 rounded-xl font-medium transition-all"
                               >
-                                Подробнее
+                                {tCommon('learnMore')}
                               </Link>
                             )}
                           </div>
@@ -284,15 +285,15 @@ export default function ServicesPage() {
             ) : (
               <div className="text-center py-20">
                 <span className="text-6xl mb-4 block">🎨</span>
-                <h3 className="text-xl text-neutral-800 mb-2">Услуги скоро появятся</h3>
-                <p className="text-neutral-500 mb-6">Мы готовим для вас интересные мастер-классы и курсы</p>
+                <h3 className="text-xl text-neutral-800 mb-2">{t('servicesSoon')}</h3>
+                <p className="text-neutral-500 mb-6">{t('preparingServices')}</p>
                 <a
                   href={`https://wa.me/996555123456?text=${encodeURIComponent('Здравствуйте! Хочу узнать о ваших услугах')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-500 text-white rounded-xl font-medium transition-all"
                 >
-                  Связаться в WhatsApp
+                  {t('contactWhatsApp')}
                 </a>
               </div>
             )}
@@ -328,12 +329,12 @@ export default function ServicesPage() {
                 </button>
 
                 <h3 className="text-xl font-display font-medium card-title mb-2">
-                  Записаться на
+                  {t('signUpFor')}
                 </h3>
                 <p className="text-zone-500 mb-6">{selectedServiceData.title}</p>
 
                 <p className="card-text text-sm mb-6">
-                  Выберите удобный способ связи:
+                  {tCommon('chooseContactMethod')}
                 </p>
 
                 <div className="space-y-3">
@@ -350,7 +351,7 @@ export default function ServicesPage() {
                     </div>
                     <div>
                       <div className="text-neutral-800 font-medium">WhatsApp</div>
-                      <div className="text-neutral-500 text-sm">Быстрый ответ</div>
+                      <div className="text-neutral-500 text-sm">{t('quickResponse')}</div>
                     </div>
                   </a>
 
@@ -367,7 +368,7 @@ export default function ServicesPage() {
                     </div>
                     <div>
                       <div className="text-neutral-800 font-medium">Telegram</div>
-                      <div className="text-neutral-500 text-sm">Написать в чат</div>
+                      <div className="text-neutral-500 text-sm">{t('writeToChat')}</div>
                     </div>
                   </a>
 
@@ -381,7 +382,7 @@ export default function ServicesPage() {
                       </svg>
                     </div>
                     <div>
-                      <div className="text-neutral-800 font-medium">Позвонить</div>
+                      <div className="text-neutral-800 font-medium">{tCommon('call')}</div>
                       <div className="text-neutral-500 text-sm">+996 555 123 456</div>
                     </div>
                   </a>

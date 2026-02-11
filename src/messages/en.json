@@ -124,5 +124,52 @@
     "howToFind": "How to find us",
     "getDirections": "Get directions",
     "contactUs": "Contact us"
+  },
+  "services": {
+    "title": "Masterclasses and events",
+    "allServices": "services",
+    "all": "All",
+    "subtitle": "Choose the format that suits you — from your first introduction to ceramics to professional courses and corporate events.",
+    "loading": "Loading...",
+    "price": "som",
+    "masterclass": "Masterclass",
+    "course": "Course",
+    "event": "Event",
+    "signUpFor": "Sign up for",
+    "servicesSoon": "Services coming soon",
+    "preparingServices": "We are preparing interesting masterclasses and courses for you",
+    "contactWhatsApp": "Contact via WhatsApp",
+    "quickResponse": "Quick response",
+    "writeToChat": "Write to chat"
+  },
+  "masters": {
+    "team": "Skeramos Team",
+    "our": "Our",
+    "masters": "masters",
+    "subtitle": "Professionals who share their mastery and love for ceramics. Each of them is a master of their craft with a unique style and approach.",
+    "achievements": "Achievements",
+    "moreAbout": "More about the master",
+    "infoSoon": "Information about masters coming soon",
+    "preparingStories": "We are preparing interesting stories of our masters for you",
+    "wantToLearn": "Want to learn from our masters?",
+    "signUpCta": "Sign up for a masterclass and create your first piece under the guidance of professionals",
+    "chooseMasterclass": "Choose a masterclass",
+    "writeWhatsApp": "Write on WhatsApp",
+    "specialization": "Specialization",
+    "signUpToMaster": "Sign up for a masterclass",
+    "notFound": "Master not found",
+    "backToMasters": "Back to masters",
+    "allMasters": "All masters",
+    "wantToLearnFrom": "Want to learn from"
+  },
+  "gallery": {
+    "title": "Gallery",
+    "empty": "Gallery is empty",
+    "addInAdmin": "Add works through admin panel"
+  },
+  "afisha": {
+    "title": "Events",
+    "noEvents": "No events yet",
+    "addInAdmin": "Add events through admin panel"
   }
 }
