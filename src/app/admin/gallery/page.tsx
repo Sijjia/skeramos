@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 import { useToast, ToastContainer } from '@/components/admin/Toast';
+import { LocalizedInput, LocalizedValue, createLocalizedValue } from '@/components/admin/LocalizedInput';
 
 interface GalleryItem {
   id: string;
-  title: string;
-  description?: string;
+  title: LocalizedValue | string;
+  description?: LocalizedValue | string;
   image: string;
   category: string;
   author?: string;
@@ -29,14 +30,37 @@ const DEFAULT_categories: GalleryCategory[] = [
 ];
 
 const EMPTY_ITEM: Omit<GalleryItem, 'id'> = {
-  title: '',
-  description: '',
+  title: createLocalizedValue(),
+  description: createLocalizedValue(),
   image: '',
   category: 'works',
   author: '',
   date: '',
   active: true,
 };
+
+function getDisplayValue(val: LocalizedValue | string | undefined): string {
+  if (!val) return '';
+  if (typeof val === 'string') return val;
+  return val?.ru || '';
+}
+
+function normalizeForEdit(item: GalleryItem): GalleryItem {
+  return {
+    ...item,
+    title: typeof item.title === 'string' ? createLocalizedValue(item.title) : item.title || createLocalizedValue(),
+    description: typeof item.description === 'string' ? createLocalizedValue(item.description) : item.description || createLocalizedValue(),
+  };
+}
+
+function getTranslationStatus(item: GalleryItem) {
+  const title = item.title;
+  if (typeof title === 'string') return { hasKg: false, hasEn: false };
+  return {
+    hasKg: !!(title?.kg),
+    hasEn: !!(title?.en),
+  };
+}
 
 export default function GalleryAdmin() {
   const [items, setItems] = useState<GalleryItem[]>([]);
@@ -92,7 +116,7 @@ export default function GalleryAdmin() {
   };
 
   const handleEdit = (item: GalleryItem) => {
-    setEditingItem({ ...item });
+    setEditingItem(normalizeForEdit(item));
     setIsNew(false);
   };
 
@@ -196,7 +220,7 @@ export default function GalleryAdmin() {
             <div className="relative aspect-square">
               <img
                 src={item.image}
-                alt={item.title}
+                alt={getDisplayValue(item.title)}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -218,10 +242,22 @@ export default function GalleryAdmin() {
               </div>
             </div>
             <div className="p-3">
-              <h3 className="text-white font-medium text-sm truncate">{item.title}</h3>
+              <h3 className="text-white font-medium text-sm truncate">{getDisplayValue(item.title)}</h3>
               {item.author && (
                 <p className="text-neutral-400 text-xs mt-1">{item.author}</p>
               )}
+              <div className="flex gap-1 mt-1">
+                {(() => {
+                  const status = getTranslationStatus(item);
+                  return (
+                    <>
+                      <span className="text-xs px-1 py-0.5 rounded bg-green-600/30 text-green-400">🇷🇺</span>
+                      <span className={`text-xs px-1 py-0.5 rounded ${status.hasKg ? 'bg-green-600/30 text-green-400' : 'bg-neutral-600/30 text-neutral-500'}`}>🇰🇬</span>
+                      <span className={`text-xs px-1 py-0.5 rounded ${status.hasEn ? 'bg-green-600/30 text-green-400' : 'bg-neutral-600/30 text-neutral-500'}`}>🇬🇧</span>
+                    </>
+                  );
+                })()}
+              </div>
             </div>
           </div>
         ))}
@@ -248,28 +284,22 @@ export default function GalleryAdmin() {
                 label="Изображение *"
               />
 
-              <div>
-                <label className="block text-neutral-300 mb-2">Название *</label>
-                <input
-                  type="text"
-                  value={editingItem.title}
-                  onChange={(e) =>
-                    setEditingItem({ ...editingItem, title: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-blue-500"
-                />
-              </div>
+              <LocalizedInput
+                label="Название"
+                value={editingItem.title}
+                onChange={(value) => setEditingItem({ ...editingItem, title: value })}
+                placeholder="Название работы"
+                required
+              />
 
-              <div>
-                <label className="block text-neutral-300 mb-2">Описание</label>
-                <textarea
-                  value={editingItem.description || ''}
-                  onChange={(e) =>
-                    setEditingItem({ ...editingItem, description: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-blue-500 h-20 resize-none"
-                />
-              </div>
+              <LocalizedInput
+                label="Описание"
+                value={editingItem.description || createLocalizedValue()}
+                onChange={(value) => setEditingItem({ ...editingItem, description: value })}
+                type="textarea"
+                placeholder="Описание работы..."
+                rows={2}
+              />
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -318,7 +348,7 @@ export default function GalleryAdmin() {
             <div className="flex gap-4 mt-6">
               <button
                 onClick={handleSave}
-                disabled={saving || !editingItem.image || !editingItem.title}
+                disabled={saving || !editingItem.image || !getDisplayValue(editingItem.title)}
                 className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-neutral-600 text-white rounded-lg font-medium transition-colors"
               >
                 {saving ? 'Сохранение...' : 'Сохранить'}
