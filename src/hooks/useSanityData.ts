@@ -1,6 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useLocale } from 'next-intl';
+import type { LocalizedValue } from '@/components/admin/LocalizedInput';
+
+// Helper to extract localized value
+function getLocalizedString(value: LocalizedValue | string | undefined, locale: string): string {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  const lang = locale as 'ru' | 'kg' | 'en';
+  return value[lang] || value.ru || '';
+}
 
 // Type definitions for UI data
 export interface MasterclassUI {
@@ -101,8 +111,10 @@ export interface ServiceUI {
 // Generic hook for fetching data from our API
 function useDataFetch<T>(
   collection: string,
-  fallbackData: T
+  fallbackData: T,
+  transform?: (data: T, locale: string) => T
 ): { data: T; loading: boolean; error: Error | null } {
+  const locale = useLocale();
   const [data, setData] = useState<T>(fallbackData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -123,13 +135,21 @@ function useDataFetch<T>(
 
         if (!cancelled) {
           // Используем пустой массив как fallback если данных нет
+          let processedData: T;
           if (Array.isArray(result) && result.length > 0) {
-            setData(result as T);
+            processedData = result as T;
           } else if (!Array.isArray(result) && Object.keys(result).length > 0) {
-            setData(result as T);
+            processedData = result as T;
           } else {
-            setData(fallbackData);
+            processedData = fallbackData;
           }
+
+          // Apply locale transformation if provided
+          if (transform) {
+            processedData = transform(processedData, locale);
+          }
+
+          setData(processedData);
           setError(null);
         }
       } catch (err) {
@@ -150,9 +170,57 @@ function useDataFetch<T>(
     return () => {
       cancelled = true;
     };
-  }, [collection, fallbackData]);
+  }, [collection, fallbackData, locale, transform]);
 
   return { data, loading, error };
+}
+
+// Transform functions for localized content
+function transformMasterclasses(data: MasterclassUI[], locale: string): MasterclassUI[] {
+  return data.map(item => ({
+    ...item,
+    title: getLocalizedString(item.title as unknown as LocalizedValue | string, locale),
+    description: getLocalizedString(item.description as unknown as LocalizedValue | string, locale),
+  }));
+}
+
+function transformPackages(data: PackageUI[], locale: string): PackageUI[] {
+  return data.map(item => ({
+    ...item,
+    title: getLocalizedString(item.title as unknown as LocalizedValue | string, locale),
+    description: getLocalizedString(item.description as unknown as LocalizedValue | string, locale),
+  }));
+}
+
+function transformMasters(data: MasterUI[], locale: string): MasterUI[] {
+  return data.map(item => ({
+    ...item,
+    role: getLocalizedString(item.role as unknown as LocalizedValue | string, locale),
+    bio: getLocalizedString(item.bio as unknown as LocalizedValue | string, locale),
+  }));
+}
+
+function transformGallery(data: GalleryItemUI[], locale: string): GalleryItemUI[] {
+  return data.map(item => ({
+    ...item,
+    title: getLocalizedString(item.title as unknown as LocalizedValue | string, locale),
+  }));
+}
+
+function transformAfisha(data: EventUI[], locale: string): EventUI[] {
+  return data.map(item => ({
+    ...item,
+    title: getLocalizedString(item.title as unknown as LocalizedValue | string, locale),
+    description: getLocalizedString(item.description as unknown as LocalizedValue | string, locale),
+  }));
+}
+
+function transformHistory(data: HistoryItemUI[], locale: string): HistoryItemUI[] {
+  return data.map(item => ({
+    ...item,
+    title: getLocalizedString(item.title as unknown as LocalizedValue | string, locale),
+    description: getLocalizedString(item.description as unknown as LocalizedValue | string, locale),
+  }));
 }
 
 // ============================================================================
@@ -212,7 +280,7 @@ const FAQ_HOTEL: FAQUI[] = [
 const EMPTY_ARRAY: never[] = [];
 
 export function useMasterclasses() {
-  return useDataFetch<MasterclassUI[]>('masterclasses', EMPTY_ARRAY);
+  return useDataFetch<MasterclassUI[]>('masterclasses', EMPTY_ARRAY, transformMasterclasses);
 }
 
 export function useCourses() {
@@ -226,15 +294,15 @@ export function useEvents() {
 }
 
 export function usePackages() {
-  return useDataFetch<PackageUI[]>('packages', EMPTY_ARRAY);
+  return useDataFetch<PackageUI[]>('packages', EMPTY_ARRAY, transformPackages);
 }
 
 export function useMasters() {
-  return useDataFetch<MasterUI[]>('masters', EMPTY_ARRAY);
+  return useDataFetch<MasterUI[]>('masters', EMPTY_ARRAY, transformMasters);
 }
 
 export function useGallery() {
-  return useDataFetch<GalleryItemUI[]>('gallery', EMPTY_ARRAY);
+  return useDataFetch<GalleryItemUI[]>('gallery', EMPTY_ARRAY, transformGallery);
 }
 
 export function useServices() {
@@ -276,7 +344,7 @@ export interface EventUI {
 }
 
 export function useAfisha() {
-  return useDataFetch<EventUI[]>('afisha', EMPTY_ARRAY);
+  return useDataFetch<EventUI[]>('afisha', EMPTY_ARRAY, transformAfisha);
 }
 
 export interface HistoryItemUI {
@@ -291,7 +359,7 @@ export interface HistoryItemUI {
 }
 
 export function useHistory() {
-  return useDataFetch<HistoryItemUI[]>('history', EMPTY_ARRAY);
+  return useDataFetch<HistoryItemUI[]>('history', EMPTY_ARRAY, transformHistory);
 }
 
 export interface SettingsUI {
