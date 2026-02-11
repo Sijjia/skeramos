@@ -477,7 +477,7 @@ export default function HotelPage() {
                 Отзывы
               </motion.span>
               <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
-                Что говорят гости
+                Добрые слова
               </motion.h2>
             </motion.div>
 
