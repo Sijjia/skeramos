@@ -383,6 +383,31 @@ export interface SettingsUI {
 
 const EMPTY_SETTINGS: SettingsUI = {};
 
+function transformSettings(data: SettingsUI, locale: string): SettingsUI {
+  return {
+    ...data,
+    galleryCategories: data.galleryCategories?.map(cat => ({
+      ...cat,
+      label: getLocalizedString(cat.label as unknown as LocalizedValue | string, locale),
+    })),
+    advantages: data.advantages?.map(item => ({
+      ...item,
+      title: getLocalizedString(item.title as unknown as LocalizedValue | string, locale),
+      description: getLocalizedString(item.description as unknown as LocalizedValue | string, locale),
+    })),
+    whatYouGet: data.whatYouGet?.map(item => ({
+      ...item,
+      title: getLocalizedString(item.title as unknown as LocalizedValue | string, locale),
+      description: getLocalizedString(item.description as unknown as LocalizedValue | string, locale),
+    })),
+    hotelAdvantages: data.hotelAdvantages?.map(item => ({
+      ...item,
+      title: getLocalizedString(item.title as unknown as LocalizedValue | string, locale),
+      description: getLocalizedString(item.description as unknown as LocalizedValue | string, locale),
+    })),
+  };
+}
+
 export function useSettings() {
-  return useDataFetch<SettingsUI>('settings', EMPTY_SETTINGS);
+  return useDataFetch<SettingsUI>('settings', EMPTY_SETTINGS, transformSettings);
 }
