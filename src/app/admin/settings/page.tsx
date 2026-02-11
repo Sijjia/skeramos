@@ -2,28 +2,29 @@
 
 import { useState, useEffect } from 'react';
 import { Plus, X } from 'lucide-react';
+import { LocalizedValue, createLocalizedValue } from '@/components/admin/LocalizedInput';
 
 interface GalleryCategory {
   value: string;
-  label: string;
+  label: LocalizedValue | string;
 }
 
 interface AdvantageItem {
   icon: string;
-  title: string;
-  description: string;
+  title: LocalizedValue | string;
+  description: LocalizedValue | string;
 }
 
 interface WhatYouGetItem {
   icon: string;
-  title: string;
-  description: string;
+  title: LocalizedValue | string;
+  description: LocalizedValue | string;
 }
 
 interface HotelAdvantageItem {
   icon: string;
-  title: string;
-  description: string;
+  title: LocalizedValue | string;
+  description: LocalizedValue | string;
 }
 
 interface Settings {
@@ -49,11 +50,11 @@ interface Settings {
 }
 
 const DEFAULT_GALLERY_CATEGORIES: GalleryCategory[] = [
-  { value: 'works', label: 'Работы' },
-  { value: 'masterclasses', label: 'Мастер-классы' },
-  { value: 'events', label: 'Мероприятия' },
-  { value: 'interior', label: 'Интерьер' },
-  { value: 'hotel', label: 'Отель' },
+  { value: 'works', label: createLocalizedValue('Работы') },
+  { value: 'masterclasses', label: createLocalizedValue('Мастер-классы') },
+  { value: 'events', label: createLocalizedValue('Мероприятия') },
+  { value: 'interior', label: createLocalizedValue('Интерьер') },
+  { value: 'hotel', label: createLocalizedValue('Отель') },
 ];
 
 const ICON_OPTIONS = [
@@ -79,18 +80,77 @@ const ICON_OPTIONS = [
   { value: 'sun', label: '☀️ Солнце' },
 ];
 
+const LANGUAGES = [
+  { code: 'ru', label: 'RU', flag: '🇷🇺' },
+  { code: 'kg', label: 'KG', flag: '🇰🇬' },
+  { code: 'en', label: 'EN', flag: '🇬🇧' },
+] as const;
+
+type LangCode = 'ru' | 'kg' | 'en';
+
+// Helper functions
+function getDisplayValue(val: LocalizedValue | string | undefined): string {
+  if (!val) return '';
+  if (typeof val === 'string') return val;
+  return val.ru || '';
+}
+
+function normalizeToLocalized(val: LocalizedValue | string | undefined): LocalizedValue {
+  if (!val) return createLocalizedValue();
+  if (typeof val === 'string') return createLocalizedValue(val);
+  return val;
+}
+
+function getLocalizedFieldValue(val: LocalizedValue | string | undefined, lang: LangCode): string {
+  if (!val) return '';
+  if (typeof val === 'string') return lang === 'ru' ? val : '';
+  return val[lang] || '';
+}
+
+function setLocalizedFieldValue(val: LocalizedValue | string | undefined, lang: LangCode, newValue: string): LocalizedValue {
+  const normalized = normalizeToLocalized(val);
+  return { ...normalized, [lang]: newValue };
+}
+
+// Mini localized input component for inline use
+function MiniLocalizedInput({
+  value,
+  onChange,
+  placeholder,
+  activeLang,
+}: {
+  value: LocalizedValue | string;
+  onChange: (val: LocalizedValue) => void;
+  placeholder?: string;
+  activeLang: LangCode;
+}) {
+  const normalized = normalizeToLocalized(value);
+  const currentValue = normalized[activeLang] || '';
+  const ruValue = normalized.ru || '';
+
+  return (
+    <input
+      type="text"
+      value={currentValue}
+      onChange={(e) => onChange(setLocalizedFieldValue(value, activeLang, e.target.value))}
+      placeholder={activeLang !== 'ru' && ruValue ? `${ruValue}` : placeholder}
+      className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+    />
+  );
+}
+
 export default function SettingsAdmin() {
   const [settings, setSettings] = useState<Settings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [activeTab, setActiveTab] = useState<'general' | 'gallery' | 'content'>('general');
+  const [activeLang, setActiveLang] = useState<LangCode>('ru');
 
   const loadSettings = async () => {
     try {
       const res = await fetch('/api/admin/data/settings');
       const data = await res.json();
-      // Initialize with defaults if not set
       setSettings({
         siteName: data.siteName || '',
         phone: data.phone || '',
@@ -114,7 +174,6 @@ export default function SettingsAdmin() {
       });
     } catch (error) {
       console.error('Error loading:', error);
-      // Set defaults on error
       setSettings({
         siteName: '',
         phone: '',
@@ -152,7 +211,7 @@ export default function SettingsAdmin() {
       ...settings,
       galleryCategories: [
         ...(settings.galleryCategories || []),
-        { value: `category_${Date.now()}`, label: 'Новая категория' },
+        { value: `category_${Date.now()}`, label: createLocalizedValue('Новая категория') },
       ],
     });
   };
@@ -164,10 +223,17 @@ export default function SettingsAdmin() {
     setSettings({ ...settings, galleryCategories: updated });
   };
 
-  const updateCategory = (index: number, field: 'value' | 'label', value: string) => {
+  const updateCategoryValue = (index: number, value: string) => {
     if (!settings?.galleryCategories) return;
     const updated = [...settings.galleryCategories];
-    updated[index] = { ...updated[index], [field]: value };
+    updated[index] = { ...updated[index], value };
+    setSettings({ ...settings, galleryCategories: updated });
+  };
+
+  const updateCategoryLabel = (index: number, label: LocalizedValue) => {
+    if (!settings?.galleryCategories) return;
+    const updated = [...settings.galleryCategories];
+    updated[index] = { ...updated[index], label };
     setSettings({ ...settings, galleryCategories: updated });
   };
 
@@ -178,7 +244,7 @@ export default function SettingsAdmin() {
       ...settings,
       advantages: [
         ...(settings.advantages || []),
-        { icon: 'star', title: '', description: '' },
+        { icon: 'star', title: createLocalizedValue(), description: createLocalizedValue() },
       ],
     });
   };
@@ -190,10 +256,24 @@ export default function SettingsAdmin() {
     setSettings({ ...settings, advantages: updated });
   };
 
-  const updateAdvantage = (index: number, field: keyof AdvantageItem, value: string) => {
+  const updateAdvantageIcon = (index: number, icon: string) => {
     if (!settings?.advantages) return;
     const updated = [...settings.advantages];
-    updated[index] = { ...updated[index], [field]: value };
+    updated[index] = { ...updated[index], icon };
+    setSettings({ ...settings, advantages: updated });
+  };
+
+  const updateAdvantageTitle = (index: number, title: LocalizedValue) => {
+    if (!settings?.advantages) return;
+    const updated = [...settings.advantages];
+    updated[index] = { ...updated[index], title };
+    setSettings({ ...settings, advantages: updated });
+  };
+
+  const updateAdvantageDesc = (index: number, description: LocalizedValue) => {
+    if (!settings?.advantages) return;
+    const updated = [...settings.advantages];
+    updated[index] = { ...updated[index], description };
     setSettings({ ...settings, advantages: updated });
   };
 
@@ -204,7 +284,7 @@ export default function SettingsAdmin() {
       ...settings,
       whatYouGet: [
         ...(settings.whatYouGet || []),
-        { icon: 'star', title: '', description: '' },
+        { icon: 'star', title: createLocalizedValue(), description: createLocalizedValue() },
       ],
     });
   };
@@ -216,10 +296,24 @@ export default function SettingsAdmin() {
     setSettings({ ...settings, whatYouGet: updated });
   };
 
-  const updateWhatYouGet = (index: number, field: keyof WhatYouGetItem, value: string) => {
+  const updateWhatYouGetIcon = (index: number, icon: string) => {
     if (!settings?.whatYouGet) return;
     const updated = [...settings.whatYouGet];
-    updated[index] = { ...updated[index], [field]: value };
+    updated[index] = { ...updated[index], icon };
+    setSettings({ ...settings, whatYouGet: updated });
+  };
+
+  const updateWhatYouGetTitle = (index: number, title: LocalizedValue) => {
+    if (!settings?.whatYouGet) return;
+    const updated = [...settings.whatYouGet];
+    updated[index] = { ...updated[index], title };
+    setSettings({ ...settings, whatYouGet: updated });
+  };
+
+  const updateWhatYouGetDesc = (index: number, description: LocalizedValue) => {
+    if (!settings?.whatYouGet) return;
+    const updated = [...settings.whatYouGet];
+    updated[index] = { ...updated[index], description };
     setSettings({ ...settings, whatYouGet: updated });
   };
 
@@ -230,7 +324,7 @@ export default function SettingsAdmin() {
       ...settings,
       hotelAdvantages: [
         ...(settings.hotelAdvantages || []),
-        { icon: 'bed', title: '', description: '' },
+        { icon: 'bed', title: createLocalizedValue(), description: createLocalizedValue() },
       ],
     });
   };
@@ -242,10 +336,24 @@ export default function SettingsAdmin() {
     setSettings({ ...settings, hotelAdvantages: updated });
   };
 
-  const updateHotelAdvantage = (index: number, field: keyof HotelAdvantageItem, value: string) => {
+  const updateHotelAdvantageIcon = (index: number, icon: string) => {
     if (!settings?.hotelAdvantages) return;
     const updated = [...settings.hotelAdvantages];
-    updated[index] = { ...updated[index], [field]: value };
+    updated[index] = { ...updated[index], icon };
+    setSettings({ ...settings, hotelAdvantages: updated });
+  };
+
+  const updateHotelAdvantageTitle = (index: number, title: LocalizedValue) => {
+    if (!settings?.hotelAdvantages) return;
+    const updated = [...settings.hotelAdvantages];
+    updated[index] = { ...updated[index], title };
+    setSettings({ ...settings, hotelAdvantages: updated });
+  };
+
+  const updateHotelAdvantageDesc = (index: number, description: LocalizedValue) => {
+    if (!settings?.hotelAdvantages) return;
+    const updated = [...settings.hotelAdvantages];
+    updated[index] = { ...updated[index], description };
     setSettings({ ...settings, hotelAdvantages: updated });
   };
 
@@ -290,7 +398,7 @@ export default function SettingsAdmin() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-8">
+      <div className="flex gap-2 mb-8 flex-wrap">
         <button
           onClick={() => setActiveTab('general')}
           className={`px-4 py-2 rounded-lg transition-colors ${
@@ -315,6 +423,26 @@ export default function SettingsAdmin() {
         >
           Контент страниц
         </button>
+
+        {/* Language switcher for gallery and content tabs */}
+        {(activeTab === 'gallery' || activeTab === 'content') && (
+          <div className="flex gap-1 ml-auto">
+            {LANGUAGES.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => setActiveLang(lang.code)}
+                className={`px-3 py-2 rounded-lg flex items-center gap-1 transition-colors ${
+                  activeLang === lang.code
+                    ? 'bg-amber-600 text-white'
+                    : 'bg-neutral-700 text-neutral-300 hover:bg-neutral-600'
+                }`}
+              >
+                <span>{lang.flag}</span>
+                <span>{lang.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {activeTab === 'general' && (
@@ -535,6 +663,9 @@ export default function SettingsAdmin() {
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
               <span>🖼️</span> Категории галереи
+              <span className="text-sm font-normal text-neutral-400 ml-2">
+                ({LANGUAGES.find(l => l.code === activeLang)?.flag} {LANGUAGES.find(l => l.code === activeLang)?.label})
+              </span>
             </h2>
             <button
               onClick={addCategory}
@@ -550,17 +681,18 @@ export default function SettingsAdmin() {
                 <input
                   type="text"
                   value={cat.value}
-                  onChange={(e) => updateCategory(index, 'value', e.target.value)}
-                  className="flex-1 px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                  onChange={(e) => updateCategoryValue(index, e.target.value)}
+                  className="w-40 px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
                   placeholder="Ключ (eng)"
                 />
-                <input
-                  type="text"
-                  value={cat.label}
-                  onChange={(e) => updateCategory(index, 'label', e.target.value)}
-                  className="flex-1 px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
-                  placeholder="Название"
-                />
+                <div className="flex-1">
+                  <MiniLocalizedInput
+                    value={cat.label}
+                    onChange={(label) => updateCategoryLabel(index, label)}
+                    placeholder="Название категории"
+                    activeLang={activeLang}
+                  />
+                </div>
                 <button
                   onClick={() => removeCategory(index)}
                   className="p-3 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors"
@@ -580,6 +712,10 @@ export default function SettingsAdmin() {
       {/* Content Tab */}
       {activeTab === 'content' && (
         <div className="space-y-8">
+          <div className="text-neutral-400 text-sm mb-4">
+            Редактирование: {LANGUAGES.find(l => l.code === activeLang)?.flag} {LANGUAGES.find(l => l.code === activeLang)?.label}
+          </div>
+
           {/* Advantages */}
           <div className="bg-neutral-800 rounded-xl p-6">
             <div className="flex items-center justify-between mb-6">
@@ -600,7 +736,7 @@ export default function SettingsAdmin() {
                   <div className="flex gap-3 items-start">
                     <select
                       value={item.icon}
-                      onChange={(e) => updateAdvantage(index, 'icon', e.target.value)}
+                      onChange={(e) => updateAdvantageIcon(index, e.target.value)}
                       className="px-3 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
                     >
                       {ICON_OPTIONS.map((opt) => (
@@ -608,19 +744,17 @@ export default function SettingsAdmin() {
                       ))}
                     </select>
                     <div className="flex-1 space-y-2">
-                      <input
-                        type="text"
+                      <MiniLocalizedInput
                         value={item.title}
-                        onChange={(e) => updateAdvantage(index, 'title', e.target.value)}
-                        className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                        onChange={(title) => updateAdvantageTitle(index, title)}
                         placeholder="Заголовок"
+                        activeLang={activeLang}
                       />
-                      <input
-                        type="text"
+                      <MiniLocalizedInput
                         value={item.description}
-                        onChange={(e) => updateAdvantage(index, 'description', e.target.value)}
-                        className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                        onChange={(desc) => updateAdvantageDesc(index, desc)}
                         placeholder="Описание"
+                        activeLang={activeLang}
                       />
                     </div>
                     <button
@@ -660,7 +794,7 @@ export default function SettingsAdmin() {
                   <div className="flex gap-3 items-start">
                     <select
                       value={item.icon}
-                      onChange={(e) => updateWhatYouGet(index, 'icon', e.target.value)}
+                      onChange={(e) => updateWhatYouGetIcon(index, e.target.value)}
                       className="px-3 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
                     >
                       {ICON_OPTIONS.map((opt) => (
@@ -668,19 +802,17 @@ export default function SettingsAdmin() {
                       ))}
                     </select>
                     <div className="flex-1 space-y-2">
-                      <input
-                        type="text"
+                      <MiniLocalizedInput
                         value={item.title}
-                        onChange={(e) => updateWhatYouGet(index, 'title', e.target.value)}
-                        className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                        onChange={(title) => updateWhatYouGetTitle(index, title)}
                         placeholder="Заголовок"
+                        activeLang={activeLang}
                       />
-                      <input
-                        type="text"
+                      <MiniLocalizedInput
                         value={item.description}
-                        onChange={(e) => updateWhatYouGet(index, 'description', e.target.value)}
-                        className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                        onChange={(desc) => updateWhatYouGetDesc(index, desc)}
                         placeholder="Описание"
+                        activeLang={activeLang}
                       />
                     </div>
                     <button
@@ -720,7 +852,7 @@ export default function SettingsAdmin() {
                   <div className="flex gap-3 items-start">
                     <select
                       value={item.icon}
-                      onChange={(e) => updateHotelAdvantage(index, 'icon', e.target.value)}
+                      onChange={(e) => updateHotelAdvantageIcon(index, e.target.value)}
                       className="px-3 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
                     >
                       {ICON_OPTIONS.map((opt) => (
@@ -728,19 +860,17 @@ export default function SettingsAdmin() {
                       ))}
                     </select>
                     <div className="flex-1 space-y-2">
-                      <input
-                        type="text"
+                      <MiniLocalizedInput
                         value={item.title}
-                        onChange={(e) => updateHotelAdvantage(index, 'title', e.target.value)}
-                        className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                        onChange={(title) => updateHotelAdvantageTitle(index, title)}
                         placeholder="Заголовок (напр. Уютные номера)"
+                        activeLang={activeLang}
                       />
-                      <input
-                        type="text"
+                      <MiniLocalizedInput
                         value={item.description}
-                        onChange={(e) => updateHotelAdvantage(index, 'description', e.target.value)}
-                        className="w-full px-4 py-2 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
+                        onChange={(desc) => updateHotelAdvantageDesc(index, desc)}
                         placeholder="Описание"
+                        activeLang={activeLang}
                       />
                     </div>
                     <button
