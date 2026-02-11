@@ -10,7 +10,20 @@
     "discuss": "Обсудить детали",
     "call": "Позвонить",
     "writeUs": "Написать нам",
-    "from": "от"
+    "from": "от",
+    "aboutUs": "О нас",
+    "ourAdvantages": "Наши преимущества",
+    "whatYouGet": "Что вы получите?",
+    "reviews": "Отзывы",
+    "ourHistory": "Наша история",
+    "chooseDirection": "Выберите направление",
+    "galleryOfWorks": "Галерея работ",
+    "viewFullGallery": "Смотреть всю галерею",
+    "afisha": "Афиша",
+    "bookInWhatsApp": "Забронировать в WhatsApp",
+    "chooseContactMethod": "Выберите удобный способ связи:",
+    "noReviewsYet": "Отзывы скоро появятся",
+    "galleryEmpty": "Галерея пока пуста"
   },
   "zones": {
     "creativity": "Творческая Арт-студия",
@@ -39,7 +52,24 @@
     "eventsDesc": "Незабываемые корпоративы, дни рождения и девичники в творческой атмосфере",
     "eventsSubtitle": "Идеально для командных мероприятий и праздников",
     "faq": "Частые вопросы",
-    "faqSubtitle": "Ответы на популярные вопросы о наших мастер-классах"
+    "faqSubtitle": "Ответы на популярные вопросы о наших мастер-классах",
+    "whereCeramicsBorn": "Место, где рождается керамика",
+    "since2024": "С 2024 года",
+    "whyUs": "Почему мы",
+    "included": "Включено",
+    "team": "Команда",
+    "ourMasters": "Наши мастера",
+    "mastersSubtitle": "Профессионалы, которые передадут вам секреты гончарного мастерства",
+    "allMasters": "Все мастера",
+    "portfolio": "Портфолио",
+    "gallerySubtitle": "Работы наших учеников и мастеров",
+    "allServices": "Все услуги",
+    "kindWords": "Добрые слова",
+    "haveQuestions": "Остались вопросы?",
+    "learnHistory": "Узнать историю Skeramos",
+    "readyToCreate": "Готовы создать свой шедевр?",
+    "signUpAndDiscover": "Запишитесь на мастер-класс и откройте для себя мир керамики",
+    "signUpWhatsApp": "Записаться в WhatsApp"
   },
   "hotel": {
     "title": "Бутик-отель",
@@ -57,7 +87,11 @@
     "cinemaFeatures": "Проектор 4K, звук Dolby, мягкие кресла, мини-бар",
     "cinemaCapacity": "До 8 человек",
     "faq": "Частые вопросы",
-    "faqSubtitle": "Ответы на вопросы о проживании"
+    "faqSubtitle": "Ответы на вопросы о проживании",
+    "allPackages": "Все пакеты",
+    "kindWords": "Добрые слова",
+    "readyToRest": "Готовы к отдыху?",
+    "bookAndEnjoy": "Забронируйте номер и насладитесь уютом нашего отеля"
   },
   "header": {
     "masterclasses": "Мастер-классы",
@@ -68,7 +102,9 @@
     "gallery": "Галерея",
     "masters": "Мастера",
     "history": "История",
-    "contacts": "Контакты"
+    "contacts": "Контакты",
+    "afisha": "Афиша",
+    "aboutUs": "О нас"
   },
   "onboarding": {
     "switchHint": "Переключитесь, чтобы увидеть {zone}"

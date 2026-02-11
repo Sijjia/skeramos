@@ -10,7 +10,20 @@
     "discuss": "Discuss details",
     "call": "Call",
     "writeUs": "Write us",
-    "from": "from"
+    "from": "from",
+    "aboutUs": "About us",
+    "ourAdvantages": "Our advantages",
+    "whatYouGet": "What you get?",
+    "reviews": "Reviews",
+    "ourHistory": "Our history",
+    "chooseDirection": "Choose direction",
+    "galleryOfWorks": "Gallery of works",
+    "viewFullGallery": "View full gallery",
+    "afisha": "Events",
+    "bookInWhatsApp": "Book in WhatsApp",
+    "chooseContactMethod": "Choose a convenient way to contact:",
+    "noReviewsYet": "Reviews coming soon",
+    "galleryEmpty": "Gallery is empty"
   },
   "zones": {
     "creativity": "Creative Art Studio",
@@ -39,7 +52,24 @@
     "eventsDesc": "Unforgettable corporate events, birthdays and bachelorette parties in a creative atmosphere",
     "eventsSubtitle": "Perfect for team events and celebrations",
     "faq": "FAQ",
-    "faqSubtitle": "Answers to popular questions about our masterclasses"
+    "faqSubtitle": "Answers to popular questions about our masterclasses",
+    "whereCeramicsBorn": "Where ceramics is born",
+    "since2024": "Since 2024",
+    "whyUs": "Why us",
+    "included": "Included",
+    "team": "Team",
+    "ourMasters": "Our masters",
+    "mastersSubtitle": "Professionals who will teach you the secrets of pottery",
+    "allMasters": "All masters",
+    "portfolio": "Portfolio",
+    "gallerySubtitle": "Works by our students and masters",
+    "allServices": "All services",
+    "kindWords": "Kind words",
+    "haveQuestions": "Have questions?",
+    "learnHistory": "Learn Skeramos history",
+    "readyToCreate": "Ready to create your masterpiece?",
+    "signUpAndDiscover": "Sign up for a masterclass and discover the world of ceramics",
+    "signUpWhatsApp": "Sign up via WhatsApp"
   },
   "hotel": {
     "title": "Boutique Hotel",
@@ -57,7 +87,11 @@
     "cinemaFeatures": "4K projector, Dolby sound, soft seats, mini-bar",
     "cinemaCapacity": "Up to 8 people",
     "faq": "FAQ",
-    "faqSubtitle": "Answers to questions about accommodation"
+    "faqSubtitle": "Answers to questions about accommodation",
+    "allPackages": "All packages",
+    "kindWords": "Kind words",
+    "readyToRest": "Ready to relax?",
+    "bookAndEnjoy": "Book a room and enjoy the comfort of our hotel"
   },
   "header": {
     "masterclasses": "Masterclasses",
@@ -68,7 +102,9 @@
     "gallery": "Gallery",
     "masters": "Masters",
     "history": "History",
-    "contacts": "Contacts"
+    "contacts": "Contacts",
+    "afisha": "Events",
+    "aboutUs": "About us"
   },
   "onboarding": {
     "switchHint": "Switch to see {zone}"

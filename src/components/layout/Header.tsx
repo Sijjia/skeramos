@@ -15,6 +15,7 @@ export function Header() {
   const locale = useLocale();
   const pathname = usePathname();
   const t = useTranslations('header');
+  const tCommon = useTranslations('common');
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -80,19 +81,19 @@ export function Header() {
           <nav className="hidden lg:flex items-center gap-6">
             {zone === 'creativity' ? (
               <>
-                <NavLink href={`/${locale}/creativity`} light={isLightHeader}>Главная</NavLink>
-                <NavLink href={`/${locale}/creativity#about`} light={isLightHeader}>О нас</NavLink>
-                <NavLink href={`/${locale}/services`} light={isLightHeader}>{t('services') || 'Услуги'}</NavLink>
-                <NavLink href={`/${locale}/masters`} light={isLightHeader}>{t('masters') || 'Мастера'}</NavLink>
-                <NavLink href={`/${locale}/afisha`} light={isLightHeader}>Афиша</NavLink>
-                <NavLink href={`/${locale}/gallery`} light={isLightHeader}>{t('gallery') || 'Галерея'}</NavLink>
-                <NavLink href={`/${locale}/history`} light={isLightHeader}>История</NavLink>
+                <NavLink href={`/${locale}/creativity`} light={isLightHeader}>{tCommon('home')}</NavLink>
+                <NavLink href={`/${locale}/creativity#about`} light={isLightHeader}>{t('aboutUs')}</NavLink>
+                <NavLink href={`/${locale}/services`} light={isLightHeader}>{t('services')}</NavLink>
+                <NavLink href={`/${locale}/masters`} light={isLightHeader}>{t('masters')}</NavLink>
+                <NavLink href={`/${locale}/afisha`} light={isLightHeader}>{t('afisha')}</NavLink>
+                <NavLink href={`/${locale}/gallery`} light={isLightHeader}>{t('gallery')}</NavLink>
+                <NavLink href={`/${locale}/history`} light={isLightHeader}>{t('history')}</NavLink>
               </>
             ) : (
               <>
-                <NavLink href={`/${locale}/hotel`} light={isLightHeader}>Главная</NavLink>
-                <NavLink href={`/${locale}/hotel/packages`} light={isLightHeader}>{t('packages') || 'Пакеты'}</NavLink>
-                <NavLink href={`/${locale}/gallery`} light={isLightHeader}>{t('gallery') || 'Галерея'}</NavLink>
+                <NavLink href={`/${locale}/hotel`} light={isLightHeader}>{tCommon('home')}</NavLink>
+                <NavLink href={`/${locale}/hotel/packages`} light={isLightHeader}>{t('packages')}</NavLink>
+                <NavLink href={`/${locale}/gallery`} light={isLightHeader}>{t('gallery')}</NavLink>
               </>
             )}
             <NavLink href={`/${locale}/contacts`} light={isLightHeader}>{t('contacts')}</NavLink>
@@ -146,43 +147,43 @@ export function Header() {
                     href={`/${locale}/creativity`}
                     onClick={() => setMenuOpen(false)}
                   >
-                    Главная
+                    {tCommon('home')}
                   </MobileNavLink>
                   <MobileNavLink
                     href={`/${locale}/creativity#about`}
                     onClick={() => setMenuOpen(false)}
                   >
-                    О нас
+                    {t('aboutUs')}
                   </MobileNavLink>
                   <MobileNavLink
                     href={`/${locale}/services`}
                     onClick={() => setMenuOpen(false)}
                   >
-                    {t('services') || 'Услуги'}
+                    {t('services')}
                   </MobileNavLink>
                   <MobileNavLink
                     href={`/${locale}/masters`}
                     onClick={() => setMenuOpen(false)}
                   >
-                    {t('masters') || 'Мастера'}
+                    {t('masters')}
                   </MobileNavLink>
                   <MobileNavLink
                     href={`/${locale}/afisha`}
                     onClick={() => setMenuOpen(false)}
                   >
-                    Афиша
+                    {t('afisha')}
                   </MobileNavLink>
                   <MobileNavLink
                     href={`/${locale}/gallery`}
                     onClick={() => setMenuOpen(false)}
                   >
-                    {t('gallery') || 'Галерея'}
+                    {t('gallery')}
                   </MobileNavLink>
                   <MobileNavLink
                     href={`/${locale}/history`}
                     onClick={() => setMenuOpen(false)}
                   >
-                    История
+                    {t('history')}
                   </MobileNavLink>
                 </>
               ) : (
@@ -191,19 +192,19 @@ export function Header() {
                     href={`/${locale}/hotel`}
                     onClick={() => setMenuOpen(false)}
                   >
-                    Главная
+                    {tCommon('home')}
                   </MobileNavLink>
                   <MobileNavLink
                     href={`/${locale}/hotel/packages`}
                     onClick={() => setMenuOpen(false)}
                   >
-                    {t('packages') || 'Пакеты'}
+                    {t('packages')}
                   </MobileNavLink>
                   <MobileNavLink
                     href={`/${locale}/gallery`}
                     onClick={() => setMenuOpen(false)}
                   >
-                    {t('gallery') || 'Галерея'}
+                    {t('gallery')}
                   </MobileNavLink>
                 </>
               )}

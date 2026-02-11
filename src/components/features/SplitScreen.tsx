@@ -187,7 +187,7 @@ export function SplitScreen() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
       >
-        <p className="text-white/60 text-sm">Выберите направление</p>
+        <p className="text-white/60 text-sm">{tCommon('chooseDirection')}</p>
       </motion.div>
     </div>
   );
