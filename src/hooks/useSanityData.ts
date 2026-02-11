@@ -254,6 +254,7 @@ export interface ReviewUI {
   rating: number;
   zone: 'creativity' | 'hotel';
   source: 'google' | '2gis' | 'instagram' | 'direct';
+  sourceUrl?: string;
   date?: string;
   active?: boolean;
 }

@@ -23,16 +23,16 @@ export function Footer() {
               Skeramos
             </Link>
             <p className="mt-2 text-sm text-neutral-600">
-              Креативный дом
+              Арт-комплекс «Скерамос»
             </p>
 
             {/* Phone with icon */}
             <a
-              href="tel:+996555123456"
+              href="tel:+996505732888"
               className="mt-4 inline-flex items-center gap-2 text-neutral-700 hover:text-zone-700 transition-colors"
             >
               <Phone className="w-4 h-4" />
-              <span className="font-medium">+996 555 123 456</span>
+              <span className="font-medium">+996 505 732 888</span>
             </a>
           </div>
 

@@ -327,7 +327,7 @@ export default function HistoryPage() {
         <section className="py-16 md:py-24 etno-tunduk">
           <div className="container mx-auto px-4">
             <FadeInOnScroll className="max-w-2xl mx-auto text-center">
-              <span className="text-5xl mb-6 block">2025+</span>
+              <span className="text-5xl mb-6 block">2026+</span>
               <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mb-6">
                 Что дальше?
               </h2>
