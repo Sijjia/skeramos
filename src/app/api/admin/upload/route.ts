@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import crypto from 'crypto';
-import { put } from '@vercel/blob';
+import { writeFile, mkdir } from 'fs/promises';
+import path from 'path';
 
-// Увеличиваем лимит тела запроса до 10 МБ
 export const runtime = 'nodejs';
 
 const SESSION_SECRET = process.env.SESSION_SECRET || 'default-secret';
@@ -35,18 +35,11 @@ async function isAuthenticated(): Promise<boolean> {
 
 // Допустимые типы изображений
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
-const MAX_SIZE = 4 * 1024 * 1024; // 4MB (Vercel serverless limit)
+const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 export async function POST(request: NextRequest) {
   if (!(await isAuthenticated())) {
     return NextResponse.json({ error: 'Не авторизован' }, { status: 401 });
-  }
-
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    return NextResponse.json(
-      { error: 'BLOB_READ_WRITE_TOKEN не настроен. Добавьте Vercel Blob Storage в проект.' },
-      { status: 500 }
-    );
   }
 
   try {
@@ -66,7 +59,7 @@ export async function POST(request: NextRequest) {
 
     if (file.size > MAX_SIZE) {
       return NextResponse.json(
-        { error: `Файл слишком большой (${(file.size / 1024 / 1024).toFixed(1)} МБ). Максимум: 4 МБ` },
+        { error: `Файл слишком большой (${(file.size / 1024 / 1024).toFixed(1)} МБ). Максимум: 10 МБ` },
         { status: 400 }
       );
     }
@@ -75,21 +68,28 @@ export async function POST(request: NextRequest) {
     const ext = file.name.split('.').pop() || 'jpg';
     const timestamp = Date.now();
     const randomId = crypto.randomBytes(4).toString('hex');
-    const filename = `uploads/${timestamp}-${randomId}.${ext}`;
+    const filename = `${timestamp}-${randomId}.${ext}`;
 
-    // Конвертируем File в Buffer для надёжной передачи в Vercel Blob
+    // Путь к папке uploads в public
+    const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+
+    // Создаём папку если не существует
+    await mkdir(uploadsDir, { recursive: true });
+
+    // Конвертируем File в Buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Загружаем в Vercel Blob
-    const blob = await put(filename, buffer, {
-      access: 'public',
-      contentType: file.type,
-    });
+    // Сохраняем файл
+    const filePath = path.join(uploadsDir, filename);
+    await writeFile(filePath, buffer);
+
+    // Возвращаем публичный URL
+    const publicUrl = `/uploads/${filename}`;
 
     return NextResponse.json({
       success: true,
-      url: blob.url,
+      url: publicUrl,
     });
   } catch (error) {
     console.error('Upload error:', error);

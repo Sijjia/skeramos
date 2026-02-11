@@ -28,6 +28,7 @@ const MENU_ITEMS = [
   { href: '/admin/gallery', label: 'Галерея', icon: '🖼️' },
   { href: '/admin/reviews', label: 'Отзывы', icon: '⭐' },
   { href: '/admin/history', label: 'История', icon: '📜' },
+  { href: '/admin/translations', label: 'Переводы', icon: '🌐' },
   { href: '/admin/settings', label: 'Настройки', icon: '⚙️' },
 ];
 
