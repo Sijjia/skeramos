@@ -354,7 +354,7 @@ export default function CreativityPage() {
                 className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto"
               >
                 {[
-                  { value: 3, suffix: '', label: 'года опыта' },
+                  { value: 2, suffix: '', label: 'года опыта' },
                   { value: 1000, suffix: '+', label: 'учеников' },
                   { value: 500, suffix: '+', label: 'мастер-классов' },
                 ].map((stat) => (
@@ -419,7 +419,7 @@ export default function CreativityPage() {
                   transition={{ delay: 0.4 }}
                   className="absolute -bottom-6 -right-6 glass-card p-6 max-w-xs"
                 >
-                  <div className="text-4xl font-display font-bold text-zone-400 mb-2">С 2019</div>
+                  <div className="text-4xl font-display font-bold text-zone-400 mb-2">С 2024</div>
                   <p className="card-muted text-sm">
                     Создаём пространство для творчества и вдохновения
                   </p>
@@ -442,7 +442,7 @@ export default function CreativityPage() {
                 <div className="space-y-4 text-neutral-600">
                   <p>
                     <strong className="text-neutral-800">Skeramos</strong> — это не просто мастерская,
-                    это пространство, где каждый может прикоснуться к древнему искусству гончарства
+                    это пространство, где каждый может прикоснуться к древнему искусству керамики
                     и создать что-то уникальное своими руками.
                   </p>
                   <p>
@@ -451,7 +451,7 @@ export default function CreativityPage() {
                   </p>
                   <p>
                     Сегодня мы — одна из ведущих гончарных мастерских Бишкека, где прошли обучение
-                    более 2000 человек, от детей до профессиональных художников.
+                    более 1000 человек.
                   </p>
                 </div>
 
@@ -462,7 +462,7 @@ export default function CreativityPage() {
                     </div>
                     <div>
                       <div className="text-neutral-800 font-medium">Индивидуальный подход</div>
-                      <div className="text-sm text-neutral-500">К каждому ученику</div>
+                      <div className="text-sm text-neutral-500">К каждому гостю</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -946,7 +946,7 @@ export default function CreativityPage() {
               className="max-w-3xl mx-auto text-center"
             >
               <span className="text-zone-400 text-sm font-medium tracking-wider uppercase">
-                С 2019 года
+                С 2024 года
               </span>
               <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mt-4 mb-6">
                 Наша история
