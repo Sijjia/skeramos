@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 import { useToast, ToastContainer } from '@/components/admin/Toast';
+import { LocalizedInput, LocalizedValue, createLocalizedValue } from '@/components/admin/LocalizedInput';
 
 interface Masterclass {
   id: string;
-  title: string;
-  description: string;
+  title: LocalizedValue | string;
+  description: LocalizedValue | string;
   image: string;
   price: number;
   duration: string;
@@ -18,8 +19,8 @@ interface Masterclass {
 }
 
 const EMPTY_ITEM: Omit<Masterclass, 'id'> = {
-  title: '',
-  description: '',
+  title: createLocalizedValue(),
+  description: createLocalizedValue(),
   image: '',
   price: 0,
   duration: '',
@@ -28,6 +29,33 @@ const EMPTY_ITEM: Omit<Masterclass, 'id'> = {
   tags: [],
   externalLink: '',
 };
+
+// Helper to get display title (RU version)
+function getDisplayTitle(title: LocalizedValue | string): string {
+  if (typeof title === 'string') return title;
+  return title?.ru || '';
+}
+
+// Helper to get display description (RU version)
+function getDisplayDescription(desc: LocalizedValue | string): string {
+  if (typeof desc === 'string') return desc;
+  return desc?.ru || '';
+}
+
+// Helper to normalize value for editing
+function normalizeForEdit(item: Masterclass): Masterclass {
+  return {
+    ...item,
+    title: typeof item.title === 'string'
+      ? createLocalizedValue(item.title)
+      : item.title || createLocalizedValue(),
+    description: typeof item.description === 'string'
+      ? createLocalizedValue(item.description)
+      : item.description || createLocalizedValue(),
+    tags: item.tags || [],
+    externalLink: item.externalLink || '',
+  };
+}
 
 export default function MasterclassesAdmin() {
   const [items, setItems] = useState<Masterclass[]>([]);
@@ -60,12 +88,7 @@ export default function MasterclassesAdmin() {
   };
 
   const handleEdit = (item: Masterclass) => {
-    // Ensure arrays are initialized for old items
-    setEditingItem({
-      ...item,
-      tags: item.tags || [],
-      externalLink: item.externalLink || '',
-    });
+    setEditingItem(normalizeForEdit(item));
     setIsNew(false);
   };
 
@@ -142,6 +165,21 @@ export default function MasterclassesAdmin() {
     });
   };
 
+  // Check translation status
+  const getTranslationStatus = (item: Masterclass) => {
+    const title = item.title;
+    const desc = item.description;
+
+    if (typeof title === 'string' || typeof desc === 'string') {
+      return { hasKg: false, hasEn: false };
+    }
+
+    return {
+      hasKg: !!(title?.kg && desc?.kg),
+      hasEn: !!(title?.en && desc?.en),
+    };
+  };
+
   if (loading) {
     return <div className="text-white text-center py-8">Загрузка...</div>;
   }
@@ -166,61 +204,74 @@ export default function MasterclassesAdmin() {
             <tr>
               <th className="text-left p-4 text-neutral-300 font-medium">Название</th>
               <th className="text-left p-4 text-neutral-300 font-medium">Цена</th>
-              <th className="text-left p-4 text-neutral-300 font-medium">Длительность</th>
+              <th className="text-center p-4 text-neutral-300 font-medium">Переводы</th>
               <th className="text-center p-4 text-neutral-300 font-medium">Статус</th>
               <th className="text-right p-4 text-neutral-300 font-medium">Действия</th>
             </tr>
           </thead>
           <tbody>
-            {items.map((item) => (
-              <tr key={item.id} className="border-t border-neutral-700 hover:bg-neutral-750">
-                <td className="p-4">
-                  <div className="flex items-center gap-3">
-                    {item.image && (
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="w-12 h-12 rounded-lg object-cover"
-                      />
-                    )}
-                    <div>
-                      <div className="text-white font-medium">{item.title}</div>
-                      <div className="text-neutral-400 text-sm truncate max-w-xs">
-                        {item.description}
+            {items.map((item) => {
+              const status = getTranslationStatus(item);
+              return (
+                <tr key={item.id} className="border-t border-neutral-700 hover:bg-neutral-750">
+                  <td className="p-4">
+                    <div className="flex items-center gap-3">
+                      {item.image && (
+                        <img
+                          src={item.image}
+                          alt={getDisplayTitle(item.title)}
+                          className="w-12 h-12 rounded-lg object-cover"
+                        />
+                      )}
+                      <div>
+                        <div className="text-white font-medium">{getDisplayTitle(item.title)}</div>
+                        <div className="text-neutral-400 text-sm truncate max-w-xs">
+                          {getDisplayDescription(item.description)}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-                <td className="p-4 text-white">{item.price.toLocaleString()} сом</td>
-                <td className="p-4 text-neutral-300">{item.duration}</td>
-                <td className="p-4 text-center">
-                  <button
-                    onClick={() => handleToggleActive(item)}
-                    className={`px-3 py-1 rounded-full text-sm ${
-                      item.active
-                        ? 'bg-green-600/20 text-green-400'
-                        : 'bg-neutral-600/20 text-neutral-400'
-                    }`}
-                  >
-                    {item.active ? 'Активен' : 'Скрыт'}
-                  </button>
-                </td>
-                <td className="p-4 text-right">
-                  <button
-                    onClick={() => handleEdit(item)}
-                    className="px-3 py-1 text-blue-400 hover:text-blue-300 mr-2"
-                  >
-                    ✏️
-                  </button>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="px-3 py-1 text-red-400 hover:text-red-300"
-                  >
-                    🗑️
-                  </button>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td className="p-4 text-white">{item.price.toLocaleString()} сом</td>
+                  <td className="p-4 text-center">
+                    <div className="flex justify-center gap-1">
+                      <span className="text-xs px-2 py-0.5 rounded bg-green-600/30 text-green-400">🇷🇺</span>
+                      <span className={`text-xs px-2 py-0.5 rounded ${status.hasKg ? 'bg-green-600/30 text-green-400' : 'bg-neutral-600/30 text-neutral-500'}`}>
+                        🇰🇬{status.hasKg ? '✓' : ''}
+                      </span>
+                      <span className={`text-xs px-2 py-0.5 rounded ${status.hasEn ? 'bg-green-600/30 text-green-400' : 'bg-neutral-600/30 text-neutral-500'}`}>
+                        🇬🇧{status.hasEn ? '✓' : ''}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="p-4 text-center">
+                    <button
+                      onClick={() => handleToggleActive(item)}
+                      className={`px-3 py-1 rounded-full text-sm ${
+                        item.active
+                          ? 'bg-green-600/20 text-green-400'
+                          : 'bg-neutral-600/20 text-neutral-400'
+                      }`}
+                    >
+                      {item.active ? 'Активен' : 'Скрыт'}
+                    </button>
+                  </td>
+                  <td className="p-4 text-right">
+                    <button
+                      onClick={() => handleEdit(item)}
+                      className="px-3 py-1 text-blue-400 hover:text-blue-300 mr-2"
+                    >
+                      ✏️
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="px-3 py-1 text-red-400 hover:text-red-300"
+                    >
+                      🗑️
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
 
@@ -240,30 +291,23 @@ export default function MasterclassesAdmin() {
             </h2>
 
             <div className="space-y-4">
-              <div>
-                <label className="block text-neutral-300 mb-2">Название *</label>
-                <input
-                  type="text"
-                  value={editingItem.title}
-                  onChange={(e) =>
-                    setEditingItem({ ...editingItem, title: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500"
-                  placeholder="Знакомство с гончарным кругом"
-                />
-              </div>
+              <LocalizedInput
+                label="Название"
+                value={editingItem.title}
+                onChange={(value) => setEditingItem({ ...editingItem, title: value })}
+                placeholder="Знакомство с гончарным кругом"
+                required
+              />
 
-              <div>
-                <label className="block text-neutral-300 mb-2">Описание *</label>
-                <textarea
-                  value={editingItem.description}
-                  onChange={(e) =>
-                    setEditingItem({ ...editingItem, description: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-neutral-700 border border-neutral-600 rounded-lg text-white focus:outline-none focus:border-green-500 h-24 resize-none"
-                  placeholder="Базовый мастер-класс для начинающих..."
-                />
-              </div>
+              <LocalizedInput
+                label="Описание"
+                value={editingItem.description}
+                onChange={(value) => setEditingItem({ ...editingItem, description: value })}
+                type="textarea"
+                placeholder="Базовый мастер-класс для начинающих..."
+                required
+                rows={4}
+              />
 
               <ImageUpload
                 value={editingItem.image}
@@ -388,7 +432,7 @@ export default function MasterclassesAdmin() {
             <div className="flex gap-4 mt-6">
               <button
                 onClick={handleSave}
-                disabled={saving || !editingItem.title}
+                disabled={saving || !getDisplayTitle(editingItem.title)}
                 className="flex-1 py-3 bg-green-600 hover:bg-green-700 disabled:bg-neutral-600 text-white rounded-lg font-medium transition-colors"
               >
                 {saving ? 'Сохранение...' : 'Сохранить'}
