@@ -14,7 +14,9 @@ import {
 import { Footer } from '@/components/layout/Footer';
 import { OnboardingHint, StickyCTA, FAQAccordion } from '@/components/features';
 import { ContactModal } from '@/components/features/ContactModal';
+import { SocialButtons } from '@/components/features/SocialButtons';
 import { FloatingOrbs, EtnoPatternOverlay, SectionDivider, GlowingAccent, ScrollFrameAnimation } from '@/components/animations';
+import { AnimatedBorder } from '@/components/animations/AnimatedBorder';
 import { FadeInOnScroll, CountUp } from '@/components/animations/OptimizedAnimations';
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from '@/components/animations/ScrollAnimations';
 import { SThreadAnimation, SThreadDivider } from '@/components/animations/SThreadAnimation';
@@ -256,6 +258,7 @@ export default function CreativityPage() {
       />
 
       <StickyCTA />
+      <SocialButtons />
       <FloatingOrbs zone="creativity" count={2} />
       <EtnoPatternOverlay pattern="mixed" opacity={0.02} />
 
@@ -263,8 +266,20 @@ export default function CreativityPage() {
         {/* Hero Section */}
         <motion.section
           style={{ opacity: heroOpacity }}
-          className="relative min-h-screen flex items-center justify-center gradient-mesh noise-overlay"
+          className="relative min-h-screen flex items-center justify-center"
         >
+          {/* Background image with overlay */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/images/hero-pottery.jpg"
+              alt="Керамика"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-black/60" />
+          </div>
+
           {/* Background decorations - CSS only for performance */}
           <GlowingAccent position="top-left" zone="creativity" size={500} />
           <GlowingAccent position="bottom-right" zone="creativity" size={400} />
@@ -340,7 +355,7 @@ export default function CreativityPage() {
                 </a>
                 <a
                   href="#about"
-                  className="px-8 py-4 glass text-white rounded-2xl font-medium transition-all duration-300 hover:bg-white/15 hover:scale-105 hover:border-white/30"
+                  className="px-8 py-4 bg-white text-neutral-900 rounded-2xl font-medium transition-all duration-300 hover:bg-neutral-100 hover:scale-105"
                 >
                   {t('learnMoreBtn')}
                 </a>
@@ -390,6 +405,7 @@ export default function CreativityPage() {
         {/* About Section */}
         <section id="about" className="py-24 md:py-32 relative etno-texture light-section">
           <div className="container mx-auto px-4">
+            <AnimatedBorder className="p-6 md:p-12 rounded-3xl bg-white/50 backdrop-blur-sm">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
               {/* Image */}
               <motion.div
@@ -401,7 +417,7 @@ export default function CreativityPage() {
               >
                 <div className="relative aspect-[4/5] rounded-3xl overflow-hidden">
                   <Image
-                    src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&q=80"
+                    src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&q=80"
                     alt="Мастерская Skeramos"
                     fill
                     className="object-cover"
@@ -431,13 +447,13 @@ export default function CreativityPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
-                <span className="text-zone-400 text-sm font-medium tracking-wider uppercase">
+                <span className="text-zone-400 text-[15px] font-medium tracking-wider uppercase">
                   {tCommon('aboutUs')}
                 </span>
                 <h2 className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4 mb-6">
                   {t('whereCeramicsBorn')}
                 </h2>
-                <div className="space-y-4 text-neutral-600">
+                <div className="space-y-4 text-neutral-600 text-lg">
                   <p>
                     <strong className="text-neutral-800">Skeramos</strong> {t('aboutText1')}
                   </p>
@@ -471,6 +487,7 @@ export default function CreativityPage() {
                 </div>
               </motion.div>
             </div>
+            </AnimatedBorder>
           </div>
         </section>
 
@@ -478,8 +495,19 @@ export default function CreativityPage() {
         <div className="etno-divider" />
 
         {/* Advantages Section */}
-        <section className="py-24 bg-zone-500/10 etno-shyrdak">
-          <div className="container mx-auto px-4">
+        <section className="py-24 relative overflow-hidden">
+          {/* Background image */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?w=1920&q=80"
+              alt="Керамика фон"
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-white/85" />
+          </div>
+          <div className="container mx-auto px-4 relative z-10">
+            <AnimatedBorder className="p-6 md:p-12 rounded-3xl bg-white/60 backdrop-blur-sm">
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -487,7 +515,7 @@ export default function CreativityPage() {
               variants={staggerContainer}
               className="text-center mb-16"
             >
-              <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
+              <motion.span variants={scaleIn} className="text-zone-400 text-[15px] font-medium tracking-wider uppercase inline-block">
                 {t('whyUs')}
               </motion.span>
               <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
@@ -530,54 +558,14 @@ export default function CreativityPage() {
                 </motion.div>
               ))}
             </motion.div>
-          </div>
-        </section>
-
-        {/* What You Get Section */}
-        <section className="py-24 md:py-32 light-section">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-100px' }}
-              variants={staggerContainer}
-              className="text-center mb-16"
-            >
-              <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
-                {t('included')}
-              </motion.span>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
-                {tCommon('whatYouGet')}
-              </motion.h2>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-50px' }}
-              variants={staggerContainer}
-              className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
-            >
-              {whatYouGet.map((item) => (
-                <motion.div
-                  key={item.title}
-                  variants={cardVariants}
-                  className="glass-card p-6 text-center"
-                >
-                  <div className="w-14 h-14 rounded-2xl bg-zone-500/10 flex items-center justify-center mx-auto mb-4">
-                    <item.Icon className="w-7 h-7 text-zone-500" strokeWidth={1.5} />
-                  </div>
-                  <h3 className="font-semibold card-title mb-1">{item.title}</h3>
-                  <p className="text-sm card-muted">{item.description}</p>
-                </motion.div>
-              ))}
-            </motion.div>
+            </AnimatedBorder>
           </div>
         </section>
 
         {/* Masterclasses Section */}
         <section id="masterclasses" className="py-24 md:py-32 light-section">
           <div className="container mx-auto px-4">
+            <AnimatedBorder className="p-6 md:p-12 rounded-3xl bg-white/50 backdrop-blur-sm">
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -585,7 +573,7 @@ export default function CreativityPage() {
               variants={staggerContainer}
               className="text-center mb-16"
             >
-              <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
+              <motion.span variants={scaleIn} className="text-zone-400 text-[15px] font-medium tracking-wider uppercase inline-block">
                 {t('servicesLabel')}
               </motion.span>
               <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
@@ -672,6 +660,7 @@ export default function CreativityPage() {
                 <span>→</span>
               </a>
             </motion.div>
+            </AnimatedBorder>
           </div>
         </section>
 
@@ -685,7 +674,7 @@ export default function CreativityPage() {
               variants={staggerContainer}
               className="text-center mb-16"
             >
-              <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
+              <motion.span variants={scaleIn} className="text-zone-400 text-[15px] font-medium tracking-wider uppercase inline-block">
                 {t('portfolio')}
               </motion.span>
               <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
@@ -768,7 +757,7 @@ export default function CreativityPage() {
               variants={staggerContainer}
               className="text-center mb-16"
             >
-              <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
+              <motion.span variants={scaleIn} className="text-zone-400 text-[15px] font-medium tracking-wider uppercase inline-block">
                 {t('team')}
               </motion.span>
               <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
@@ -852,6 +841,48 @@ export default function CreativityPage() {
           </div>
         </section>
 
+        {/* What You Get Section */}
+        <section className="py-24 md:py-32 light-section">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-100px' }}
+              variants={staggerContainer}
+              className="text-center mb-16"
+            >
+              <motion.span variants={scaleIn} className="text-zone-400 text-[15px] font-medium tracking-wider uppercase inline-block">
+                {t('included')}
+              </motion.span>
+              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
+                {tCommon('whatYouGet')}
+              </motion.h2>
+            </motion.div>
+
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-50px' }}
+              variants={staggerContainer}
+              className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+            >
+              {whatYouGet.map((item) => (
+                <motion.div
+                  key={item.title}
+                  variants={cardVariants}
+                  className="glass-card p-6 text-center"
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-zone-500/10 flex items-center justify-center mx-auto mb-4">
+                    <item.Icon className="w-7 h-7 text-zone-500" strokeWidth={1.5} />
+                  </div>
+                  <h3 className="font-semibold card-title mb-1">{item.title}</h3>
+                  <p className="text-sm card-muted">{item.description}</p>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
         {/* Этно-разделитель */}
         <div className="etno-divider" />
 
@@ -865,7 +896,7 @@ export default function CreativityPage() {
               variants={staggerContainer}
               className="text-center mb-16"
             >
-              <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
+              <motion.span variants={scaleIn} className="text-zone-400 text-[15px] font-medium tracking-wider uppercase inline-block">
                 {tCommon('reviews')}
               </motion.span>
               <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
@@ -895,7 +926,7 @@ export default function CreativityPage() {
               variants={staggerContainer}
               className="text-center mb-16"
             >
-              <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
+              <motion.span variants={scaleIn} className="text-zone-400 text-[15px] font-medium tracking-wider uppercase inline-block">
                 FAQ
               </motion.span>
               <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
@@ -939,7 +970,7 @@ export default function CreativityPage() {
               viewport={{ once: true }}
               className="max-w-3xl mx-auto text-center"
             >
-              <span className="text-zone-400 text-sm font-medium tracking-wider uppercase">
+              <span className="text-zone-400 text-[15px] font-medium tracking-wider uppercase">
                 {t('since2024')}
               </span>
               <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mt-4 mb-6">
