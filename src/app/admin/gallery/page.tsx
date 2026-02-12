@@ -136,6 +136,9 @@ export default function GalleryAdmin() {
         await loadItems();
         setEditingItem(null);
         toast.success('Сохранено!');
+      } else {
+        const err = await res.json();
+        toast.error('Ошибка: ' + err.error);
       }
     } catch (error) {
       console.error('Error saving:', error);

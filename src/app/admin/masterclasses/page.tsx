@@ -104,14 +104,19 @@ export default function MasterclassesAdmin() {
         body: JSON.stringify(editingItem),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
         await loadItems();
         setEditingItem(null);
         toast.success('Сохранено!');
+      } else {
+        toast.error(data.error || 'Ошибка сохранения');
+        console.error('API error:', data);
       }
     } catch (error) {
       console.error('Error saving:', error);
-      toast.error('Ошибка сохранения');
+      toast.error('Ошибка сети');
     } finally {
       setSaving(false);
     }
