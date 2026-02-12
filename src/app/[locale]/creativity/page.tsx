@@ -575,183 +575,6 @@ export default function CreativityPage() {
           </div>
         </section>
 
-        {/* Masters Section */}
-        <section id="masters" className="py-24 md:py-32 light-section">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-100px' }}
-              variants={staggerContainer}
-              className="text-center mb-16"
-            >
-              <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
-                {t('team')}
-              </motion.span>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
-                {t('ourMasters')}
-              </motion.h2>
-              <motion.p variants={fadeInUp} className="text-neutral-500 mt-4 max-w-2xl mx-auto">
-                {t('mastersSubtitle')}
-              </motion.p>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-50px' }}
-              variants={staggerContainer}
-              className="grid md:grid-cols-3 gap-8"
-            >
-              {masters.slice(0, 3).map((master) => (
-                <Link key={master.id} href={`/masters/${master.id}`}>
-                  <motion.div
-                    variants={cardVariants}
-                    whileHover={{ y: -8 }}
-                    className="group cursor-pointer"
-                  >
-                    <motion.div
-                      className="relative aspect-[4/5] rounded-3xl overflow-hidden mb-6"
-                      whileHover={{ scale: 1.02 }}
-                      transition={{ duration: 0.4 }}
-                    >
-                      <Image
-                        src={master.image}
-                        alt={master.name}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-
-                      {/* Hover overlay */}
-                      <motion.div
-                        className="absolute inset-0 bg-zone-500/20"
-                        initial={{ opacity: 0 }}
-                        whileHover={{ opacity: 1 }}
-                        transition={{ duration: 0.3 }}
-                      />
-
-                      {/* Info on hover */}
-                      <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                        <div className="glass-card p-4">
-                          <p className="text-sm card-muted">{master.specialties?.[0] || ''}</p>
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    <h3 className="text-xl font-display font-medium text-neutral-800">
-                      {master.name}
-                    </h3>
-                    <p className="text-neutral-500">{master.role}</p>
-                    <p className="text-zone-500 text-sm mt-1">{master.experience}</p>
-                  </motion.div>
-                </Link>
-              ))}
-            </motion.div>
-
-            {/* Link to all masters */}
-            {masters.length > 3 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                className="text-center mt-12"
-              >
-                <a
-                  href="/masters"
-                  className="inline-flex items-center gap-2 px-6 py-3 glass text-neutral-700 hover:text-zone-500 rounded-xl font-medium transition-colors"
-                >
-                  {t('allMasters')}
-                  <span>→</span>
-                </a>
-              </motion.div>
-            )}
-          </div>
-        </section>
-
-        {/* Gallery Section */}
-        <section id="gallery" className="py-24 bg-zone-500/10 etno-tunduk">
-          <div className="container mx-auto px-4">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-100px' }}
-              variants={staggerContainer}
-              className="text-center mb-16"
-            >
-              <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
-                {t('portfolio')}
-              </motion.span>
-              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
-                {tCommon('galleryOfWorks')}
-              </motion.h2>
-              <motion.p variants={fadeInUp} className="text-neutral-500 mt-4 max-w-2xl mx-auto">
-                {t('gallerySubtitle')}
-              </motion.p>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-50px' }}
-              variants={staggerContainer}
-              className="grid grid-cols-2 md:grid-cols-4 gap-4"
-            >
-              {galleryItems.map((item, index) => (
-                <motion.div
-                  key={item.id}
-                  variants={cardVariants}
-                  whileHover={{ scale: 1.03, zIndex: 10 }}
-                  className={`relative rounded-2xl overflow-hidden group cursor-pointer ${
-                    index === 0 ? 'md:col-span-2 md:row-span-2' : ''
-                  }`}
-                >
-                  <div className="aspect-square">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                  </div>
-
-                  {/* Overlay */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent flex items-end p-6"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <motion.h4
-                      className="text-white font-display text-lg"
-                      initial={{ y: 20 }}
-                      whileHover={{ y: 0 }}
-                    >
-                      {item.title}
-                    </motion.h4>
-                  </motion.div>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Link to full gallery */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-center mt-12"
-            >
-              <a
-                href="/gallery"
-                className="inline-flex items-center gap-2 px-6 py-3 glass text-neutral-700 hover:text-zone-500 rounded-xl font-medium transition-colors"
-              >
-                {tCommon('viewFullGallery')}
-                <span>→</span>
-              </a>
-            </motion.div>
-          </div>
-        </section>
-
         {/* Masterclasses Section */}
         <section id="masterclasses" className="py-24 md:py-32 light-section">
           <div className="container mx-auto px-4">
@@ -849,6 +672,183 @@ export default function CreativityPage() {
                 <span>→</span>
               </a>
             </motion.div>
+          </div>
+        </section>
+
+        {/* Gallery Section */}
+        <section id="gallery" className="py-24 bg-zone-500/10 etno-tunduk">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-100px' }}
+              variants={staggerContainer}
+              className="text-center mb-16"
+            >
+              <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
+                {t('portfolio')}
+              </motion.span>
+              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
+                {tCommon('galleryOfWorks')}
+              </motion.h2>
+              <motion.p variants={fadeInUp} className="text-neutral-500 mt-4 max-w-2xl mx-auto">
+                {t('gallerySubtitle')}
+              </motion.p>
+            </motion.div>
+
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-50px' }}
+              variants={staggerContainer}
+              className="grid grid-cols-2 md:grid-cols-4 gap-4"
+            >
+              {galleryItems.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  variants={cardVariants}
+                  whileHover={{ scale: 1.03, zIndex: 10 }}
+                  className={`relative rounded-2xl overflow-hidden group cursor-pointer ${
+                    index === 0 ? 'md:col-span-2 md:row-span-2' : ''
+                  }`}
+                >
+                  <div className="aspect-square">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  </div>
+
+                  {/* Overlay */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent flex items-end p-6"
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <motion.h4
+                      className="text-white font-display text-lg"
+                      initial={{ y: 20 }}
+                      whileHover={{ y: 0 }}
+                    >
+                      {item.title}
+                    </motion.h4>
+                  </motion.div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Link to full gallery */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-center mt-12"
+            >
+              <a
+                href="/gallery"
+                className="inline-flex items-center gap-2 px-6 py-3 glass text-neutral-700 hover:text-zone-500 rounded-xl font-medium transition-colors"
+              >
+                {tCommon('viewFullGallery')}
+                <span>→</span>
+              </a>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Masters Section */}
+        <section id="masters" className="py-24 md:py-32 light-section">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-100px' }}
+              variants={staggerContainer}
+              className="text-center mb-16"
+            >
+              <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
+                {t('team')}
+              </motion.span>
+              <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
+                {t('ourMasters')}
+              </motion.h2>
+              <motion.p variants={fadeInUp} className="text-neutral-500 mt-4 max-w-2xl mx-auto">
+                {t('mastersSubtitle')}
+              </motion.p>
+            </motion.div>
+
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-50px' }}
+              variants={staggerContainer}
+              className="grid md:grid-cols-3 gap-8"
+            >
+              {masters.slice(0, 3).map((master) => (
+                <Link key={master.id} href={`/masters/${master.id}`}>
+                  <motion.div
+                    variants={cardVariants}
+                    whileHover={{ y: -8 }}
+                    className="group cursor-pointer"
+                  >
+                    <motion.div
+                      className="relative aspect-[4/5] rounded-3xl overflow-hidden mb-6"
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.4 }}
+                    >
+                      <Image
+                        src={master.image}
+                        alt={master.name}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+
+                      {/* Hover overlay */}
+                      <motion.div
+                        className="absolute inset-0 bg-zone-500/20"
+                        initial={{ opacity: 0 }}
+                        whileHover={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+
+                      {/* Info on hover */}
+                      <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                        <div className="glass-card p-4">
+                          <p className="text-sm card-muted">{master.specialties?.[0] || ''}</p>
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    <h3 className="text-xl font-display font-medium text-neutral-800">
+                      {master.name}
+                    </h3>
+                    <p className="text-neutral-500">{master.role}</p>
+                    <p className="text-zone-500 text-sm mt-1">{master.experience}</p>
+                  </motion.div>
+                </Link>
+              ))}
+            </motion.div>
+
+            {/* Link to all masters */}
+            {masters.length > 3 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                className="text-center mt-12"
+              >
+                <a
+                  href="/masters"
+                  className="inline-flex items-center gap-2 px-6 py-3 glass text-neutral-700 hover:text-zone-500 rounded-xl font-medium transition-colors"
+                >
+                  {t('allMasters')}
+                  <span>→</span>
+                </a>
+              </motion.div>
+            )}
           </div>
         </section>
 
