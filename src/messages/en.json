@@ -306,5 +306,29 @@
     "freeWifiDesc": "High-speed internet in all rooms and common areas",
     "security": "Security",
     "securityDesc": "Video surveillance, safes in rooms and 24/7 security"
+  },
+  "faqCreativity": {
+    "q1": "Do I need experience to participate in a masterclass?",
+    "a1": "No, our masterclasses are suitable for complete beginners. The master will explain everything from scratch and help at every step.",
+    "q2": "What's included in the masterclass price?",
+    "a2": "The price includes all materials, master's work, firing and packaging. You pick up your finished piece 3-4 weeks after firing.",
+    "q3": "Can I come with my own ideas?",
+    "a3": "Of course! We welcome creative approach. Discuss your idea with the master before the class.",
+    "q4": "How do I sign up for a masterclass?",
+    "a4": "Sign up by phone: +996505732888",
+    "q5": "Is the masterclass suitable for children?",
+    "a5": "Yes! We conduct masterclasses for children from 3 years old. For the youngest, we recommend slab pottery."
+  },
+  "faqHotel": {
+    "q1": "What time is check-in and check-out?",
+    "a1": "Standard check-in is from 14:00, check-out is until 12:00. Early check-in or late check-out is possible by prior arrangement.",
+    "q2": "How do I pay for accommodation?",
+    "a2": "We accept cash, bank cards and transfers. 50% prepayment upon booking, the rest upon check-in.",
+    "q3": "Can I cancel my booking?",
+    "a3": "Free cancellation 24 hours before check-in. For later cancellation, the prepayment is non-refundable.",
+    "q4": "Is there parking?",
+    "a4": "Yes, free secure parking for hotel guests.",
+    "q5": "Are pets allowed?",
+    "a5": "Unfortunately, accommodation with pets is not provided."
   }
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import type { LocalizedValue } from '@/components/admin/LocalizedInput';
 
 // Helper to extract localized value
@@ -224,54 +224,8 @@ function transformHistory(data: HistoryItemUI[], locale: string): HistoryItemUI[
 }
 
 // ============================================================================
-// FAQ Data (это статические данные, которые не редактируются через админку)
+// FAQ Data - теперь с поддержкой i18n через useTranslations
 // ============================================================================
-
-const FAQ_CREATIVITY: FAQUI[] = [
-  {
-    question: 'Нужен ли опыт для участия в мастер-классе?',
-    answer: 'Нет, наши мастер-классы подходят для полных новичков. Мастер объяснит всё с нуля и поможет на каждом этапе.',
-  },
-  {
-    question: 'Что входит в стоимость мастер-класса?',
-    answer: 'В стоимость входят все материалы, работа мастера, обжиг изделия и упаковка. Вы забираете готовое изделие через 3-4 недели после обжига.',
-  },
-  {
-    question: 'Можно ли прийти со своими идеями?',
-    answer: 'Конечно! Мы приветствуем творческий подход. Обсудите свою идею с мастером перед началом занятия.',
-  },
-  {
-    question: 'Как записаться на мастер-класс?',
-    answer: 'Записаться по телефону № +996505732888',
-  },
-  {
-    question: 'Подходит ли мастер-класс для детей?',
-    answer: 'Да! Мы проводим мастер-классы с 3-х лет. Для самых маленьких рекомендуем лепку из пласта.',
-  },
-];
-
-const FAQ_HOTEL: FAQUI[] = [
-  {
-    question: 'Во сколько заезд и выезд?',
-    answer: 'Стандартный заезд — с 14:00, выезд — до 12:00. Ранний заезд или поздний выезд возможен по предварительной договорённости.',
-  },
-  {
-    question: 'Как оплатить проживание?',
-    answer: 'Мы принимаем наличные, банковские карты и переводы. Предоплата 50% при бронировании, остаток — при заселении.',
-  },
-  {
-    question: 'Можно ли отменить бронирование?',
-    answer: 'Бесплатная отмена за 24 часа до заезда. При отмене позже — предоплата не возвращается.',
-  },
-  {
-    question: 'Есть ли парковка?',
-    answer: 'Да, бесплатная охраняемая парковка для гостей отеля.',
-  },
-  {
-    question: 'Разрешено ли проживание с животными?',
-    answer: 'К сожалению, проживание с домашними животными не предусмотрено.',
-  },
-];
 
 // ============================================================================
 // Export hooks - данные получаются из нашего API
@@ -310,8 +264,17 @@ export function useServices() {
 }
 
 export function useFAQ(zone: 'creativity' | 'hotel') {
-  // FAQ - статические данные
-  const faqData = zone === 'creativity' ? FAQ_CREATIVITY : FAQ_HOTEL;
+  // FAQ - теперь с поддержкой i18n
+  const t = useTranslations(zone === 'creativity' ? 'faqCreativity' : 'faqHotel');
+
+  const faqData: FAQUI[] = [
+    { question: t('q1'), answer: t('a1') },
+    { question: t('q2'), answer: t('a2') },
+    { question: t('q3'), answer: t('a3') },
+    { question: t('q4'), answer: t('a4') },
+    { question: t('q5'), answer: t('a5') },
+  ];
+
   return { data: faqData, loading: false, error: null };
 }
 
