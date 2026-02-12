@@ -40,3 +40,6 @@ export {
 
 // Scroll-driven frame animation (for video-like backgrounds)
 export { ScrollFrameAnimation } from './ScrollFrameAnimation';
+
+// Side pottery animation (fixed spinning pottery on scroll)
+export { SidePotteryAnimation } from './SidePotteryAnimation';

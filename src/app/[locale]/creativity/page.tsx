@@ -15,7 +15,7 @@ import { Footer } from '@/components/layout/Footer';
 import { OnboardingHint, StickyCTA, FAQAccordion } from '@/components/features';
 import { ContactModal } from '@/components/features/ContactModal';
 import { SocialButtons } from '@/components/features/SocialButtons';
-import { FloatingOrbs, EtnoPatternOverlay, SectionDivider, GlowingAccent, ScrollFrameAnimation } from '@/components/animations';
+import { FloatingOrbs, EtnoPatternOverlay, SectionDivider, GlowingAccent, SidePotteryAnimation } from '@/components/animations';
 import { AnimatedBorder } from '@/components/animations/AnimatedBorder';
 import { FadeInOnScroll, CountUp } from '@/components/animations/OptimizedAnimations';
 import { FadeIn, ScaleIn, StaggerContainer, StaggerItem } from '@/components/animations/ScrollAnimations';
@@ -246,15 +246,15 @@ export default function CreativityPage() {
 
   return (
     <>
-      {/* Scroll-driven pottery animation - fixed background for entire page */}
-      <ScrollFrameAnimation
+      {/* Scroll-driven pottery animation - fixed on left side */}
+      <SidePotteryAnimation
         framePath="/frames/pottery"
         frameCount={168}
         filePrefix="ezgif-frame-"
         extension="jpg"
-        opacity={0.15}
-        scrollRange={[0, 1]}
-        className="z-0"
+        position="left"
+        size={280}
+        mobileSize={120}
         mobileFrameCount={42}
       />
 
