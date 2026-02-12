@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import crypto from 'crypto';
-import { put, list, del } from '@vercel/blob';
+import { readFile, writeFile, mkdir } from 'fs/promises';
+import path from 'path';
 
 // Отключаем кэширование Route Handler — всегда свежие данные
 export const dynamic = 'force-dynamic';
 
 const SESSION_SECRET = process.env.SESSION_SECRET || 'default-secret';
 const COOKIE_NAME = 'admin_session';
+
+// Папка для хранения данных
+const DATA_DIR = path.join(process.cwd(), 'data');
 
 // Доступные коллекции
 const COLLECTIONS = [
@@ -47,57 +51,33 @@ async function isAuthenticated(): Promise<boolean> {
   return token ? verifyToken(token) : false;
 }
 
-// Читаем данные из Vercel Blob
+// Убедимся что папка data существует
+async function ensureDataDir(): Promise<void> {
+  try {
+    await mkdir(DATA_DIR, { recursive: true });
+  } catch {
+    // Папка уже существует
+  }
+}
+
+// Читаем данные из локального JSON файла
 async function readData(collection: string): Promise<unknown> {
   try {
-    // Проверяем есть ли BLOB_READ_WRITE_TOKEN
-    if (!process.env.BLOB_READ_WRITE_TOKEN) {
-      console.warn('BLOB_READ_WRITE_TOKEN not set, returning empty data');
-      return collection === 'settings' ? {} : [];
-    }
-
-    // Ищем файл в Blob storage
-    const { blobs } = await list({ prefix: `data/${collection}.json` });
-
-    if (blobs.length === 0) {
-      return collection === 'settings' ? {} : [];
-    }
-
-    // Читаем данные из blob (без кэширования!)
-    const response = await fetch(blobs[0].url, { cache: 'no-store' });
-    if (!response.ok) {
-      return collection === 'settings' ? {} : [];
-    }
-
-    const data = await response.json();
-    return data;
+    await ensureDataDir();
+    const filePath = path.join(DATA_DIR, `${collection}.json`);
+    const content = await readFile(filePath, 'utf-8');
+    return JSON.parse(content);
   } catch (error) {
-    console.error(`Error reading ${collection}:`, error);
+    // Файл не существует или ошибка чтения - возвращаем пустые данные
     return collection === 'settings' ? {} : [];
   }
 }
 
-// Записываем данные в Vercel Blob
+// Записываем данные в локальный JSON файл
 async function writeData(collection: string, data: unknown): Promise<void> {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    throw new Error('BLOB_READ_WRITE_TOKEN not configured');
-  }
-
-  // Сначала удаляем старый файл если есть
-  try {
-    const { blobs } = await list({ prefix: `data/${collection}.json` });
-    for (const blob of blobs) {
-      await del(blob.url);
-    }
-  } catch {
-    // Игнорируем ошибки удаления
-  }
-
-  // Записываем новый файл
-  await put(`data/${collection}.json`, JSON.stringify(data, null, 2), {
-    access: 'public',
-    contentType: 'application/json',
-  });
+  await ensureDataDir();
+  const filePath = path.join(DATA_DIR, `${collection}.json`);
+  await writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
 }
 
 type RouteContext = {
