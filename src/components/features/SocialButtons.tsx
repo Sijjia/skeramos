@@ -57,7 +57,7 @@ const socialLinks = [
 
 export function SocialButtons() {
   return (
-    <div className="fixed left-4 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-3">
+    <div className="fixed right-4 bottom-4 z-40 flex flex-row gap-3">
       {socialLinks.map((social, index) => (
         <motion.a
           key={social.name}
@@ -65,26 +65,42 @@ export function SocialButtons() {
           target="_blank"
           rel="noopener noreferrer"
           className="relative group"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 + 0.5 }}
-          whileHover={{ scale: 1.1 }}
+          whileHover={{ scale: 1.15, y: -5 }}
           whileTap={{ scale: 0.95 }}
         >
-          {/* Pulse wave animation */}
+          {/* Pulse wave animation - первая волна */}
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            style={{ backgroundColor: social.color }}
+            animate={{
+              scale: [1, 1.8, 1.8],
+              opacity: [0.6, 0, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              repeatDelay: 1,
+            }}
+          />
+          {/* Вторая волна */}
           <motion.div
             className="absolute inset-0 rounded-full"
             style={{ backgroundColor: social.color }}
             animate={{
               scale: [1, 1.5, 1.5],
-              opacity: [0.5, 0, 0],
+              opacity: [0.4, 0, 0],
             }}
             transition={{
               duration: 2,
               repeat: Infinity,
-              repeatDelay: index * 0.3,
+              repeatDelay: 1,
+              delay: 0.3,
             }}
           />
+          {/* Третья волна */}
           <motion.div
             className="absolute inset-0 rounded-full"
             style={{ backgroundColor: social.color }}
@@ -95,21 +111,33 @@ export function SocialButtons() {
             transition={{
               duration: 2,
               repeat: Infinity,
-              repeatDelay: index * 0.3,
-              delay: 0.2,
+              repeatDelay: 1,
+              delay: 0.6,
             }}
           />
 
-          {/* Button */}
-          <div
-            className="relative w-11 h-11 rounded-full flex items-center justify-center text-white shadow-lg transition-shadow duration-300 group-hover:shadow-xl"
+          {/* Button с пульсацией */}
+          <motion.div
+            className="relative w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg transition-shadow duration-300 group-hover:shadow-xl group-hover:shadow-current/30"
             style={{ backgroundColor: social.color }}
+            animate={{
+              boxShadow: [
+                `0 0 0 0 ${social.color}40`,
+                `0 0 0 8px ${social.color}00`,
+                `0 0 0 0 ${social.color}00`,
+              ],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              repeatDelay: index * 0.5,
+            }}
           >
             {social.icon}
-          </div>
+          </motion.div>
 
-          {/* Tooltip */}
-          <div className="absolute left-full ml-3 px-3 py-1 bg-neutral-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+          {/* Tooltip - сверху */}
+          <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-3 py-1 bg-neutral-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
             {social.name}
           </div>
         </motion.a>
