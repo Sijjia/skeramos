@@ -252,9 +252,10 @@ export default function CreativityPage() {
         frameCount={168}
         filePrefix="ezgif-frame-"
         extension="jpg"
-        opacity={0.1}
+        opacity={0.15}
         scrollRange={[0, 1]}
         className="z-0"
+        mobileFrameCount={42}
       />
 
       <StickyCTA />

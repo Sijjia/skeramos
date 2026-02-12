@@ -11,12 +11,13 @@ interface ScrollFrameAnimationProps {
   className?: string;
   opacity?: number;
   scrollRange?: [number, number];
+  mobileFrameCount?: number; // Уменьшенное количество фреймов для мобильных
 }
 
 /**
  * Optimized scroll-driven frame animation using Canvas
  * - Uses canvas for direct pixel manipulation (no React re-renders)
- * - Disabled on mobile for performance
+ * - Works on mobile with reduced frame count for performance
  * - Preloads all frames before displaying
  */
 export function ScrollFrameAnimation({
@@ -27,9 +28,11 @@ export function ScrollFrameAnimation({
   className = '',
   opacity = 0.15,
   scrollRange = [0, 1],
+  mobileFrameCount,
 }: ScrollFrameAnimationProps) {
   const [isFullyLoaded, setIsFullyLoaded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const lastFrameRef = useRef(-1);
@@ -37,14 +40,20 @@ export function ScrollFrameAnimation({
 
   const { scrollYProgress } = useScroll();
 
+  // Используем меньше фреймов на мобильных для производительности
+  const actualFrameCount = isMobile && mobileFrameCount ? mobileFrameCount : frameCount;
+  // Шаг для выборки фреймов на мобильных
+  const frameStep = isMobile && mobileFrameCount ? Math.floor(frameCount / mobileFrameCount) : 1;
+
   const frameIndex = useTransform(
     scrollYProgress,
     scrollRange,
-    [0, frameCount - 1]
+    [0, actualFrameCount - 1]
   );
 
-  // Check if mobile
+  // Check if client and mobile
   useEffect(() => {
+    setIsClient(true);
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -53,9 +62,10 @@ export function ScrollFrameAnimation({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Generate frame URL
-  const getFrameUrl = useCallback((index: number) => {
-    const frameNumber = String(index + 1).padStart(3, '0');
+  // Generate frame URL (с учетом шага для мобильных)
+  const getFrameUrl = useCallback((index: number, step: number = 1) => {
+    const actualIndex = index * step;
+    const frameNumber = String(actualIndex + 1).padStart(3, '0');
     return `${framePath}/${filePrefix}${frameNumber}.${extension}`;
   }, [framePath, filePrefix, extension]);
 
@@ -99,14 +109,14 @@ export function ScrollFrameAnimation({
 
   // Set up canvas size
   useEffect(() => {
-    if (isMobile || !isFullyLoaded) return;
+    if (!isFullyLoaded || !isClient) return;
 
     const updateCanvasSize = () => {
       const canvas = canvasRef.current;
       if (!canvas) return;
 
-      // Use device pixel ratio for sharp rendering
-      const dpr = window.devicePixelRatio || 1;
+      // Use device pixel ratio for sharp rendering (меньше на мобильных для производительности)
+      const dpr = isMobile ? Math.min(window.devicePixelRatio || 1, 2) : (window.devicePixelRatio || 1);
       const width = window.innerWidth;
       const height = window.innerHeight;
 
@@ -130,11 +140,11 @@ export function ScrollFrameAnimation({
     updateCanvasSize();
     window.addEventListener('resize', updateCanvasSize);
     return () => window.removeEventListener('resize', updateCanvasSize);
-  }, [isMobile, isFullyLoaded, drawFrame]);
+  }, [isMobile, isFullyLoaded, isClient, drawFrame]);
 
-  // Preload images (skip on mobile)
+  // Preload images
   useEffect(() => {
-    if (isMobile) return;
+    if (!isClient) return;
 
     let loadedCount = 0;
     const images: HTMLImageElement[] = [];
@@ -143,14 +153,14 @@ export function ScrollFrameAnimation({
     const loadImage = (index: number): Promise<void> => {
       return new Promise((resolve) => {
         const img = new Image();
-        img.src = getFrameUrl(index);
+        img.src = getFrameUrl(index, frameStep);
 
         img.onload = () => {
           if (!cancelled) {
             images[index] = img;
             loadedCount++;
 
-            if (loadedCount === frameCount) {
+            if (loadedCount === actualFrameCount) {
               imagesRef.current = images;
               setIsFullyLoaded(true);
             }
@@ -168,7 +178,7 @@ export function ScrollFrameAnimation({
     // Load all images in parallel for faster loading
     const loadAllImages = async () => {
       const promises = [];
-      for (let i = 0; i < frameCount; i++) {
+      for (let i = 0; i < actualFrameCount; i++) {
         promises.push(loadImage(i));
       }
       await Promise.all(promises);
@@ -179,24 +189,24 @@ export function ScrollFrameAnimation({
     return () => {
       cancelled = true;
     };
-  }, [frameCount, getFrameUrl, isMobile]);
+  }, [actualFrameCount, frameStep, getFrameUrl, isClient]);
 
   // Update frame on scroll - direct canvas update, no state
   useMotionValueEvent(frameIndex, 'change', (latest) => {
-    if (!isFullyLoaded || isMobile) return;
-    const index = Math.max(0, Math.min(Math.round(latest), frameCount - 1));
+    if (!isFullyLoaded) return;
+    const index = Math.max(0, Math.min(Math.round(latest), actualFrameCount - 1));
     drawFrame(index);
   });
 
   // Draw initial frame when loaded
   useEffect(() => {
-    if (isFullyLoaded && !isMobile) {
+    if (isFullyLoaded && isClient) {
       drawFrame(0);
     }
-  }, [isFullyLoaded, isMobile, drawFrame]);
+  }, [isFullyLoaded, isClient, drawFrame]);
 
-  // Don't render on mobile or until loaded
-  if (isMobile || !isFullyLoaded) {
+  // Don't render until loaded on client
+  if (!isClient || !isFullyLoaded) {
     return null;
   }
 
