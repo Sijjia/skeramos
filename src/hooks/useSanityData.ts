@@ -125,7 +125,7 @@ function useDataFetch<T>(
     async function fetchData() {
       try {
         setLoading(true);
-        const response = await fetch(`/api/admin/data/${collection}`);
+        const response = await fetch(`/api/data.php?collection=${collection}`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

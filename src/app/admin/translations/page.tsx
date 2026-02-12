@@ -37,7 +37,7 @@ export default function TranslationsAdmin() {
 
   const loadTranslations = async () => {
     try {
-      const res = await fetch('/api/admin/translations');
+      const res = await fetch('/api/translations.php');
       const data = await res.json();
       setTranslations(data);
     } catch (error) {
@@ -55,7 +55,7 @@ export default function TranslationsAdmin() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const res = await fetch('/api/admin/translations', {
+      const res = await fetch('/api/translations.php', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(translations),

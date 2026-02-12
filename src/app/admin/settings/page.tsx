@@ -149,7 +149,7 @@ export default function SettingsAdmin() {
 
   const loadSettings = async () => {
     try {
-      const res = await fetch('/api/admin/data/settings');
+      const res = await fetch('/api/data.php?collection=settings');
       const data = await res.json();
       setSettings({
         siteName: data.siteName || '',
@@ -363,7 +363,7 @@ export default function SettingsAdmin() {
     setSaved(false);
 
     try {
-      const res = await fetch('/api/admin/data/settings', {
+      const res = await fetch('/api/data.php?collection=settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settings),

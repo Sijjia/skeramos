@@ -25,7 +25,7 @@ export default function AdminDashboard() {
 
       for (const col of collections) {
         try {
-          const res = await fetch(`/api/admin/data/${col}`);
+          const res = await fetch(`/api/data.php?collection=${col}`);
           const data = await res.json();
           results[col as keyof Stats] = Array.isArray(data) ? data.length : 0;
         } catch {

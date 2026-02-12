@@ -43,7 +43,7 @@ export default function ReviewsAdmin() {
 
   const loadItems = async () => {
     try {
-      const res = await fetch('/api/admin/data/reviews');
+      const res = await fetch('/api/data.php?collection=reviews');
       const data = await res.json();
       setItems(data);
     } catch (error) {
@@ -73,7 +73,7 @@ export default function ReviewsAdmin() {
 
     try {
       const method = isNew ? 'POST' : 'PUT';
-      const res = await fetch('/api/admin/data/reviews', {
+      const res = await fetch('/api/data.php?collection=reviews', {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editingItem),
@@ -99,7 +99,7 @@ export default function ReviewsAdmin() {
     if (!confirm('Удалить этот отзыв?')) return;
 
     try {
-      const res = await fetch(`/api/admin/data/reviews?id=${id}`, {
+      const res = await fetch(`/api/data.php?collection=reviews&id=${id}`, {
         method: 'DELETE',
       });
 
@@ -115,7 +115,7 @@ export default function ReviewsAdmin() {
 
   const handleToggleActive = async (item: Review) => {
     try {
-      await fetch('/api/admin/data/reviews', {
+      await fetch('/api/data.php?collection=reviews', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...item, active: !item.active }),

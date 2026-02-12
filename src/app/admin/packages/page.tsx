@@ -62,7 +62,7 @@ export default function PackagesAdmin() {
 
   const loadItems = async () => {
     try {
-      const res = await fetch('/api/admin/data/packages');
+      const res = await fetch('/api/data.php?collection=packages');
       const data = await res.json();
       setItems(Array.isArray(data) ? data : []);
     } catch (error) {
@@ -92,7 +92,7 @@ export default function PackagesAdmin() {
 
     try {
       const method = isNew ? 'POST' : 'PUT';
-      const res = await fetch('/api/admin/data/packages', {
+      const res = await fetch('/api/data.php?collection=packages', {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editingItem),
@@ -118,7 +118,7 @@ export default function PackagesAdmin() {
     if (!confirm('Удалить этот пакет?')) return;
 
     try {
-      const res = await fetch(`/api/admin/data/packages?id=${id}`, {
+      const res = await fetch(`/api/data.php?collection=packages&id=${id}`, {
         method: 'DELETE',
       });
 

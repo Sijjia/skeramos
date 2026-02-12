@@ -45,7 +45,7 @@ export default function AdminLayout({
 
   const checkAuth = async () => {
     try {
-      const res = await fetch('/api/admin/auth');
+      const res = await fetch('/api/auth.php');
       const data = await res.json();
       setIsAuthenticated(data.authenticated);
       return data.authenticated;
@@ -57,7 +57,7 @@ export default function AdminLayout({
 
   const login = async (password: string) => {
     try {
-      const res = await fetch('/api/admin/auth', {
+      const res = await fetch('/api/auth.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
@@ -74,7 +74,7 @@ export default function AdminLayout({
   };
 
   const logout = async () => {
-    await fetch('/api/admin/auth', { method: 'DELETE' });
+    await fetch('/api/auth.php', { method: 'DELETE' });
     setIsAuthenticated(false);
     router.push('/admin');
   };

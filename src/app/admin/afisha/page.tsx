@@ -69,7 +69,7 @@ export default function AfishaAdmin() {
 
   const loadItems = async () => {
     try {
-      const res = await fetch('/api/admin/data/afisha');
+      const res = await fetch('/api/data.php?collection=afisha');
       const data = await res.json();
       setItems(Array.isArray(data) ? data : []);
     } catch (error) {
@@ -99,7 +99,7 @@ export default function AfishaAdmin() {
 
     try {
       const method = isNew ? 'POST' : 'PUT';
-      const res = await fetch('/api/admin/data/afisha', {
+      const res = await fetch('/api/data.php?collection=afisha', {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editingItem),
@@ -125,7 +125,7 @@ export default function AfishaAdmin() {
     if (!confirm('Удалить это событие?')) return;
 
     try {
-      const res = await fetch(`/api/admin/data/afisha?id=${id}`, {
+      const res = await fetch(`/api/data.php?collection=afisha&id=${id}`, {
         method: 'DELETE',
       });
 

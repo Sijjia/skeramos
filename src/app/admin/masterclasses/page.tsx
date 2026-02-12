@@ -68,7 +68,7 @@ export default function MasterclassesAdmin() {
 
   const loadItems = async () => {
     try {
-      const res = await fetch('/api/admin/data/masterclasses');
+      const res = await fetch('/api/data.php?collection=masterclasses');
       const data = await res.json();
       setItems(data);
     } catch (error) {
@@ -98,7 +98,7 @@ export default function MasterclassesAdmin() {
 
     try {
       const method = isNew ? 'POST' : 'PUT';
-      const res = await fetch('/api/admin/data/masterclasses', {
+      const res = await fetch('/api/data.php?collection=masterclasses', {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editingItem),
@@ -126,7 +126,7 @@ export default function MasterclassesAdmin() {
     if (!confirm('Удалить этот мастер-класс?')) return;
 
     try {
-      const res = await fetch(`/api/admin/data/masterclasses?id=${id}`, {
+      const res = await fetch(`/api/data.php?collection=masterclasses&id=${id}`, {
         method: 'DELETE',
       });
 
@@ -142,7 +142,7 @@ export default function MasterclassesAdmin() {
 
   const handleToggleActive = async (item: Masterclass) => {
     try {
-      await fetch('/api/admin/data/masterclasses', {
+      await fetch('/api/data.php?collection=masterclasses', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...item, active: !item.active }),

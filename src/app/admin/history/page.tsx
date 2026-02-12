@@ -73,7 +73,7 @@ export default function HistoryAdmin() {
 
   const loadItems = async () => {
     try {
-      const res = await fetch('/api/admin/data/history');
+      const res = await fetch('/api/data.php?collection=history');
       const data = await res.json();
       // Сортируем по году (новые сверху)
       const sorted = Array.isArray(data)
@@ -107,7 +107,7 @@ export default function HistoryAdmin() {
 
     try {
       const method = isNew ? 'POST' : 'PUT';
-      const res = await fetch('/api/admin/data/history', {
+      const res = await fetch('/api/data.php?collection=history', {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editingItem),
@@ -133,7 +133,7 @@ export default function HistoryAdmin() {
     if (!confirm('Удалить этот момент истории?')) return;
 
     try {
-      const res = await fetch(`/api/admin/data/history?id=${id}`, {
+      const res = await fetch(`/api/data.php?collection=history&id=${id}`, {
         method: 'DELETE',
       });
 

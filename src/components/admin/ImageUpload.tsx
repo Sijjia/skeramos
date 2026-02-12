@@ -30,7 +30,7 @@ export function ImageUpload({ value, onChange, label = 'Изображение',
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('/api/admin/upload', {
+      const response = await fetch('/api/upload.php', {
         method: 'POST',
         body: formData,
       });

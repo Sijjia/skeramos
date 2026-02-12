@@ -76,8 +76,8 @@ export default function GalleryAdmin() {
     try {
       // Load gallery items and settings in parallel
       const [galleryRes, settingsRes] = await Promise.all([
-        fetch('/api/admin/data/gallery'),
-        fetch('/api/admin/data/settings'),
+        fetch('/api/data.php?collection=gallery'),
+        fetch('/api/data.php?collection=settings'),
       ]);
 
       const galleryData = await galleryRes.json();
@@ -102,7 +102,7 @@ export default function GalleryAdmin() {
 
   const loadItems = async () => {
     try {
-      const res = await fetch('/api/admin/data/gallery');
+      const res = await fetch('/api/data.php?collection=gallery');
       const data = await res.json();
       setItems(Array.isArray(data) ? data : []);
     } catch (error) {
@@ -126,7 +126,7 @@ export default function GalleryAdmin() {
 
     try {
       const method = isNew ? 'POST' : 'PUT';
-      const res = await fetch('/api/admin/data/gallery', {
+      const res = await fetch('/api/data.php?collection=gallery', {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editingItem),
@@ -152,7 +152,7 @@ export default function GalleryAdmin() {
     if (!confirm('Удалить это изображение?')) return;
 
     try {
-      const res = await fetch(`/api/admin/data/gallery?id=${id}`, {
+      const res = await fetch(`/api/data.php?collection=gallery&id=${id}`, {
         method: 'DELETE',
       });
 
