@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import crypto from 'crypto';
 import { readFile, writeFile, mkdir } from 'fs/promises';
 import path from 'path';
+import { put, list, del } from '@vercel/blob';
 
 // Отключаем кэширование Route Handler — всегда свежие данные
 export const dynamic = 'force-dynamic';
@@ -10,8 +11,11 @@ export const dynamic = 'force-dynamic';
 const SESSION_SECRET = process.env.SESSION_SECRET || 'default-secret';
 const COOKIE_NAME = 'admin_session';
 
-// Папка для хранения данных
+// Папка для хранения данных (для локального режима)
 const DATA_DIR = path.join(process.cwd(), 'data');
+
+// Определяем режим хранения: Vercel Blob или локальные файлы
+const USE_BLOB_STORAGE = !!process.env.BLOB_READ_WRITE_TOKEN;
 
 // Доступные коллекции
 const COLLECTIONS = [
@@ -51,7 +55,10 @@ async function isAuthenticated(): Promise<boolean> {
   return token ? verifyToken(token) : false;
 }
 
-// Убедимся что папка data существует
+// ============================================================================
+// Локальное хранилище (для своего хостинга)
+// ============================================================================
+
 async function ensureDataDir(): Promise<void> {
   try {
     await mkdir(DATA_DIR, { recursive: true });
@@ -60,24 +67,81 @@ async function ensureDataDir(): Promise<void> {
   }
 }
 
-// Читаем данные из локального JSON файла
-async function readData(collection: string): Promise<unknown> {
+async function readLocalData(collection: string): Promise<unknown> {
   try {
     await ensureDataDir();
     const filePath = path.join(DATA_DIR, `${collection}.json`);
     const content = await readFile(filePath, 'utf-8');
     return JSON.parse(content);
-  } catch (error) {
-    // Файл не существует или ошибка чтения - возвращаем пустые данные
+  } catch {
     return collection === 'settings' ? {} : [];
   }
 }
 
-// Записываем данные в локальный JSON файл
-async function writeData(collection: string, data: unknown): Promise<void> {
+async function writeLocalData(collection: string, data: unknown): Promise<void> {
   await ensureDataDir();
   const filePath = path.join(DATA_DIR, `${collection}.json`);
   await writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
+}
+
+// ============================================================================
+// Vercel Blob хранилище (для Vercel)
+// ============================================================================
+
+async function readBlobData(collection: string): Promise<unknown> {
+  try {
+    const { blobs } = await list({ prefix: `data/${collection}.json` });
+
+    if (blobs.length === 0) {
+      return collection === 'settings' ? {} : [];
+    }
+
+    const response = await fetch(blobs[0].url, { cache: 'no-store' });
+    if (!response.ok) {
+      return collection === 'settings' ? {} : [];
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Error reading ${collection} from Blob:`, error);
+    return collection === 'settings' ? {} : [];
+  }
+}
+
+async function writeBlobData(collection: string, data: unknown): Promise<void> {
+  // Удаляем старый файл если есть
+  try {
+    const { blobs } = await list({ prefix: `data/${collection}.json` });
+    for (const blob of blobs) {
+      await del(blob.url);
+    }
+  } catch {
+    // Игнорируем ошибки удаления
+  }
+
+  // Записываем новый файл
+  await put(`data/${collection}.json`, JSON.stringify(data, null, 2), {
+    access: 'public',
+    contentType: 'application/json',
+  });
+}
+
+// ============================================================================
+// Универсальные функции (автоматически выбирают хранилище)
+// ============================================================================
+
+async function readData(collection: string): Promise<unknown> {
+  if (USE_BLOB_STORAGE) {
+    return readBlobData(collection);
+  }
+  return readLocalData(collection);
+}
+
+async function writeData(collection: string, data: unknown): Promise<void> {
+  if (USE_BLOB_STORAGE) {
+    return writeBlobData(collection, data);
+  }
+  return writeLocalData(collection, data);
 }
 
 type RouteContext = {
