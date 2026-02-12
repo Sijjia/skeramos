@@ -215,7 +215,7 @@ export default function HotelPage() {
                   whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.15)' }}
                   transition={{ duration: 0.2 }}
                 >
-                  Бутик-отель в сердце Кыргызстана
+                  {t('badge')}
                 </motion.span>
               </motion.div>
 
@@ -224,10 +224,10 @@ export default function HotelPage() {
                 variants={fadeInUp}
                 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium text-white mb-6 text-balance"
               >
-                Уют и{' '}
-                <span className="bg-gradient-text">комфорт</span>
+                {t('heroTitle1')}{' '}
+                <span className="bg-gradient-text">{t('heroTitle2')}</span>
                 <br />
-                для вашего отдыха
+                {t('heroTitle3')}
               </motion.h1>
 
               {/* Subtitle */}
@@ -235,8 +235,7 @@ export default function HotelPage() {
                 variants={fadeInUp}
                 className="text-lg md:text-xl text-neutral-300 mb-10 max-w-2xl mx-auto"
               >
-                Камерный отель с атмосферой домашнего уюта. Идеальное место для романтического
-                уикенда, творческого отпуска или просто тихого отдыха.
+                {t('heroDescription')}
               </motion.p>
 
               {/* CTA Buttons */}
@@ -245,7 +244,7 @@ export default function HotelPage() {
                   href="#packages"
                   className="group relative px-8 py-4 bg-zone-500 text-white rounded-2xl font-medium transition-all duration-300 hover:bg-zone-400 hover:scale-105 hover:shadow-xl hover:shadow-zone-500/30"
                 >
-                  <span className="relative z-10">Специальные пакеты</span>
+                  <span className="relative z-10">{t('specialPackages')}</span>
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-zone-400 to-zone-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </a>
                 <a
@@ -254,7 +253,7 @@ export default function HotelPage() {
                   rel="noopener noreferrer"
                   className="px-8 py-4 glass text-white rounded-2xl font-medium transition-all duration-300 hover:bg-white/15 hover:scale-105 hover:border-white/30"
                 >
-                  Забронировать
+                  {t('bookBtn')}
                 </a>
               </motion.div>
 
@@ -264,9 +263,9 @@ export default function HotelPage() {
                 className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto"
               >
                 {[
-                  { value: 24, suffix: '/7', label: 'заселение' },
-                  { value: 500, suffix: '+', label: 'довольных гостей' },
-                  { value: 5, suffix: '★', label: 'рейтинг' },
+                  { value: 24, suffix: '/7', label: t('statsCheckin') },
+                  { value: 500, suffix: '+', label: t('statsGuests') },
+                  { value: 5, suffix: '★', label: t('statsRating') },
                 ].map((stat) => (
                   <div key={stat.label} className="text-center">
                     <div className="text-3xl md:text-4xl font-display font-bold text-zone-400">
@@ -310,10 +309,10 @@ export default function HotelPage() {
               className="text-center mb-16"
             >
               <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
-                Почему мы
+                {t('whyUs')}
               </motion.span>
               <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
-                Преимущества отеля
+                {t('hotelAdvantages')}
               </motion.h2>
             </motion.div>
 
@@ -364,7 +363,7 @@ export default function HotelPage() {
               className="text-center mb-16"
             >
               <motion.span variants={fadeInUp} className="text-zone-400 text-sm font-medium tracking-wider uppercase">
-                Выгодно
+                {t('profitably')}
               </motion.span>
               <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
                 {t('packages')}
@@ -391,7 +390,7 @@ export default function HotelPage() {
                 >
                   {pkg.featured && (
                     <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-zone-400 text-on-color text-xs font-medium z-10">
-                      Популярный
+                      {t('popular')}
                     </div>
                   )}
 

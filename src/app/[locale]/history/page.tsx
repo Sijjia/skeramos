@@ -2,7 +2,9 @@
 
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations, useLocale } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
 import { useHistory } from '@/hooks/useSanityData';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -21,6 +23,8 @@ const MILESTONE_COLORS: Record<string, string> = {
 
 export default function HistoryPage() {
   const { setZone } = useZone();
+  const locale = useLocale();
+  const t = useTranslations('history');
   const { data: historyData, loading } = useHistory();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -104,7 +108,7 @@ export default function HistoryPage() {
         <main className="min-h-screen bg-background pt-20">
           <div className="container mx-auto px-4 py-16">
             <div className="flex items-center justify-center">
-              <div className="text-neutral-400">Загрузка истории...</div>
+              <div className="text-neutral-400">{t('loading')}</div>
             </div>
           </div>
         </main>
@@ -124,21 +128,21 @@ export default function HistoryPage() {
             <div className="container mx-auto px-4">
               <FadeInOnScroll className="max-w-3xl mx-auto text-center">
                 <span className="inline-block px-4 py-2 rounded-full glass text-sm text-zone-300 font-medium mb-4">
-                  С 2024 года
+                  {t('badge')}
                 </span>
                 <h1 className="text-4xl md:text-5xl font-display font-medium text-neutral-800 mb-4">
-                  Наша{' '}
+                  {t('our')}{' '}
                   <span className="bg-gradient-to-r from-zone-400 to-gold-500 bg-clip-text text-transparent">
-                    история
+                    {t('history')}
                   </span>
                 </h1>
                 <p className="text-neutral-500 mb-8">
-                  От одного гончарного круга до творческого дома
+                  {t('subtitle')}
                 </p>
                 <div className="text-center py-16">
                   <span className="text-6xl mb-4 block">📜</span>
                   <p className="text-neutral-500">
-                    История скоро появится
+                    {t('emptySoon')}
                   </p>
                 </div>
               </FadeInOnScroll>
@@ -162,16 +166,16 @@ export default function HistoryPage() {
           <div className="container mx-auto px-4">
             <FadeInOnScroll className="max-w-3xl mx-auto text-center">
               <span className="inline-block px-4 py-2 rounded-full glass text-sm text-zone-300 font-medium mb-4">
-                С 2024 года
+                {t('badge')}
               </span>
               <h1 className="text-4xl md:text-5xl font-display font-medium text-neutral-800 mb-4">
-                Наша{' '}
+                {t('our')}{' '}
                 <span className="bg-gradient-to-r from-zone-400 to-gold-500 bg-clip-text text-transparent">
-                  история
+                  {t('history')}
                 </span>
               </h1>
               <p className="text-neutral-500">
-                От одного гончарного круга до творческого дома
+                {t('subtitle')}
               </p>
             </FadeInOnScroll>
           </div>
@@ -329,14 +333,13 @@ export default function HistoryPage() {
             <FadeInOnScroll className="max-w-2xl mx-auto text-center">
               <span className="text-5xl mb-6 block">2026+</span>
               <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mb-6">
-                Что дальше?
+                {t('whatNext')}
               </h2>
               <p className="text-neutral-600 mb-8">
-                Мы продолжаем расти и мечтать. В планах — собственная линейка керамики,
-                международные мастер-классы и создание сообщества керамистов Кыргызстана.
+                {t('futureText')}
               </p>
               <p className="text-zone-500 text-lg">
-                Присоединяйтесь к нашей истории — станьте её частью!
+                {t('joinOurStory')}
               </p>
             </FadeInOnScroll>
           </div>
@@ -350,33 +353,33 @@ export default function HistoryPage() {
                 <div className="glass-card p-8 text-center">
                   <span className="text-4xl mb-4 block">🎨</span>
                   <h3 className="text-xl font-display font-medium text-white mb-3">
-                    Творить с нами
+                    {t('createWithUs')}
                   </h3>
                   <p className="text-neutral-400 mb-6 text-sm">
-                    Запишитесь на мастер-класс и создайте своё первое изделие
+                    {t('createWithUsDesc')}
                   </p>
-                  <a
-                    href="/creativity"
+                  <Link
+                    href={`/${locale}/creativity`}
                     className="inline-block px-6 py-3 bg-zone-500 hover:bg-zone-600 text-white rounded-xl font-medium transition-colors"
                   >
-                    Мастер-классы
-                  </a>
+                    {t('masterclassesBtn')}
+                  </Link>
                 </div>
 
                 <div className="glass-card p-8 text-center">
                   <span className="text-4xl mb-4 block">🏠</span>
                   <h3 className="text-xl font-display font-medium text-white mb-3">
-                    Остаться с нами
+                    {t('stayWithUs')}
                   </h3>
                   <p className="text-neutral-400 mb-6 text-sm">
-                    Забронируйте номер и погрузитесь в атмосферу творчества
+                    {t('stayWithUsDesc')}
                   </p>
-                  <a
-                    href="/hotel"
+                  <Link
+                    href={`/${locale}/hotel`}
                     className="inline-block px-6 py-3 bg-hotel-500 hover:bg-hotel-600 text-white rounded-xl font-medium transition-colors"
                   >
-                    Номера отеля
-                  </a>
+                    {t('hotelRoomsBtn')}
+                  </Link>
                 </div>
               </div>
             </FadeInOnScroll>

@@ -306,7 +306,7 @@ export default function CreativityPage() {
                   whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.15)' }}
                   transition={{ duration: 0.2 }}
                 >
-                  Гончарная мастерская в Бишкеке
+                  {t('badge')}
                 </motion.span>
               </motion.div>
 
@@ -315,10 +315,10 @@ export default function CreativityPage() {
                 variants={fadeInUp}
                 className="text-4xl md:text-6xl lg:text-7xl font-display font-medium text-white mb-6 text-balance"
               >
-                Лепим{' '}
-                <span className="bg-gradient-text">счастье</span>
+                {t('heroTitle1')}{' '}
+                <span className="bg-gradient-text">{t('heroTitle2')}</span>
                 <br />
-                своими руками
+                {t('heroTitle3')}
               </motion.h1>
 
               {/* Subtitle */}
@@ -326,9 +326,7 @@ export default function CreativityPage() {
                 variants={fadeInUp}
                 className="text-lg md:text-xl text-neutral-300 mb-10 max-w-2xl mx-auto"
               >
-                Мастер-классы по керамике для всех уровней.
-                <br />
-                Погрузитесь в мир гончарного искусства и создайте уникальные изделия под руководством опытных мастеров.
+                {t('heroDescription')}
               </motion.p>
 
               {/* CTA Buttons */}
@@ -337,14 +335,14 @@ export default function CreativityPage() {
                   href="#masterclasses"
                   className="group relative px-8 py-4 bg-zone-500 text-white rounded-2xl font-medium transition-all duration-300 hover:bg-zone-400 hover:scale-105 hover:shadow-xl hover:shadow-zone-500/30"
                 >
-                  <span className="relative z-10">Выбрать мастер-класс</span>
+                  <span className="relative z-10">{t('chooseMasterclass')}</span>
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-zone-400 to-zone-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </a>
                 <a
                   href="#about"
                   className="px-8 py-4 glass text-white rounded-2xl font-medium transition-all duration-300 hover:bg-white/15 hover:scale-105 hover:border-white/30"
                 >
-                  Узнать больше
+                  {t('learnMoreBtn')}
                 </a>
               </motion.div>
 
@@ -354,9 +352,9 @@ export default function CreativityPage() {
                 className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto"
               >
                 {[
-                  { value: 2, suffix: '', label: 'года опыта' },
-                  { value: 1000, suffix: '+', label: 'учеников' },
-                  { value: 500, suffix: '+', label: 'мастер-классов' },
+                  { value: 2, suffix: '', label: t('statsYears') },
+                  { value: 1000, suffix: '+', label: t('statsStudents') },
+                  { value: 500, suffix: '+', label: t('statsMasterclasses') },
                 ].map((stat) => (
                   <div key={stat.label} className="text-center">
                     <div className="text-3xl md:text-4xl font-display font-bold text-zone-400">
@@ -419,9 +417,9 @@ export default function CreativityPage() {
                   transition={{ delay: 0.4 }}
                   className="absolute -bottom-6 -right-6 glass-card p-6 max-w-xs"
                 >
-                  <div className="text-4xl font-display font-bold text-zone-400 mb-2">С 2024</div>
+                  <div className="text-4xl font-display font-bold text-zone-400 mb-2">{t('since2024Card')}</div>
                   <p className="card-muted text-sm">
-                    Создаём пространство для творчества и вдохновения
+                    {t('creativeSpaceText')}
                   </p>
                 </motion.div>
               </motion.div>
@@ -441,17 +439,13 @@ export default function CreativityPage() {
                 </h2>
                 <div className="space-y-4 text-neutral-600">
                   <p>
-                    <strong className="text-neutral-800">Skeramos</strong> — это не просто мастерская,
-                    это пространство, где каждый может прикоснуться к древнему искусству керамики
-                    и создать что-то уникальное своими руками.
+                    <strong className="text-neutral-800">Skeramos</strong> {t('aboutText1')}
                   </p>
                   <p>
-                    Мы начинали с небольшой студии и мечты — дать людям возможность отключиться
-                    от повседневной суеты и погрузиться в медитативный процесс работы с глиной.
+                    {t('aboutText2')}
                   </p>
                   <p>
-                    Сегодня мы — одна из ведущих гончарных мастерских Бишкека, где прошли обучение
-                    более 1000 человек.
+                    {t('aboutText3')}
                   </p>
                 </div>
 
@@ -461,8 +455,8 @@ export default function CreativityPage() {
                       <span className="text-xl">🎯</span>
                     </div>
                     <div>
-                      <div className="text-neutral-800 font-medium">Индивидуальный подход</div>
-                      <div className="text-sm text-neutral-500">К каждому гостю</div>
+                      <div className="text-neutral-800 font-medium">{t('individualApproach')}</div>
+                      <div className="text-sm text-neutral-500">{t('toEachGuest')}</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -470,8 +464,8 @@ export default function CreativityPage() {
                       <span className="text-xl">✨</span>
                     </div>
                     <div>
-                      <div className="text-neutral-800 font-medium">Качественные материалы</div>
-                      <div className="text-sm text-neutral-500">Профессиональная глина</div>
+                      <div className="text-neutral-800 font-medium">{t('qualityMaterials')}</div>
+                      <div className="text-sm text-neutral-500">{t('professionalClay')}</div>
                     </div>
                   </div>
                 </div>
@@ -769,7 +763,7 @@ export default function CreativityPage() {
               className="text-center mb-16"
             >
               <motion.span variants={scaleIn} className="text-zone-400 text-sm font-medium tracking-wider uppercase inline-block">
-                Услуги
+                {t('servicesLabel')}
               </motion.span>
               <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-display font-medium text-neutral-800 mt-4">
                 {t('masterclasses')}
@@ -952,8 +946,7 @@ export default function CreativityPage() {
                 {tCommon('ourHistory')}
               </h2>
               <p className="text-neutral-600 mb-8">
-                От одного гончарного круга до творческого дома — узнайте, как мы росли
-                и развивались вместе с нашими учениками.
+                {t('historyDescription')}
               </p>
               <a
                 href="/history"

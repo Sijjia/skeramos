@@ -23,7 +23,7 @@ export function Footer() {
               Skeramos
             </Link>
             <p className="mt-2 text-sm text-neutral-600">
-              Арт-комплекс «Скерамос»
+              {t('tagline')}
             </p>
 
             {/* Phone with icon */}
@@ -40,8 +40,8 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-zone-900 mb-3">{t('address')}</h4>
             <p className="text-neutral-600 text-sm mb-3">
-              ул. Шукурова 8<br />
-              Бишкек, Кыргызстан
+              {t('addressLine1')}<br />
+              {t('addressLine2')}
             </p>
 
             {/* 2GIS Mini Map */}
@@ -61,7 +61,7 @@ export function Footer() {
               rel="noopener noreferrer"
               className="mt-2 inline-flex items-center gap-1 text-sm text-zone-700 hover:text-zone-900 transition-colors"
             >
-              Открыть в 2GIS
+              {t('openIn2GIS')}
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
@@ -144,38 +144,38 @@ export function Footer() {
                 rel="noopener noreferrer"
                 className="px-3 py-1.5 bg-white rounded-full text-xs text-neutral-600 hover:text-[#FC3F1D] hover:shadow-md transition-all"
               >
-                Яндекс Карты
+                {t('yandexMaps')}
               </a>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold text-zone-900 mb-3">Навигация</h4>
+            <h4 className="font-semibold text-zone-900 mb-3">{t('navigation')}</h4>
             <nav className="flex flex-col gap-2">
               <Link
                 href={`/${locale}/creativity`}
                 className="text-sm text-neutral-600 hover:text-zone-700 transition-colors"
               >
-                Арт-студия
+                {t('artStudio')}
               </Link>
               <Link
                 href={`/${locale}/hotel`}
                 className="text-sm text-neutral-600 hover:text-zone-700 transition-colors"
               >
-                Бутик-отель
+                {t('boutiqueHotel')}
               </Link>
               <Link
                 href={`/${locale}/gallery`}
                 className="text-sm text-neutral-600 hover:text-zone-700 transition-colors"
               >
-                Галерея
+                {t('gallery')}
               </Link>
               <Link
                 href={`/${locale}/contacts`}
                 className="text-sm text-neutral-600 hover:text-zone-700 transition-colors"
               >
-                Контакты
+                {t('contacts')}
               </Link>
             </nav>
           </div>
@@ -190,7 +190,7 @@ export function Footer() {
             href={`/${locale}`}
             className="text-sm text-zone-700 hover:text-zone-900 transition-colors"
           >
-            На главную
+            {t('toMain')}
           </Link>
         </div>
       </div>

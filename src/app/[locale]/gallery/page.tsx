@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocale, useTranslations } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
 import { useGallery, useSettings, type GalleryItemUI } from '@/hooks/useSanityData';
 
@@ -21,26 +23,31 @@ interface CategoryOption {
   label: string;
 }
 
-const DEFAULT_CATEGORIES: CategoryOption[] = [
-  { value: 'works', label: 'Работы' },
-  { value: 'masterclasses', label: 'Мастер-классы' },
-  { value: 'events', label: 'Мероприятия' },
-  { value: 'interior', label: 'Интерьер' },
-  { value: 'hotel', label: 'Отель' },
-];
+// Default categories will be replaced with translations in component
+const DEFAULT_CATEGORIES: CategoryOption[] = [];
 
 export default function GalleryPage() {
   const { setZone } = useZone();
+  const locale = useLocale();
+  const t = useTranslations('gallery');
+  const tCommon = useTranslations('common');
   const { data: galleryData, loading } = useGallery();
   const { data: settings } = useSettings();
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Use categories from settings or defaults
+  // Use categories from settings or defaults with translations
+  const defaultTranslatedCategories: CategoryOption[] = [
+    { value: 'works', label: t('works') },
+    { value: 'masterclasses', label: t('masterclasses') },
+    { value: 'events', label: t('events') },
+    { value: 'interior', label: t('interior') },
+    { value: 'hotel', label: t('hotel') },
+  ];
   const categories: CategoryOption[] = settings.galleryCategories && settings.galleryCategories.length > 0
     ? settings.galleryCategories
-    : DEFAULT_CATEGORIES;
+    : defaultTranslatedCategories;
 
   useEffect(() => {
     setZone('creativity');
@@ -115,15 +122,15 @@ export default function GalleryPage() {
           <div className="container mx-auto px-4">
             <FadeInOnScroll className="max-w-3xl mx-auto text-center">
               <span className="inline-block px-4 py-2 rounded-full glass text-sm text-zone-300 font-medium mb-6">
-                Наше творчество
+                {t('badge')}
               </span>
               <h1 className="text-4xl md:text-6xl font-display font-medium text-neutral-800 mb-6">
                 <span className="bg-gradient-to-r from-zone-400 to-gold-500 bg-clip-text text-transparent">
-                  Галерея
+                  {t('title')}
                 </span>
               </h1>
               <p className="text-lg text-neutral-500">
-                Изделия наших мастеров, моменты с мастер-классов и атмосфера нашего пространства
+                {t('subtitle')}
               </p>
             </FadeInOnScroll>
           </div>
@@ -147,7 +154,7 @@ export default function GalleryPage() {
                 `}
               >
                 <span className="mr-2">✨</span>
-                Все
+                {t('all')}
               </button>
               {/* Dynamic categories */}
               {categories.map((cat) => (
@@ -175,7 +182,7 @@ export default function GalleryPage() {
             {loading ? (
               <div className="text-center py-20">
                 <div className="inline-block w-8 h-8 border-2 border-zone-500 border-t-transparent rounded-full animate-spin mb-4" />
-                <p className="text-neutral-400">Загрузка...</p>
+                <p className="text-neutral-400">{tCommon('loading')}</p>
               </div>
             ) : filteredItems.length > 0 ? (
               <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
@@ -232,8 +239,8 @@ export default function GalleryPage() {
             ) : (
               <div className="text-center py-20">
                 <span className="text-6xl mb-4 block">🎨</span>
-                <h3 className="text-xl text-neutral-800 mb-2">Галерея пока пуста</h3>
-                <p className="text-neutral-500">Скоро здесь появятся работы наших мастеров</p>
+                <h3 className="text-xl text-neutral-800 mb-2">{t('empty')}</h3>
+                <p className="text-neutral-500">{t('emptySoon')}</p>
               </div>
             )}
           </div>
@@ -244,17 +251,17 @@ export default function GalleryPage() {
           <div className="container mx-auto px-4">
             <FadeInOnScroll className="max-w-2xl mx-auto text-center">
               <h2 className="text-3xl md:text-4xl font-display font-medium text-neutral-800 mb-6">
-                Хотите создать своё изделие?
+                {t('wantToCreate')}
               </h2>
               <p className="text-neutral-600 mb-8">
-                Запишитесь на мастер-класс и ваша работа тоже может оказаться в нашей галерее!
+                {t('signUpAndAppear')}
               </p>
-              <a
-                href="/creativity#masterclasses"
+              <Link
+                href={`/${locale}/creativity#masterclasses`}
                 className="inline-block px-8 py-4 bg-zone-500 hover:bg-zone-600 text-white rounded-2xl font-medium transition-all hover-lift"
               >
-                Записаться на мастер-класс
-              </a>
+                {t('signUpMasterclass')}
+              </Link>
             </FadeInOnScroll>
           </div>
         </section>

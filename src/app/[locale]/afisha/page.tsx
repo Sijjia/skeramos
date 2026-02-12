@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { useTranslations, useLocale } from 'next-intl';
 import { useZone } from '@/contexts/ZoneContext';
 import { useAfisha, EventUI } from '@/hooks/useSanityData';
 import { Calendar, Clock, MapPin } from 'lucide-react';
@@ -41,6 +42,8 @@ function isUpcomingEvent(dateString: string): boolean {
 
 export default function AfishaPage() {
   const { setZone } = useZone();
+  const locale = useLocale();
+  const t = useTranslations('afisha');
   const { data: events, loading } = useAfisha();
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
 
@@ -95,13 +98,13 @@ export default function AfishaPage() {
           <FadeInOnScroll>
             <div className="text-center mb-12">
               <span className="text-zone-500 text-sm font-medium tracking-wider uppercase">
-                События
+                {t('badge')}
               </span>
               <h1 className="text-4xl md:text-5xl font-display font-semibold mt-4 mb-4">
-                Афиша
+                {t('title')}
               </h1>
               <p className="text-neutral-500 max-w-2xl mx-auto">
-                Предстоящие мероприятия, праздники и мастер-классы в Skeramos
+                {t('subtitle')}
               </p>
             </div>
           </FadeInOnScroll>
@@ -119,7 +122,7 @@ export default function AfishaPage() {
               `}
             >
               <span className="mr-2">✨</span>
-              Все события
+              {t('allEvents')}
               {allEvents.length > 0 && (
                 <span className="ml-2 px-2 py-0.5 rounded-full bg-white/20 text-xs">
                   {allEvents.length}
@@ -137,7 +140,7 @@ export default function AfishaPage() {
               `}
             >
               <span className="mr-2">🔥</span>
-              Грядущие
+              {t('upcoming')}
               {upcomingEvents.length > 0 && (
                 <span className="ml-2 px-2 py-0.5 rounded-full bg-white/20 text-xs">
                   {upcomingEvents.length}
@@ -155,7 +158,7 @@ export default function AfishaPage() {
               `}
             >
               <span className="mr-2">📜</span>
-              Прошедшие
+              {t('past')}
               {pastEvents.length > 0 && (
                 <span className="ml-2 px-2 py-0.5 rounded-full bg-white/20 text-xs">
                   {pastEvents.length}
@@ -183,12 +186,12 @@ export default function AfishaPage() {
             <div className="text-center py-16">
               <span className="text-6xl mb-4 block">📅</span>
               <h3 className="text-xl font-semibold mb-2">
-                {activeFilter === 'upcoming' && 'Нет грядущих событий'}
-                {activeFilter === 'past' && 'Нет прошедших событий'}
-                {activeFilter === 'all' && 'Пока нет событий'}
+                {activeFilter === 'upcoming' && t('noUpcoming')}
+                {activeFilter === 'past' && t('noPast')}
+                {activeFilter === 'all' && t('noEvents')}
               </h3>
               <p className="text-neutral-500">
-                Следите за обновлениями! Скоро мы добавим новые мероприятия.
+                {t('followUpdates')}
               </p>
             </div>
           ) : (
@@ -220,6 +223,7 @@ export default function AfishaPage() {
 
 // Event Card Component
 function EventCard({ event, isUpcoming }: { event: EventUI; isUpcoming: boolean }) {
+  const t = useTranslations('afisha');
   return (
     <motion.div
       layout
@@ -252,14 +256,14 @@ function EventCard({ event, isUpcoming }: { event: EventUI; isUpcoming: boolean 
             ${event.type === 'exhibition' ? 'bg-purple-500' : ''}
             ${event.type === 'other' ? 'bg-blue-500' : ''}
           `}>
-            {event.type === 'masterclass' && 'Мастер-класс'}
-            {event.type === 'holiday' && 'Праздник'}
-            {event.type === 'exhibition' && 'Выставка'}
-            {event.type === 'other' && 'Событие'}
+            {event.type === 'masterclass' && t('masterclass')}
+            {event.type === 'holiday' && t('holiday')}
+            {event.type === 'exhibition' && t('exhibition')}
+            {event.type === 'other' && t('event')}
           </span>
           {!isUpcoming && (
             <span className="px-3 py-1 rounded-full text-xs font-medium text-white bg-neutral-500">
-              Завершено
+              {t('finished')}
             </span>
           )}
         </div>
